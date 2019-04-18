@@ -1,0 +1,8 @@
+*.pyc
+.env
+.idea
+.vscode
+settings.py
+requirements.txt
+requiriments.txt
+static.rar
