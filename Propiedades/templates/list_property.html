@@ -1,6 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block navbar %}
+{% endblock %}
 {% block content %}
 <html>
 <head>
@@ -20,13 +22,15 @@
                 <th scope="col">Uso propiedad</th>
                 <th scope="col">Rol</th>
                 <th scope="col"></th>
-                <th ><a href="">{{request.user}}</a></th>
+                <th> <button class="btn btn-outline-info my-2 my-sm-0" type="submit"> <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a> </button> </th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               {% for cli in object_list %}
               <tr>
+                <th scope="row">{{cli.id}}</th>
+                <td><a href="{% url 'view_acquisition' cli.pk %}">{{cli.name}}</a></td>
                 <td>{{cli.name}}</td>
                 <td>{{cli.property_use}}</td>
                 <td>{{cli.role_number}}</td>
