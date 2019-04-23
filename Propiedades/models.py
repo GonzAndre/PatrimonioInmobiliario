@@ -25,9 +25,6 @@ class Location(models.Model):
     def __str__(self):
         return "calle: %s %s" % (self.street, self.number)
 
-# class Post_user(models.Model):
-#     post = models.OneToOneField(Post, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Property(models.Model):
     name = models.CharField(max_length=200)
