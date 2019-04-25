@@ -1,24 +1,24 @@
 from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-# from Propiedades.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from Propiedades.models import *
+from Propiedades.forms import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 # Create your views here.
 
 def index(request):
-    template_name = "base.html"
+    template_name = "index.html"
 
     return render(request, template_name, {})
 
 def list_acquisition(request):
-    #si es false el super admin no podra entrar
     data = {}
     data["request"] = request
 
     object_list = Acquisition.objects.all().order_by('-id')
+    print (object_list)
 
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
@@ -30,11 +30,17 @@ def list_acquisition(request):
         data['object_list'] = paginator.page(1)
     except EmptyPage:
         data['object_list'] = paginator.page(paginator.num_pages)
-    template_name = 'list_property.html'
+    template_name = 'list_acquisition.html'
+    return render(request, template_name, data)
+
+def view_acquisition(request, cli_id):
+    data = {}
+    data['request'] = request
+    template_name = 'detail_acquisition.html'
+    data ['acquisition'] = Acquisition.objects.get(pk=cli_id)
     return render(request, template_name, data)
 
 def list_rent(request):
-    #si es false el super admin no podra entrar
     data = {}
     data["request"] = request
 
@@ -50,7 +56,7 @@ def list_rent(request):
         data['object_list'] = paginator.page(1)
     except EmptyPage:
         data['object_list'] = paginator.page(paginator.num_pages)
-    template_name = 'list_property.html'
+    template_name = 'list_rent.html'
     return render(request, template_name, data)
 
 def user_leaderships(UserProfile, Leadership):
@@ -76,12 +82,12 @@ def Add_acquisition(request):
 
         if data['form'].is_valid():
             sav = data['form'].save()
-            return redirect('list_property')
-        else:
-            data['form'] = AcquisitionForm()
+            return redirect('list_acquisitions')
+    else:
+        form = AcquisitionForm()
 
-    template_name = 'add_property.html'
-    return render(request, template_name, data)
+    template_name = 'add_acquisition.html'
+    return render(request, template_name, {'form':form})
 
 def Add_rent(request):
     data={}
@@ -92,11 +98,11 @@ def Add_rent(request):
         if data['form'].is_valid():
             sav = data['form'].save()
             return redirect('list_rent')
-        else:
-            data['form'] = RentForm()
+    else:
+        form = RentForm()
 
-    template_name = 'add_property.html'
-    return render(request, template_name, data)
+    template_name = 'add_rent.html'
+    return render(request, template_name, {'form':form})
 
 def Edit_acquisition(request):
     data = {}

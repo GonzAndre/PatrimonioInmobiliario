@@ -26,22 +26,22 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                       Propiedades
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="#">Adquiridas</a>
-                      <a class="dropdown-item" href="#">Rentadas</a>
+                      <a class="dropdown-item" href="{% url 'list_acquisitions' %}">Adquiridas</a>
+                      <a class="dropdown-item" href="{% url 'list_rents' %}">Rentadas</a>
                     </div>
             </li>
             <li>
               <a class="nav-link" href="#">{{request.user}}</a>
             </li>
             <li>
-              <button class="btn btn-outline-light btn-sm" type="submit"> <a class="nav-link" href="{% url 'auth_logout' %}">Cerrar sesión</a> </button>
+              <button class="btn btn-outline-light btn-sm" type="submit"> <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a> </button>
             </li>
           </ul>
         </div>

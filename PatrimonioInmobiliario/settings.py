@@ -80,13 +80,8 @@ WSGI_APPLICATION = 'PatrimonioInmobiliario.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Patrimonio_Inmobiliario',
-        'USER': 'postgres',
-        'PASSWORD': 'Joaquingalaz13',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'CHARSET':  'UTF8',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
