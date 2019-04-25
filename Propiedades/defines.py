@@ -9,6 +9,13 @@ PROPERTY_USE_CHOICE = (
     ('Otro', 'Otro')
 )
 
+WRITING_DATA_CHOICE = (
+    ('COM', 'Compraventa'),
+    ('DON', 'Donación'),
+    ('SUB','Subdivisión'),
+    ('Otro', 'Otro')
+)
+
 REGION_CHOICE = (
     ('RM', 'Region Metropolitana'),
     ('TP', 'Region de Tarapaca'),

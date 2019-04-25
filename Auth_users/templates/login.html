@@ -22,11 +22,9 @@
         <link rel="stylesheet" href="{% static 'style.css' %}"  class="sty">
   </head>
 
-  <body>
-
+  <body background="{% static 'logo1.png' %}" style="background-position:center" >
     <form class="form-signin" method="POST">{% csrf_token %}
       <div class="text-center mb-4">
-        <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal"> Iniciar sesión</h1>
 
         {% if messages %}
@@ -46,12 +44,12 @@
       </div>
     <div id="login">
       <div class="form-label-group">
-        <input type="text" id="user" name="user" class="form-control" placeholder="Usuario" required autofocus>
+        <input type="text" id="user" name="user" class="form-control" placeholder="Usuario" required autofocus style="background-color:transparent; ">
         <label for="user"><i class="fas fa-user"></i> Nombre usuario</label>
       </div>
 
       <div class="form-label-group">
-        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required style="background-color:transparent; ">
         <label for="password"><i class="fas fa-unlock"></i> Contraseña</label>
       </div>
 

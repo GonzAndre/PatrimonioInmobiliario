@@ -24,6 +24,9 @@ urlpatterns = [
     path('index/', views.index, name = 'index'),
     path('login/', view.login, name = 'login'),
     path('', view.logout, name = 'logout'),
-    path('list_property/', views.list_property, name="list_property"),
-    path('view/<int:cli_id>', views.view_acquisition, name="view_acquisition"),
+    path('list_acquisition/', views.list_acquisition, name="list_acquisition"),
+    path('list_rent/', views.list_rent, name="list_rent"),
+    path('view_acquisition/<int:cli_id>', views.view_acquisition, name="view_acquisition"),
+    path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
+    path('add_acquisition/',views.Add_acquisition, name = "add_acquisition"),
 ]

@@ -1,0 +1,25 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.header{
+  height: 100px
+  background-color: #005a65;
+  padding: 0 20px;
+  color: #fff;
+}
+
+.logo{
+  line-height: 100px;
+  float: left;
+}
+
+.menu{
+  float: right;
+  line-height: 100px;
+}
+
+.menu a{
+  color: #fff;
+}

@@ -1,8 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8" />
 {% block navbar %}
-<th> <button class="btn btn-outline-info my-2 my-sm-0" type="submit"> <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a> </button> </th>
 {% endblock %}
 {% block content %}
 <html>
@@ -14,11 +13,53 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body style="background-color:#FFFFFF  ">
+
     <ul>
-      <li><strong>Nombre</strong>: {{acquisition.name}}</li>
-      <li>Numero AASI: {{acquisition.number_AASI}}</li>
-      <li>Numero Rol: {{acquisition.role_number}}</li>
-      <li>Uso Propiedad: {{acquisition.property_use}}</li>
+        <li><strong>Nombre</strong>: {{rent.name}}</li>
+        <li>Numero AASI: {{acquisition.number_AASI}}</li>
+        <li>Numero Rol: {{acquisition.role_number}}</li>
+        <li>Dirección: {{acquisition.location}}</li>
+        <li>Uso Propiedad: {{acquisition.property_use}}</li>
+        {% for cli in object_list %}
+        <li></li>
+        {% endfor %}
+        <li>Tipo de contrato: {{acquisition.contract_type.archive}}</li>
+        <li>Tipo de contrato1: {{acquisition.contract_type.publish_date}}</li>
+        <li>Tipo de contrato2: {{acquisition.contract_type.comment}}</li>
+        <li>Nombre comprador: {{acquisition.acquiring_name}}</li>
+        <li>Nombre vendedor/donador: {{acquisition.supplier_name}}</li>
+        <li>Notaria: {{acquisition.notary}}</li>
+        <li>Año de escritura: {{acquisition.writing_year}}</li>
+        <li>Precio de venta : {{acquisition.sale_price}}</li>
+        <li>Titulo previo: {{acquisition.previous_title}}</li>
+        <li>Titulo actual: {{acquisition.current_title}}</li>
+        <li>Destino: {{acquisition.destiny}}</li>
+        <li>Avalúo fiscal: {{acquisition.tax_appraisal}}</li>
+        <li>Nombre del propietario/a en SII: {{acquisition.owner_name_SII}}</li>
+        <li>Deuda total: {{acquisition.total_debt}}</li>
+        <li>Exención de contribuciones: {{acquisition.ex_contributions}}</li>
+        <li>Escritura: {{acquisition.writing}}</li>
+        <li>Certificado de dominio: {{acquisition.domain_certificate}}</li>
+        <li>Gravamenes y prohibiciones: {{acquisition.prohibitions}}</li>
+        <li>No expropiación SERVIU: {{acquisition.expropriation_serviu}}</li>
+        <li>Otros: {{acquisition.others}}</li>
+        <li>No expropiación municipal: {{acquisition.expropriation_mun}}</li>
+        <li>CIP: {{acquisition.cip.archive}}</li>
+        <li>Numero de certificado: {{acquisition.certified_number}}</li>
+        <li>Planos: {{acquisition.blueprints}}</li>
+        <li>Permiso de edificación: {{acquisition.building_permit}}</li>
+        <li>Recepción municipal: {{acquisition.municipal_reception}}</li>
+        <li>Certificado de avalúo: {{acquisition.appraisal_certificate}}</li>
+        <li>Certificado de NO deuda: {{acquisition.debt_certificate}}</li>
+        <li>Superficie del terreno: {{acquisition.ground_surface}}</li>
+        <li>Metros cuadrados contruidos: {{acquisition.square_m_build}}</li>
+        <li>Metros construcción existente: {{acquisition.e_construction_m}}</li>
+        <li>Número de recepción municipal: {{acquisition.municipal_n}}</li>
+        <li>Número de permiso de edificación: {{acquisition.n_building_permit}}</li>
+        <li>Valor contabilizado terreno: {{acquisition.value_land}}</li>
+        <li>Valor contabilizado contrucción: {{acquisition.value_construction}}</li>
+
+
 
     </ul>
 

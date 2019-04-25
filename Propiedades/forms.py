@@ -1,6 +1,5 @@
 from django.forms import ModelForm
 from Property.models import *
-from Auth_users.models import *
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -43,9 +42,3 @@ class RentForm(ModelForm):
     class meta:
         model = Rent
         fields = ['contract_type','acquiring_name','supplier_name','start_date','end_date','duration',]
-
-class UserProfileFrom(ModelForm):
-
-    class meta:
-        model = UserProfile
-        fields = ['username','password',]
