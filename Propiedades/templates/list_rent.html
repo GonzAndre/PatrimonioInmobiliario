@@ -38,7 +38,7 @@
               <tbody>
                 {% for cli in object_list %}
                 <tr>
-                  <td><a href="{% url 'view_acquisition' cli.pk %}">{{cli.name}}</a></td>
+                  <td><a href="{% url 'view_rent' cli.pk %}">{{cli.name}}</a></td>
                   <td>{{cli.role_number}}</td>
                   <td>{{cli.property_use}}</td>
                   <td>

@@ -39,4 +39,4 @@ def auth_login(request):
 
 def auth_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('login'))

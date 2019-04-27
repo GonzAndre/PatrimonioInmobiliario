@@ -11,7 +11,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Document(models.Model):
     archive = models.FileField(upload_to='Documentos/', blank=True, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
-    comment = models.CharField(max_length=300)
+    comment = models.TextField()
+    type = models.CharField(max_length=2, choices=ATTRIBUTES_CHOICE)
+
 
 class Location(models.Model):
     street = models.CharField(max_length=200)
@@ -59,7 +61,8 @@ class Acquisition(models.Model):
     tax_appraisal = models.PositiveIntegerField(blank=True, null=True)
     owner_name_SII = models.CharField(max_length=100,blank=True, null=True)
     total_debt = models.PositiveIntegerField(blank=True, null=True)
-    ex_contributions = models.NullBooleanField()
+    ex_contributions = models.BooleanField(default=False)
+    # documentos
     writing = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True, related_name='Escritura')
     domain_certificate = models.ForeignKey(Document, on_delete=models.CASCADE, null=True, blank=True,related_name='CertificadoDominio')
     prohibitions = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True, related_name='Prohibiciones')

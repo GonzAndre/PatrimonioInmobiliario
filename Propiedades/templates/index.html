@@ -6,38 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %} Home {% endblock title %}</title>
-
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
-    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+      <title>{% block title %} Home {% endblock %}</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+      <link rel="stylesheet" href="{% static 'base.css'%}">
+      <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
     {% block stylesheet %}{% endblock stylesheet %}
 </head>
 <body style="background-color: #FFFFFF  ">
-  <br>
-  <div class="container">
-    <nav class="navbar navbar-default" style="background-color: #005a65;">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapse"
-          data-toggle = "collapse" data-target = "#navbar" aria-expended = "false"
-          aria-controls = "navbar">
-          <span class="sr-only">toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" class="fa fa-home" href="/index/">Principal</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/login/">Inicio Sesión</li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </div>
+    {% include "base.html" %}
 </body>
     <!-- Mainly scripts -->
     <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>

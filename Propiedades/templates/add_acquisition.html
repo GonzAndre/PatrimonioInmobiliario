@@ -14,15 +14,18 @@
 <body>
   <div class="container">
     <br>
-    <h1>Agregar propiedad adquirida</h1>
     <div class="row">
           <div class="col-md-12">
             <div class="container">
               <div class="row">
-                  <div class="col-lg-8 col-offset-2">
+                  <div class="col-lg-6 mx-auto">
+                      <h1>Agregar propiedad adquirida</h1>
                     <h1 style="margin-top:30px;">{{title}}</h1>
                       <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                        {{ form.as_p }}
+                          <h2>Datos de dirección</h2>
+                          {{ form2.as_p }}
+                          <h2>Datos de propiedad</h2>
+                          {{ form.as_p }}
                         <input type="submit" value="Enviar" class="btn btn-primary btn-lg btn-block">
                       </form>
                       <br>

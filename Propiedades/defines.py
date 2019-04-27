@@ -32,5 +32,21 @@ REGION_CHOICE = (
     ('RS', 'Region de los Rios'),
     ('AP', 'Region de Arica y Parinacota'),
     ('ÑB', 'Region del Ñuble')
+)
 
+ATTRIBUTES_CHOICE = (
+    ('TC', 'Tipo contrato'),
+    ('ES', 'Escritura'),
+    ('CD', 'Certificado de dominio'),
+    ('PR', 'Prohibiciones'),
+    ('SE', 'Expropiación SERVIU'),
+    ('OT', 'Otro'),
+    ('EM', 'Expropiación Municipalidad'),
+    ('CP', 'CIP'),
+    ('NC', 'Número certificado'),
+    ('PL', 'Planos'),
+    ('PE', 'Permiso de edificación'),
+    ('RM', 'Recepción municipal'),
+    ('CA', 'Certificado avalúo'),
+    ('CD', 'Certificado no deuda')
 )

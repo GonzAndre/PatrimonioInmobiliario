@@ -1,24 +1,23 @@
 from django.shortcuts import render
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
-from Propiedades.models import *
-from Propiedades.forms import *
+from Propiedades.models import Acquisition,Document,Rent,Location,Post
+from Propiedades.forms import DocumentForm,LocationForm,AcquisitionForm,RentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+
+
 # Create your views here.
 
 def index(request):
-    template_name = "index.html"
+    return render(request, 'index.html', {'cosa': 'pat'})
 
-    return render(request, template_name, {})
 
 def list_acquisition(request):
     data = {}
-    data["request"] = request
-
     object_list = Acquisition.objects.all().order_by('-id')
-    print (object_list)
+    print(object_list)
 
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
@@ -33,16 +32,25 @@ def list_acquisition(request):
     template_name = 'list_acquisition.html'
     return render(request, template_name, data)
 
+
 def view_acquisition(request, cli_id):
     data = {}
-    data['request'] = request
     template_name = 'detail_acquisition.html'
-    data ['acquisition'] = Acquisition.objects.get(pk=cli_id)
+    data['acquisition'] = Acquisition.objects.get(pk=cli_id)
     return render(request, template_name, data)
+
+
+def view_rent(request, rent_id):
+    data = {}
+    data_documents = {}
+    template_name = 'detail_rent.html'
+    data['rent'] = Rent.objects.get(pk=rent_id)
+    data_documents['document'] = Document.objects.get(pk=rent_id)
+    return render(request, template_name, data, data_documents)
+
 
 def list_rent(request):
     data = {}
-    data["request"] = request
 
     object_list = Rent.objects.all().order_by('-id')
 
@@ -59,8 +67,9 @@ def list_rent(request):
     template_name = 'list_rent.html'
     return render(request, template_name, data)
 
+
 def user_leaderships(UserProfile, Leadership):
-    if(Leadership):
+    if (Leadership):
         try:
             Leadership.objects.get(UserProfile=UserProfile)
             return False
@@ -72,37 +81,46 @@ def user_leaderships(UserProfile, Leadership):
             return True
         except Exception as e:
             return False
+
 
 def Add_acquisition(request):
-
     data = {}
-    data["request"] = request
     if request.method == "POST":
-        data['form'] = AcquisitionForm(request.POST,request.FILES)
+        data['form'] = AcquisitionForm(request.POST, request.FILES)
+        data['form2'] = LocationForm(request.POST, request.FILES)
 
-        if data['form'].is_valid():
-            sav = data['form'].save()
-            return redirect('list_acquisitions')
+        if data['form'].is_valid() and data['form2'].is_valid():
+            print('Hola 1')
+            sav = data['form'].save(commit=False)
+            print('Hola 2')
+            sav.location = data['form2'].save()
+            print('Hola 3')
+            sav.save()
+            print('Hola 4')
+        return redirect('list_acquisitions')
     else:
+        form2 = LocationForm()
         form = AcquisitionForm()
 
-    template_name = 'add_acquisition.html'
-    return render(request, template_name, {'form':form})
+    return render(request, 'add_acquisition.html', {'form': form,'form2': form2})
+
 
 def Add_rent(request):
-    data={}
-    data["request"] = request
+    data = {}
     if request.method == "POST":
-        data['form'] = RentForm(request.POST,request.FILES)
+        data['form'] = RentForm(request.POST, request.FILES)
+        data['form2'] = LocationForm(request.POST)
 
-        if data['form'].is_valid():
-            sav = data['form'].save()
+        if data['form'].is_valid() and data['form2'].is_valid():
+            sav = data['form'].save(commit=False)
+            sav.Location = data[form2].save()
             return redirect('list_rent')
     else:
+        form2 = LocationForm()
         form = RentForm()
 
-    template_name = 'add_rent.html'
-    return render(request, template_name, {'form':form})
+    return render(request, 'add_rent.html', {'form': form,'form2': form2})
+
 
 def Edit_acquisition(request):
     data = {}
@@ -117,6 +135,7 @@ def Edit_acquisition(request):
 
     return render(request, template_name, data)
 
+
 def Edit_rent(request):
     data = {}
     data["request"] = request
@@ -130,12 +149,14 @@ def Edit_rent(request):
 
     return render(request, template_name, data)
 
+
 def Delete_acquisition(request):
     data = {}
     template_name = ''
     data['acquisition'] = Acquisition.objects.all()
     Acquisition.objects.filter(pk=id).delete()
     return HttpResponseRedirect(reverse('list_acquisition'))
+
 
 def Delete_rent(request):
     data = {}
