@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from Propiedades.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+import re
 from django.contrib import messages
 # Create your views here.
 
@@ -129,21 +130,23 @@ def Delete_rent(request):
 @login_required(login_url='login')
 def view_acquisition(request, cli_id):
     data = {}
-    data_documents = {}
     data['request'] = request
-    data_documents['request'] = request
     template_name = 'detail_acquisition.html'
     data ['acquisition'] = Acquisition.objects.get(pk=cli_id)
-    data_documents ['document'] = Document.objects.get(pk=cli_id)
-    return render(request, template_name, data, data_documents)
+    return render(request, template_name, data)
 
 @login_required(login_url='login')
 def view_rent(request, rent_id):
     data = {}
-    data_documents = {}
     data['request'] = request
-    data_documents['request'] = request
     template_name = 'detail_rent.html'
     data ['rent'] = Rent.objects.get(pk=rent_id)
-    data_documents ['document'] = Document.objects.get(pk=rent_id)
-    return render(request, template_name, data, data_documents)
+    return render(request, template_name, data)
+
+def view_archive(request, document_id):
+    data = {}
+    data['request'] = request
+    template_name = 'view_archive.html'
+    data['archive'] = Document.objects.get(pk=document_id)
+    return render(request, template_name, data)
+

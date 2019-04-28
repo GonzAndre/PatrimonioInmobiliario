@@ -13,6 +13,7 @@ class Document(models.Model):
     publish_date = models.DateTimeField(default=timezone.now)
     comment = models.CharField(max_length=300)
 
+
 class Location(models.Model):
     street = models.CharField(max_length=200)
     number = models.PositiveIntegerField()

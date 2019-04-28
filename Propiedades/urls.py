@@ -13,4 +13,6 @@ urlpatterns = [
     path('delete_rent/<int:id>', views.Delete_rent, name="delete_rent"),
     path('view_acquisition/<int:cli_id>', views.view_acquisition, name="view_acquisition"),
     path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
+    path('view_archive/<str:document_id>', views.view_archive, name="view_archive"),
+
 ]
