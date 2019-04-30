@@ -6,6 +6,7 @@ urlpatterns = [
     path('index', views.index, name="index"),
     path('list_acquisition', views.list_acquisition, name="list_acquisition"),
     path('list_rent', views.list_rent, name="list_rent"),
+    path('list_total', views.list_total, name="list_total"),
     path('add_acquisition/',views.Add_acquisition, name = "add_acquisition"),
     path('editar_acquisition/<int:acq_id>', views.Edit_acquisition, name="edit_acquisition"),
     path('delete_acquisition/<int:id>', views.Delete_acquisition, name="delete_acquisition"),

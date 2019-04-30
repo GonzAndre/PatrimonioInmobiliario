@@ -28,6 +28,7 @@ urlpatterns = [
     path('', view.logout, name = 'logout'),
     path('list_acquisition/', views.list_acquisition, name="list_acquisition"),
     path('list_rent/', views.list_rent, name="list_rent"),
+    path('list_total/', views.list_total, name="list_total"),
     path('view_acquisition/<int:cli_id>', views.view_acquisition, name="view_acquisition"),
     path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
     path('add_acquisition/',views.Add_acquisition, name = "add_acquisition"),

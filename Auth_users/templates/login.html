@@ -23,7 +23,8 @@
   </head>
 
   <body background="{% static 'logo1.png' %}" style="background-position:center" >
-    <form class="form-signin" method="POST">{% csrf_token %}
+    <form class="form-signin" method="POST">
+       {% csrf_token %}
       <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal"> Iniciar sesión</h1>
 

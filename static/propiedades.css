@@ -50,7 +50,17 @@ html, body {
         float: right;
     }
 
-#total li
+#vermas {
+        padding: 0px;
+        margin-left: 25%;
+        margin-right: 25%;
+        margin-down: 25%;
+        width: 100%;
+        height: 100%;
+        background-color: #d0cece;
+        float: right;
+    }
+#total p
         {
         padding: 0px;
         margin: 0px;
@@ -61,4 +71,21 @@ html, body {
     }
 
 
-
+#izquierda-izquierda {
+        width: 50%;
+        height: 50%;
+        background-color: #d0cece;
+        float: left;
+}
+#derecha-derecha {
+        width: 50%;
+        height: 50%;
+        background-color: #d0cece;
+        float: right;
+    }
+#derecha-boton{
+        width: 50%;
+        height: 50%;
+        background-color: #d0cece;
+        float: right;
+    }

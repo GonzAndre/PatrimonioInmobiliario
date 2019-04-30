@@ -2,45 +2,123 @@
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8" />
 {% block navbar %}
-<th> <button class="btn btn-outline-info my-2 my-sm-0" type="submit"> <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a> </button> </th>
 {% endblock %}
+{% include "base.html" %}
 {% block content %}
 <html>
 <head>
   <title>{% block title %} Propiedades {% endblock %}</title>
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
-    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'propiedades.css'%}">
+  <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
 </head>
 <body style="background-color:#FFFFFF  ">
-
-    <ul>
-        <li><strong>Nombre</strong>: {{rent.name}}</li>
-        <li>Numero Rol: {{rent.role_number}}</li>
-        <li>Dirección: {{rent.location}}</li>
-        <li>Uso Propiedad: {{rent.property_use}}</li>
-        <li>Tipo de contrato: {{rent.contract_type.archive}}</li>
-        <li>Tipo de contrato1: {{rent.contract_type.publish_date}}</li>
-        <li>Tipo de contrato2: {{rent.contract_type.comment}}</li>
-        <li>Nombre arrendatario: {{rent.acquiring_name}}</li>
-        <li>Nombre arrendador: {{rent.supplier_name}}</li>
-        <li>Fecha comienzo arriendo: {{rent.start_date}}</li>
-        <li>Fecha termino arriendo: {{rent.end_date}}</li>
-        <li>Duración contrato: {{rent.duration}}</li>
-        <li>Superficie del terreno: {{rent.ground_surface}}</li>
-        <li>Metros cuadrados contruidos: {{rent.square_m_build}}</li>
-        <li>Metros construcción existente: {{rent.e_construction_m}}</li>
-        <li>Número de recepción municipal: {{rent.municipal_n}}</li>
-        <li>Número de permiso de edificación: {{rent.n_building_permit}}</li>
-        <li>Valor contabilizado terreno: {{rent.value_land}}</li>
-        <li>Valor contabilizado contrucción: {{rent.value_construction}}</li>
-
-
-
-    </ul>
-
-
-</body>
+<div class="container">
+    <br>
+        <row>
+            <div id="cuerpo">
+                    <div id="izquierda">
+                        <img src="/media/{{rent.image}}" alt="" width="100%" height="100%">
+                    </div>
+                <div id="centro">
+                    <p id="total"><strong>Nombre</strong>: {{acquisition.name}}</p>
+                    {% if acquisition.role_number %}
+                        <p id="total">Número de Rol: {{acquisition.role_number}}</p>
+                    {% else %}
+                        <p id="total">Número de Rol: No Registrado</p>
+                    {% endif %}
+                    <p id="total">Dirección: {{acquisition.location}}</p>
+                    <p id="total">Uso Propiedad: {{acquisition.property_use}}</p>
+                </div>
+                <col>
+                <div id="derecha">
+                    <li id="total"><strong>Nombre</strong>: {{rent.name}}</li>
+                    <li id="total">Numero AASI: {{rent.number_AASI}}</li>
+                    <li id="total">Numero Rol: {{rent.role_number}}</li>
+                    <li id="total">Dirección: {{rent.location}}</li>
+                    <li id="total">Uso Propiedad: {{rent.property_use}}</li>
+                </div>
+            </div>
+        </row>
+        <row>
+            <div id="cuerpo">
+                <div>
+                    <a id="cuerpo" href="#demo" class="btn btn-success" data-toggle="collapse"> Ver Más</a>
+                    <row>
+                        <div id="demo" class="collapse">
+                            <br>
+                            <div id="izquierda-izquierda">
+                                <p id="total"><strong>Contables Internos</strong></p>
+                                {% if rent.acquiring_name %}
+                                    <p id="total">Nombre Comprador: {{rent.acquiring_name}}</p>
+                                {% else %}
+                                    <p id="total">Nombre Comprador: No Registrado</p>
+                                {% endif %}
+                                {% if rent.supplier_name %}
+                                    <p id="total">Nombre Vendedor: {{rent.supplier_name}}</p>
+                                {% else %}
+                                    <p id="total">Nombre Vendedor: No Registrado</p>
+                                {% endif %}
+                                {% if rent.value_land %}
+                                    <p id="total">Valor Contabilizado Terreno: {{rent.value_land}}</p>
+                                {% else %}
+                                    <p id="total">Valor Contabilizado Terreno: No Registrado</p>
+                                {% endif %}
+                                {% if rent.value_contruction %}
+                                    <p id="total">Valor Contabilizado Construcción: {{rent.value_contruction}}</p>
+                                {% else %}
+                                    <p id="total">Valor Contabilizado Construcción: No Registrado</p>
+                                {% endif %}
+                                {% if rent.start_date %}
+                                    <p id="total">Comienzo Arriendo o Comodato: {{rent.start_date}}</p>
+                                {% else %}
+                                    <p id="total">Comienzo Arriendo o Comodato: No Registrado</p>
+                                {% endif %}
+                                {% if rent.end_date %}
+                                    <p id="total">Termino Arriendo o Comodato: {{rent.end_date}}</p>
+                                {% else %}
+                                    <p id="total">Termino Arriendo o Comodato: No Registrado</p>
+                                {% endif %}
+                                {% if rent.duration %}
+                                    <p id="total">Duración Arriendo o Comodato: {{rent.duration}}</p>
+                                {% else %}
+                                    <p id="total">Duración Arriendo o Comodato: No Registrado</p>
+                                {% endif %}
+                            </div>
+                            <div id="derecha-derecha">
+                                <p id="total"><strong>Antecedentes Arquitectonicos</strong></p>
+                                {% if rent.ground_surface %}
+                                    <p id="total">Superficie de Terreno: {{rent.ground_surface}}</p>
+                                {% else %}
+                                    <p id="total">Superficie de Terreno: No Registrado</p>
+                                {% endif %}
+                                {% if rent.square_m_build %}
+                                    <p id="total">Metros Cuadrados Construidos: {{rent.square_m_build}}</p>
+                                {% else %}
+                                    <p id="total">Metros Cuadrados Construidos: No Registrado</p>
+                                {% endif %}
+                                {% if rent.e_construction_m %}
+                                    <p id="total">Metros Construcción Existente: {{rent.e_construction_m}}</p>
+                                {% else %}
+                                    <p id="total">Metros COnstrucción Existente: No Registrado</p>
+                                {% endif %}
+                                {% if rent.municipal_n %}
+                                    <p id="total">Número de recepción municipal: {{rent.municipal_n}}</p>
+                                {% else %}
+                                    <p id="total">Número de recepción municipal: No Registrado</p>
+                                {% endif %}
+                                {% if rent.n_building_permit %}
+                                    <p id="total">Número de permiso de edificación: {{rent.n_building_permit}}</p>
+                                {% else %}
+                                    <p id="total">Número de permiso de edificación: No Registrado</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </row>
+                </div>
+            </div>
+        </row>
+</drent
 </html>
 {% endblock %}

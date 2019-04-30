@@ -78,7 +78,7 @@ class Acquisition(models.Model):
     debt_certificate = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,related_name='CerNoDeuda')
 
     def __str__(self):
-        return "nombre: %s, rol: %s, uso: %s" % (self.name, self.role_number, self.property_use)
+        return "nombre: %s, rol: %s, uso: %s, certificado: %s" % (self.name, self.role_number, self.property_use, self.domain_certificate)
 
 class Rent(models.Model):
     name = models.CharField(max_length=200)

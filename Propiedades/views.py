@@ -21,7 +21,7 @@ def list_acquisition(request):
     data = {}
 
     data["request"] = request
-    object_list = Acquisition.objects.all().order_by('-id')
+    object_list = Acquisition.objects.all().order_by('id')
 
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
@@ -41,7 +41,7 @@ def list_rent(request):
     data = {}
     data["request"] = request
 
-    object_list = Rent.objects.all().order_by('-id')
+    object_list = Rent.objects.all().order_by('id')
 
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
@@ -55,6 +55,28 @@ def list_rent(request):
         data['object_list'] = paginator.page(paginator.num_pages)
     template_name = 'list_rent.html'
     return render(request, template_name, data)
+
+def list_total(request):
+    data = {}
+    object_list_acquisition = Acquisition.objects.all().order_by('id')
+    object_list_rent = Rent.objects.all().order_by('id')
+
+    paginator_acq = Paginator(object_list_acquisition, 5)
+    paginator_rent = Paginator(object_list_rent, 5)
+    page = request.GET.get('page')
+
+    try:
+        data['object_list_acquisition'] = paginator_acq.page(page)
+        data['object_list_rent'] = paginator_rent.page(page)
+    except PageNotAnInteger:
+        data['object_list_acquisition'] = paginator_acq.page(1)
+        data['object_list_rent'] = paginator_rent.page(1)
+    except EmptyPage:
+        data['object_list_acquisition'] = paginator_acq.page(paginator_acq.num_pages)
+        data['object_list_rent'] = paginator_rent.page(paginator_rent.num_pages)
+    template_name = 'list_total.html'
+    return render(request, template_name, data)
+
 
 def Add_acquisition(request):
 
@@ -133,6 +155,9 @@ def view_acquisition(request, cli_id):
     data['request'] = request
     template_name = 'detail_acquisition.html'
     data ['acquisition'] = Acquisition.objects.get(pk=cli_id)
+    print('------------------------')
+    print(data)
+    print('------------------------')
     return render(request, template_name, data)
 
 @login_required(login_url='login')
@@ -147,6 +172,13 @@ def view_archive(request, document_id):
     data = {}
     data['request'] = request
     template_name = 'view_archive.html'
-    data['archive'] = Document.objects.get(pk=document_id)
-    return render(request, template_name, data)
+    if document_id != None:
+        data['archive'] = Document.objects.get(pk=document_id)
+        print('-------------------------------')
+        print(data)
+        print('-------------------------------')
+        return render(request, template_name, data)
+
+    else:
+        return render(request, template_name)
 
