@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %} Propiedades {% endblock %}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'base.css'%}">
+  <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'jquery.datetimepicker.min.css.css'%}">
+    <script src="{% static 'jquery.js' %}"></script>
+<script src="{% static 'jquery.datetimepicker.full.js' %}"></script>
+
+</head>
+{% include "base.html" %}
+{% block content %}
+<body>
+  <div class="container">
+    <br>
+    <div class="row">
+          <div class="col-md-12">
+            <div class="container">
+              <div class="row">
+                  <div class="col-lg-12 mx-auto">
+                      <h1>Agregar propiedad adquirida</h1>
+                      <br>
+                      <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                          <div class="row mb-2">
+                              <div class="col">
+                                <div class="card border-dark">
+                                  <div class="card-header"><h2>Datos de dirección</h2></div>
+                                    <div class="card-body">
+                                        {{ formLocation.as_p }}
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col mb-2">
+                                  <div class="card border-dark">
+                                      <div class="card-header"><h2>Datos de propiedad</h2></div>
+                                      <div class="card-body">
+                                          <label>Nombre propiedad: *</label>
+                                          {{ formAcquisition.name }}
+                                          <p></p>
+                                          <label>Número de rol: *</label>
+                                          {{ formAcquisition.role_number }}
+                                          <p></p>
+                                          <label>Imagen de la propiedad:</label>
+                                          {{ formAcquisition.image }}
+                                          <p></p>
+                                          <label>Uso de la propiedad: *</label>
+                                          {{ formAcquisition.property_use }}
+                                          <p></p>
+                                          <label>Fecha de adquisición: *</label>
+                                          {{ formAcquisition.acquisition_date }}
+                                          <p></p>
+                                          <label>Tipo de escritura: *</label>
+                                          {{ formAcquisition.writing_data }}
+                                          <p></p>
+                                          <label>Número AASI.net: *</label>
+                                          {{ formAcquisition.number_AASI }}
+                                          <p></p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <h2>Datos de arquitectura</h2>
+                              {{ formArquitecture.as_p }}
+                          </div>
+                          <div class="row">
+                              <div class="col-lg-6">
+                                  <h3>Documento de expropiación municipal:</h3>
+                                  {{ formEx }}
+                                  <p></p>
+                                  <h3>Documento CIP:</h3>
+                                  {{ formCip }}
+                                  <p></p>
+                                  <h3>Documento Certificado número:</h3>
+                                  {{ formCn }}
+                              </div>
+                              <div class="col-lg-6">
+                                  <h3>Documento de planos:</h3>
+                                  {{ formBlue }}
+                                  <p></p>
+                                  <h3>Documento de permiso de edificación:</h3>
+                                  {{ formBuildP }}
+                                  <p></p>
+                                  <h3>Documento de recepción municipal:</h3>
+                                  {{ formMR }}
+                                  <p></p>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-lg-6">
+                                  <div class="card border-dark">
+                                    <div class="card-header"><h3>Datos contables internos</h3></div>
+                                    <div class="card-body">
+                                      {{ formInternal.as_p }}
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <h2>Documento Tipo de contrato:*</h2>
+                                  {{ formTypeC }}
+                                  <p></p>
+                                  <h2>Otro documento adicional:</h2>
+                                  {{ formOther }}
+                                  <p></p>
+                              </div>
+                          </div>
+                          <h2>Datos de notaría</h2>
+                          {{ formNotary.as_p }}
+                          <h2>Datos de SII</h2>
+                          {{ formSII.as_p }}
+                        <input type="submit" value="Enviar" class="btn btn-primary btn-lg btn-block">
+                      </form>
+                      <br>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
+    <script type="text/javascript">
+            $(function () {
+                $('#id_acquisition_date').datetimepicker();
+            });
+    </script>
+{% endblock %}
+</html>

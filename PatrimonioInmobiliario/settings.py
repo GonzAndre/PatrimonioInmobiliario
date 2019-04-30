@@ -38,11 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Propiedades',
+    'propiedades2',
     'Auth_users',
     'autofixture',
     'bootstrap4',
+    'tempus_dominus',
+    'bootstrap_datepicker_plus',
 ]
+
+BOOTSTRAP4  =  {
+    'include_jquery' :  True ,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
