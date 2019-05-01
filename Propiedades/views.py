@@ -164,7 +164,7 @@ def view_acquisition(request, cli_id):
 def view_rent(request, rent_id):
     data = {}
     data['request'] = request
-    template_name = 'detail_rent.html'
+    template_name = 'detail_rent1.html'
     data ['rent'] = Rent.objects.get(pk=rent_id)
     return render(request, template_name, data)
 

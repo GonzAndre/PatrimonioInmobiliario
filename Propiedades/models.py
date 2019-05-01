@@ -13,6 +13,9 @@ class Document(models.Model):
     publish_date = models.DateTimeField(default=timezone.now)
     comment = models.CharField(max_length=300)
 
+    def __str__(self):
+        return "archive: %s" % (self.archive)
+
 
 class Location(models.Model):
     street = models.CharField(max_length=200)
