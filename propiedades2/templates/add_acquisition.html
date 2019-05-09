@@ -7,9 +7,6 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'base.css'%}">
   <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'jquery.datetimepicker.min.css.css'%}">
-    <script src="{% static 'jquery.js' %}"></script>
-<script src="{% static 'jquery.datetimepicker.full.js' %}"></script>
 
 </head>
 {% include "base.html" %}
@@ -63,58 +60,228 @@
                                   </div>
                               </div>
                           </div>
-                          <div class="col-lg-6">
-                              <h2>Datos de arquitectura</h2>
-                              {{ formArquitecture.as_p }}
-                          </div>
                           <div class="row">
                               <div class="col-lg-6">
-                                  <h3>Documento de expropiación municipal:</h3>
-                                  {{ formEx }}
-                                  <p></p>
-                                  <h3>Documento CIP:</h3>
-                                  {{ formCip }}
-                                  <p></p>
-                                  <h3>Documento Certificado número:</h3>
-                                  {{ formCn }}
+                                  <div class="card border-dark">
+                                      <div class="card-header"><h2>Datos de arquitectura</h2></div>
+                                      <div class="card-body">{{ formArquitecture.as_p }}</div>
+                                  </div>
                               </div>
                               <div class="col-lg-6">
-                                  <h3>Documento de planos:</h3>
-                                  {{ formBlue }}
-                                  <p></p>
-                                  <h3>Documento de permiso de edificación:</h3>
-                                  {{ formBuildP }}
-                                  <p></p>
-                                  <h3>Documento de recepción municipal:</h3>
-                                  {{ formMR }}
-                                  <p></p>
+                                  <div class="accordion" id="accordionArquitecture">
+                                      <div class="card border-dark">
+                                        <div class="card-header" id="headEx">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseEx" aria-expanded="false" aria-controls="collapseEx">
+                                                    Documento de expropiación municipal:
+                                                </button>
+                                            </h2>
+                                        </div>
+                                          <div id="collapseEx" class="collapse" aria-labelledby="headEx" data-parent="#accordionArquitecture">
+                                            <div class="card-body">{{ formEx }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                        <div class="card-header" id="headCIP">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseCIP" aria-expanded="true" aria-controls="collapseCIP">
+                                                    Documento CIP:
+                                                </button>
+                                            </h2>
+                                        </div>
+                                              <div id="collapseCIP" class="collapse" aria-labelledby="headCIP" data-parent="#accordionArquitecture">
+                                                  <div class="card-body">{{ formCip }}</div>
+                                                  <button id="enviar_cip">Enviar</button>
+                                              </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                        <div class="card-header" id="headCn">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseCn" aria-expanded="true" aria-controls="collapseCn">
+                                                    Documento Certificado número:
+                                                </button>
+                                            </h2>
+                                        </div>
+                                          <div id="collapseCn" class="collapse" aria-labelledby="headCn" data-parent="#accordionArquitecture">
+                                            <div class="card-body">{{ formCn }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                        <div class="card-header" id="headBlue">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseBlue" aria-expanded="true" aria-controls="collapseBlue">
+                                                    Documento de planos:
+                                                </button>
+                                            </h2>
+                                        </div>
+                                          <div id="collapseBlue" class="collapse" aria-labelledby="headBlue" data-parent="#accordionArquitecture">
+                                            <div class="card-body">{{ formBlue }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                        <div class="card-header" id="headBuild">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseBuild" aria-expanded="true" aria-controls="collapseBuild">
+                                                    Documento permiso de edificación:
+                                                </button>
+                                            </h2>
+                                        </div>
+                                          <div id="collapseBuild" class="collapse" aria-labelledby="headBuild" data-parent="#accordionArquitecture">
+                                            <div class="card-body">{{ formBuildP }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                        <div class="card-header" id="headRM">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseRM" aria-expanded="true" aria-controls="collapseRM">
+                                                    Documento de recepción municipal:
+                                                </button>
+                                            </h2>
+                                        </div>
+                                          <div id="collapseRM" class="collapse" aria-labelledby="headRM" data-parent="#accordionArquitecture">
+                                            <div class="card-body">{{ formMR }}</div>
+                                          </div>
+                                      </div>
+                                  </div>
                               </div>
                           </div>
+                          <p></p>
                           <div class="row">
                               <div class="col-lg-6">
                                   <div class="card border-dark">
                                     <div class="card-header"><h3>Datos contables internos</h3></div>
-                                    <div class="card-body">
-                                      {{ formInternal.as_p }}
-                                    </div>
+                                    <div class="card-body">{{ formInternal.as_p }}</div>
                                   </div>
                               </div>
                               <div class="col-lg-6">
-                                  <h2>Documento Tipo de contrato:*</h2>
-                                  {{ formTypeC }}
-                                  <p></p>
-                                  <h2>Otro documento adicional:</h2>
-                                  {{ formOther }}
-                                  <p></p>
+                                  <div class="accordion" id="accordionInternal">
+                                      <div class="card border-dark">
+                                          <div class="card-header" id="headTypeC">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseOneI" aria-expanded="true" aria-controls="collapseOneI">
+                                                    Documento Tipo de contrato:*
+                                                </button>
+                                            </h2>
+                                          </div>
+                                          <div id="collapseOneI" class="collapse" aria-labelledby="headTypeC" data-parent="#accordionInternal">
+                                            <div class="card-body">{{ formTypeC }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                         <div class="card-header" id="headOther">
+                                             <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseTwoI" aria-expanded="false" aria-controls="collapseTwoI">
+                                                    Otro documento adicional:
+                                                </button>
+                                            </h2>
+                                         </div>
+                                          <div id="collapseTwoI" class="collapse" aria-labelledby="headOther" data-parent="#accordionInternal">
+                                            <div class="card-body">{{ formOther }}</div>
+                                        </div>
+                                      </div>
+                                  </div>
                               </div>
                           </div>
-                          <h2>Datos de notaría</h2>
-                          {{ formNotary.as_p }}
-                          <h2>Datos de SII</h2>
-                          {{ formSII.as_p }}
-                        <input type="submit" value="Enviar" class="btn btn-primary btn-lg btn-block">
+                          <p></p>
+                          <div class="row">
+                              <div class="col-lg-6">
+                                  <div class="card border-dark">
+                                    <div class="card-header"><h2>Datos de notaría</h2></div>
+                                    <div class="card-body">{{ formNotary.as_p }}</div>
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="accordion" id="accordionNotary">
+                                      <div class="card border-dark">
+                                          <div class="card-header" id="headWr">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseOneN" aria-expanded="true" aria-controls="collapseOneN">
+                                                    Documento de escritura:
+                                                </button>
+                                            </h2>
+                                          </div>
+                                          <div id="collapseOneN" class="collapse" aria-labelledby="headWr" data-parent="#accordionNotary">
+                                            <div class="card-body">{{ formWR }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                         <div class="card-header" id="headDC">
+                                             <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseTwoN" aria-expanded="false" aria-controls="collapseTwoN">
+                                                    Documento certificado dominio:
+                                                </button>
+                                            </h2>
+                                         </div>
+                                          <div id="collapseTwoN" class="collapse" aria-labelledby="headDC" data-parent="#accordionNotary">
+                                            <div class="card-body">{{ formDC }}</div>
+                                        </div>
+                                      </div>
+                                    <div class="card border-dark">
+                                         <div class="card-header" id="headPH">
+                                             <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseThreeN" aria-expanded="false" aria-controls="collapseThreeN">
+                                                    Documento de prohibiciones:
+                                                </button>
+                                            </h2>
+                                         </div>
+                                          <div id="collapseThreeN" class="collapse" aria-labelledby="headPH" data-parent="#accordionNotary">
+                                            <div class="card-body">{{ formPH }}</div>
+                                        </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                         <div class="card-header" id="headEs">
+                                             <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseFourN" aria-expanded="false" aria-controls="collapseFourN">
+                                                    Documento de expropiación del SERVIU:
+                                                </button>
+                                            </h2>
+                                         </div>
+                                          <div id="collapseFouNr" class="collapse" aria-labelledby="headEs" data-parent="#accordionNotary">
+                                            <div class="card-body">{{ formEs }}</div>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <p></p>
+                          <div class="row">
+                              <div class="col-lg-6">
+                                  <div class="card border-dark">
+                                    <div class="card-header"><h2>Datos de SII</h2></div>
+                                    <div class="card-body">{{ formSII.as_p }}</div>
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="accordion" id="accordionSII">
+                                      <div class="card border-dark">
+                                          <div class="card-header" id="headAc">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseOneS" aria-expanded="true" aria-controls="collapseOneS">
+                                                    Documento de avalúo:
+                                                </button>
+                                            </h2>
+                                          </div>
+                                          <div id="collapseOneS" class="collapse" aria-labelledby="headAc" data-parent="#accordionSII">
+                                            <div class="card-body">{{ formAc }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="card border-dark">
+                                          <div class="card-header" id="headDB">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseTwoS" aria-expanded="true" aria-controls="collapseTwoS">
+                                                    Documento de no deuda:
+                                                </button>
+                                            </h2>
+                                          </div>
+                                          <div id="collapseTwoS" class="collapse" aria-labelledby="headAc" data-parent="#accordionSII">
+                                            <div class="card-body">{{ formDB }}</div>
+                                          </div>
+                                      </div>
+                              </div>
+                          </div>
+                            <input type="submit" value="Enviar" class="btn btn-primary btn-lg btn-block">
                       </form>
-                      <br>
+                    </div>
                   </div>
               </div>
             </div>
@@ -123,9 +290,13 @@
       </div>
 </body>
     <script type="text/javascript">
-            $(function () {
-                $('#id_acquisition_date').datetimepicker();
-            });
+
+    $("#enviar_cip").on("click",function () {
+        var descr = $("#doccip").value();
+        var tipo = "doccip";
+        alert();
+
+    })
     </script>
 {% endblock %}
 </html>
