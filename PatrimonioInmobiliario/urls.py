@@ -33,4 +33,5 @@ urlpatterns = [
     path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
     path('add_acquisition/',views.Add_acquisition, name = "add_acquisition"),
     path('view_archive/<str:document_id>', views.view_archive, name="view_archive"),
+path('search', views.search, name = "search"),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

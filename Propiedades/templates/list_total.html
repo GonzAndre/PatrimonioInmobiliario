@@ -18,6 +18,14 @@
       <div class="col-md-10">
         <h1>Listado Propiedades</h1>
       </div>
+      <div>
+        <form method="GET" action="{% url 'search' %}">
+          <input name="q" value="{{request.GET.q}}" placeholder="search..">
+          <button class="btn btn-success" type="submit">
+            Search
+          </button>
+        </form>
+      </div>
       <div class="col-md-2">
         <a href="{% url 'add_acquisition' %}" >
           <button type="button" class="btn btn-success">Agregar</button>

@@ -92,7 +92,7 @@
                                 <p id="total">Título Anterior: No Registrado</p>
                             {% endif %}
                             {% if acquisition.domain_certificate %}
-                                <td><a href="{% url 'view_archive' acquisition.domain_certificate.pk %}" style="color:blue">Certificado de dominio: {{acquisition.writing.archive}}</a></td>
+                                <td><a href="{% url 'view_archive' acquisition.domain_certificate.pk %}" style="color:blue">Certificado de dominio: {{acquisition.domain_certificate.archive}}</a></td>
                             {% else %}
                                 <p id="total">Certificado de dominio: No Registrado</p>
                             {% endif %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped" id="datos">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Numero Rol</th>
+                  <th scope="col">Uso propiedad</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cli in object_list_acquisition %}
+                <tr>
+                  <td><a href="{% url 'view_acquisition' cli.pk %}">{{cli.name}}</a></td>
+                  <td>{{cli.role_number}}</td>
+                  <td>{{cli.property_use}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-warning" <td><a href="{% url 'view_acquisition' cli.pk %}" >Visualizar</a></td></button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+                {% for cli in object_list_rent %}
+                <tr>
+                  <td><a href="{% url 'view_acquisition' cli.pk %}">{{cli.name}}</a></td>
+                  <td>{{cli.role_number}}</td>
+                  <td>{{cli.property_use}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-warning" <td><a href="{% url 'view_acquisition' cli.pk %}" >Visualizar</a></td></button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>

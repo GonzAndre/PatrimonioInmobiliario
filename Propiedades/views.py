@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 # from Propiedades.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 from Propiedades.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
@@ -60,7 +61,6 @@ def list_total(request):
     data = {}
     object_list_acquisition = Acquisition.objects.all().order_by('id')
     object_list_rent = Rent.objects.all().order_by('id')
-
     paginator_acq = Paginator(object_list_acquisition, 5)
     paginator_rent = Paginator(object_list_rent, 5)
     page = request.GET.get('page')
@@ -181,4 +181,29 @@ def view_archive(request, document_id):
 
     else:
         return render(request, template_name)
+
+
+def search(request):
+    template = 'search.html'
+
+    data = {}
+    data[request] = request
+    query = request.GET.get('q')
+    # objects_list = list(Acquisition.objects.all())
+    object_list_acquisition = Acquisition.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
+    object_list_rent = Rent.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
+    paginator_acq = Paginator(object_list_acquisition, 5)
+    paginator_rent = Paginator(object_list_rent, 5)
+    page = request.GET.get('page')
+    try:
+        data['object_list_acquisition'] = paginator_acq.page(page)
+        data['object_list_rent'] = paginator_rent.page(page)
+    except PageNotAnInteger:
+        data['object_list_acquisition'] = paginator_acq.page(1)
+        data['object_list_rent'] = paginator_rent.page(1)
+    except EmptyPage:
+        data['object_list_acquisition'] = paginator_acq.page(paginator_acq.num_pages)
+        data['object_list_rent'] = paginator_rent.page(paginator_rent.num_pages)
+    return render(request, template, data)
+
 
