@@ -13,8 +13,13 @@
       <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
     {% block stylesheet %}{% endblock stylesheet %}
 </head>
-<body style="background-color: #FFFFFF  ">
+<header>
     {% include "base.html" %}
+</header>
+<body>
+    <div class="container">
+        <img src="{% static 'background.jpg' %}" class="rounded img-fluid" alt="Responsive image" style="padding: 20px;border-radius: 15px;">
+    </div>
 </body>
     <!-- Mainly scripts -->
     <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>

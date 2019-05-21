@@ -16,8 +16,8 @@ class DocumentForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control','id': 'doccip'}),
-            'comment': forms.TextInput(attrs={'class': 'form-control'}),
+            'archive': forms.FileInput(attrs={'class': 'form-control'}),
+            'comment': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese un comentario'}),
         }
 
 class LocationForm(ModelForm):
@@ -34,13 +34,13 @@ class LocationForm(ModelForm):
             'lot_number': 'Número de parcela'
         }
         widgets = {
-            'street': forms.TextInput(attrs={'class': 'form-control'}),
-            'number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'commune': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'region': forms.Select(attrs={'class': 'form-control'}),
-            'lot_number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'plot': forms.TextInput(attrs={'class': 'form-control'})
+            'street': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de la calle','id':'street'}),
+            'number': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de la propiedad','id':'number'}),
+            'commune': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de la comuna','id':'commune'}),
+            'city': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de la ciudad','id':'city'}),
+            'region': forms.Select(attrs={'class': 'form-control','id':'region'}),
+            'lot_number': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de la parcela','id':'lot_number'}),
+            'plot': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de parcela','id':'plot'})
         }
 
 
@@ -49,23 +49,23 @@ class AcquisitionForm(ModelForm):
         model = Acquisition
         fields = ['name', 'role_number', 'image', 'property_use', 'acquisition_date', 'writing_data', 'number_AASI', ]
 
-        labels = {'name': 'Nombre',
-                  'role_number': 'Número de rol',
+        labels = {'name': 'Nombre*',
+                  'role_number': 'Número de rol*',
                   'image': 'Imagen',
-                  'property_use': 'Uso de la propiedad',
-                  'number_AASI': 'Número AASI.net',
-                  'acquisition_date': 'Fecha de adquisición',
-                  'writing_data': 'Datos de escritura',
+                  'property_use': 'Uso de la propiedad*',
+                  'number_AASI': 'Número AASI.net*',
+                  'acquisition_date': 'Fecha de adquisición*',
+                  'writing_data': 'Datos de escritura*',
                   }
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'role_number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'image': forms.FileInput(attrs={'class': 'form-control'}),
-            'property_use': forms.Select(attrs={'class': 'form-control'}),
-            'number_AASI': forms.NumberInput(attrs={'class': 'form-control'}),
-            'acquisition_date': forms.DateTimeInput(attrs={'class': 'form-control', 'id': 'id_acquisition_date'}),
-            'writing_data': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de la propiedad','id':'name'}),
+            'role_number': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de rol','id':'role_number'}),
+            'image': forms.FileInput(attrs={'class': 'form-control','placeholder':'Seleccione una imagen','id':'image'}),
+            'property_use': forms.Select(attrs={'class': 'form-control','id':'property_use'}),
+            'number_AASI': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de AASI.net','id':'number_AASI'}),
+            'acquisition_date': forms.DateTimeInput(attrs={'class': 'form-control', 'id': 'acquisition_date','placeholder':'Ingrese fecha de adquisición','type':'date'}),
+            'writing_data': forms.Select(attrs={'class': 'form-control','id': 'writing_data'}),
         }
 
 
@@ -85,11 +85,11 @@ class ArquitectureForm(ModelForm):
         }
 
         widgets = {
-            'ground_surface': forms.TextInput(attrs={'class': 'form-control'}),
-            'square_m_build': forms.TextInput(attrs={'class': 'form-control'}),
-            'e_construction_m': forms.TextInput(attrs={'class': 'form-control'}),
-            'municipal_n': forms.NumberInput(attrs={'class': 'form-control'}),
-            'n_building_permit': forms.NumberInput(attrs={'class': 'form-control'}),
+            'ground_surface': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese superficie del terreno','id':'ground_surface'}),
+            'square_m_build': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese metros cuadrados construidos','id':'square_m_build'}),
+            'e_construction_m': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese metros de construcción existentes','id':'e_construction_m'}),
+            'municipal_n': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de recepción municipal','id':'municipal_n'}),
+            'n_building_permit': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de permiso de edificación','id':'n_building_permit'}),
         }
 
 
@@ -108,10 +108,10 @@ class InternalForm(ModelForm):
         }
 
         widgets = {
-            'value_land': forms.NumberInput(attrs={'class': 'form-control'}),
-            'value_construction': forms.NumberInput(attrs={'class': 'form-control'}),
-            'acquiring_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'supplier_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'value_land': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese valor del terreno','id':'value_land'}),
+            'value_construction': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese valor de la construcción','id':'value_construction'}),
+            'acquiring_name': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre del comprador o donador','id':'acquiring_name'}),
+            'supplier_name': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre del vendedor o donatario','id':'supplier_name'}),
         }
 
 
@@ -130,11 +130,11 @@ class NotaryForm(ModelForm):
         }
 
         widgets = {
-            'notary': forms.TextInput(attrs={'class': 'form-control'}),
-            'writing_year': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sale_price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'previous_title': forms.TextInput(attrs={'class': 'form-control'}),
-            'current_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'notary': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de la notaría','id':'notary'}),
+            'writing_year': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese el año de escritura','id':'writing_year'}),
+            'sale_price': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese el precio de venta de la propiedad','id':'sale_price'}),
+            'previous_title': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese el título anterior','id':'previous_title'}),
+            'current_title': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese el título actual','id':'current_title'}),
         }
 
 
@@ -153,11 +153,11 @@ class SII_recordForm(ModelForm):
         }
 
         widgets = {
-            'destiny': forms.TextInput(attrs={'class': 'form-control'}),
-            'tax_appraisal': forms.NumberInput(attrs={'class': 'form-control'}),
-            'owner_name_SII': forms.TextInput(attrs={'class': 'form-control'}),
-            'total_debt': forms.NumberInput(attrs={'class': 'form-control'}),
-            'ex_contributions': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'destiny': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese destino de SII','id':'destiny'}),
+            'tax_appraisal': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese el avalúo fiscal','id':'tax_appraisal'}),
+            'owner_name_SII': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre del propietario en SII','id':'owner_name_SII'}),
+            'total_debt': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese deuda total','id':'total_debt'}),
+            'ex_contributions': forms.CheckboxInput(attrs={'class': 'form-control','id':'ex_contributions'}),
         }
 
 
@@ -186,22 +186,22 @@ class RentForm(ModelForm):
             'duration': 'Duración del contrato',
         }
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'role_number': forms.NumberInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre de la propiedad'}),
+            'role_number': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de rol'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'property_use': forms.Select(attrs={'class': 'form-control'}),
-            'ground_surface': forms.TextInput(attrs={'class': 'form-control'}),
-            'square_m_build': forms.TextInput(attrs={'class': 'form-control'}),
-            'e_construction_m': forms.TextInput(attrs={'class': 'form-control'}),
-            'municipal_n': forms.NumberInput(attrs={'class': 'form-control'}),
-            'n_building_permit': forms.NumberInput(attrs={'class': 'form-control'}),
-            'value_land': forms.TextInput(attrs={'class': 'form-control'}),
-            'value_construction': forms.TextInput(attrs={'class': 'form-control'}),
-            'acquiring_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'supplier_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'start_date': forms.DateTimeInput(attrs={'class': 'form-control'}),
-            'end_date': forms.DateTimeInput(attrs={'class': 'form-control'}),
-            'duration': forms.NumberInput(attrs={'class': 'form-control'}),
+            'ground_surface': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese superficie del terreno'}),
+            'square_m_build': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese metros cuadrados construidos'}),
+            'e_construction_m': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese metros cuadrados de construcción existente'}),
+            'municipal_n': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de recepción municipal'}),
+            'n_building_permit': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese número de permiso de edificación'}),
+            'value_land': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese valor del terreno'}),
+            'value_construction': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese valor de la construcción'}),
+            'acquiring_name': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre del arrendatario'}),
+            'supplier_name': forms.TextInput(attrs={'class': 'form-control','placeholder':'Ingrese nombre del arrendador'}),
+            'start_date': forms.DateTimeInput(attrs={'class': 'form-control','type':'date'}),
+            'end_date': forms.DateTimeInput(attrs={'class': 'form-control','type':'date'}),
+            'duration': forms.NumberInput(attrs={'class': 'form-control','placeholder':'Ingrese fecha de duración del contrato'}),
         }
 
     class PostForm(ModelForm):
