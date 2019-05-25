@@ -44,7 +44,7 @@
                             <td><a href="{% url 'view_acquisition' cli.pk %}">{{ cli.name }}</a></td>
                             <td>{{ cli.location }}</td>
                             <td>{{ cli.property_use }}</td>
-                            <td></td>
+                            <td><a href="{% url 'edit_acquisition' cli.pk %}"><button>editar</button></a></td>
                         </tr>
                     {% endfor %}
 

@@ -2,9 +2,12 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
-from propiedades2.models import Acquisition, Document, Rent, Location, Post
-from propiedades2.forms import DocumentForm, LocationForm, AcquisitionForm, ArquitectureForm, \
-    InternalForm, NotaryForm, SII_recordForm, RentForm
+from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
+    DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
+    Rent, Location, Post
+from propiedades2.forms import DocExForm, DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
+    DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
+    ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -21,7 +24,6 @@ def index(request):
 def list_acquisition(request):
     data = {}
     object_list = Acquisition.objects.all().order_by('-id')
-    print(object_list)
 
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
@@ -93,133 +95,220 @@ def user_leaderships(UserProfile, Leadership):
 @login_required(login_url='login')
 def Add_acquisition(request):
     data = {}
+    id_propiedad = 0
     if request.method == "POST":
         # ArquitectureForm,InternalForm,NotaryForm,SII_recordForm
         data['formAcquisition'] = AcquisitionForm(request.POST, request.FILES)
         data['formLocation'] = LocationForm(request.POST, request.FILES)
         # Arquitecture
         data['formArquitecture'] = ArquitectureForm(request.POST, request.FILES)
-        data['formEx'] = DocumentForm(request.POST, request.FILES)
-        data['formCip'] = DocumentForm(request.POST, request.FILES)
-        data['formCn'] = DocumentForm(request.POST, request.FILES)
-        data['formBlue'] = DocumentForm(request.POST, request.FILES)
-        data['formBuildP'] = DocumentForm(request.POST, request.FILES)
-        data['formMR'] = DocumentForm(request.POST, request.FILES)
+        data['formEx'] = DocExForm(request.POST, request.FILES)
+        data['formCip'] = DocCipForm(request.POST, request.FILES)
+        data['formCn'] = DocCnForm(request.POST, request.FILES)
+        data['formBlue'] = DocBlueForm(request.POST, request.FILES)
+        data['formBuildP'] = DocBuildPForm(request.POST, request.FILES)
+        data['formMR'] = DocMRForm(request.POST, request.FILES)
         # Internal
         data['formInternal'] = InternalForm(request.POST, request.FILES)
-        data['formTypeC'] = DocumentForm(request.POST, request.FILES)
-        data['formOther'] = DocumentForm(request.POST, request.FILES)
+        data['formTypeC'] = DocTypeCForm(request.POST, request.FILES)
+        data['formOther'] = DocOtherForm(request.POST, request.FILES)
         # Notary
         data['formNotary'] = NotaryForm(request.POST, request.FILES)
-        data['formWR'] = DocumentForm(request.POST, request.FILES)
-        data['formDC'] = DocumentForm(request.POST, request.FILES)
-        data['formPH'] = DocumentForm(request.POST, request.FILES)
-        data['formEs'] = DocumentForm(request.POST, request.FILES)
+        data['formWR'] = DocWRForm(request.POST, request.FILES)
+        data['formDC'] = DocDCForm(request.POST, request.FILES)
+        data['formPH'] = DocPHForm(request.POST, request.FILES)
+        data['formEs'] = DocEsForm(request.POST, request.FILES)
         # Sii
         data['formSII'] = SII_recordForm(request.POST, request.FILES)
-        data['formAc'] = DocumentForm(request.POST, request.FILES)
-        data['formDB'] = DocumentForm(request.POST, request.FILES)
+        data['formAc'] = DocAcForm(request.POST, request.FILES)
+        data['formDB'] = DocDBForm(request.POST, request.FILES)
 
-        print('request: ',request.POST)
+        if request.POST.get('Tipo') is not None:
+            if request.POST['Tipo'] == 'Propiedad':
+                if data['formAcquisition'].is_valid():
+                    data['formAcquisition'] = data['formAcquisition'].save(commit=False)
+                    if data['formLocation'].is_valid():
+                        data['formLocation'] = data['formLocation'].save()
+                        aux = Location.objects.get(pk=data['formLocation'].pk)
+                        data['formAcquisition'].location = aux
+                        data['formAcquisition'].save()
+                        return JsonResponse({'id': data['formAcquisition'].pk})
 
-        if request.POST['Tipo'] == "Propiedad":
-            if data['formAcquisition'].is_valid():
-                data['formAcquisition'] = data['formAcquisition'].save(commit=False)
-                if data['formLocation'].is_valid():
-                    data['formLocation'] = data['formLocation'].save()
-                    aux = Location.objects.get(pk=data['formLocation'].pk)
-                    data['formAcquisition'].location = aux
-                    data['formAcquisition'].save()
-                    return JsonResponse({'id': data['formAcquisition'].pk})
+        elif request.POST.get('Arquitecture') is not None:
+            if request.POST['Arquitecture'] == 'arquitecture':
 
-        elif request.POST['Tipo'] == "arquitecture":
-            print('Funciona antes de validar')
-            if data['formArquitecture'].is_valid():
-                arquitectureForm = data['formArquitecture'].save(commit=False)
-                print(request.POST['docEx'])
-                if data['formEx'].is_valid():
-                    print("formulario ex valido")
-                    Ex = data['formEx']
-                    Ex.type = 'EM'
-                    arquitectureForm.expropriation_mun = Ex.save()
+                if request.POST.get('id_propiedad') is not None:
+                    # extraer pk de la acquisition
+                    prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+
+                if data['formArquitecture'].is_valid():
+                    data['formArquitecture'] = data['formArquitecture'].save(commit=False)
+                    if data['formEx'].is_valid():
+                        Ex = DocumentEx()
+                        if ('ArDocEx' not in request.POST):
+                            Ex.archive = request.FILES['ArDocEx']
+                        Ex.comment = request.POST['CDocEx']
+                        Ex.type = 'EM'
+                        Ex.save()
+                        data['formArquitecture'].expropriation_mun = Ex
                     if data['formCip'].is_valid():
-                        cip = data['formCip']
-                        cip.type = 'CP'
-                        arquitectureForm.cip = cip.save()
-                        if data['formCn'].is_valid():
-                            Cn = data['formCn']
-                            Cn.type = 'Nc'
-                            arquitectureForm.certified_number = Cn.save()
-                            if data['formBlue'].is_valid():
-                                Blue = data['formBlue']
-                                Blue.type = 'PL'
-                                arquitectureForm.blueprints = Blue.save()
-                                if data['formBuildP'].is_valid():
-                                    Build = data['formBuildP']
-                                    Build.type = 'PE'
-                                    arquitectureForm.building_permit = Build.save()
-                                    if data['formMR'].is_valid():
-                                        print("Ultimo valido")
-                                        MR = data['formMR']
-                                        MR.type = 'RM'
-                                        arquitectureForm.municipal_reception = MR.save()
-                                        arquitectureForm.save()
-                                        return JsonResponse({})
+                        Cip = DocumentCip()
+                        if ('ArDocCip' not in request.POST):
+                            Cip.archive = request.FILES['ArDocCip']
+                        Cip.comment = request.POST['CDocCip']
+                        Cip.type = 'CP'
+                        Cip.save()
+                        data['formArquitecture'].cip = Cip
+                    if data['formCn'].is_valid():
+                        cn = DocumentCn()
+                        if ('ArDocCn' not in request.POST):
+                            cn.archive = request.FILES['ArDocCn']
+                        cn.comment = request.POST['CDocCn']
+                        cn.type = 'NC'
+                        cn.save()
+                        data['formArquitecture'].certified_number = cn
+                    if data['formBlue'].is_valid():
+                        blue = DocumentBlue()
+                        if ('ArDocBlue' not in request.POST):
+                            blue.archive = request.FILES['ArDocBlue']
+                        blue.comment = request.POST['CDocBlue']
+                        blue.type = 'PL'
+                        blue.save()
+                        data['formArquitecture'].blueprints = blue
+                    if data['formBuildP'].is_valid():
+                        build = DocumentBuildP()
+                        if ('ArDocBuild' not in request.POST):
+                            build.archive = request.FILES['ArDocBuild']
+                        build.comment = request.POST['CDocBuild']
+                        build.type = 'PE'
+                        build.save()
+                        data['formArquitecture'].building_permit = build
+                    if data['formMR'].is_valid():
+                        MR = DocumentMR()
+                        if ('ArDocMR' not in request.POST):
+                            MR.archive = request.FILES['ArDocMR']
+                        MR.type = 'RM'
+                        MR.save()
+                        data['formArquitecture'].municipal_reception = MR
+                    data['formArquitecture'].save()
+                    prop.arquitecture = data['formArquitecture']
+                    prop.save()
+                return JsonResponse({})
 
-        elif request.POST['Tipo'] == 'Internal':
-            if data['formInternal'].is_valid():
-                data['formInternal'] = data['formInternal'].save(commit=False)
-                if data['formTypeC'].is_valid():
-                    data['formTypeC'].type = 'TC'
-                    data['formInternal'].contract_type = data['formTypeC'].save()
+        elif request.POST.get('Internal') is not None:
+            if request.POST['Internal'] == 'internal':
+                if request.POST.get('id_propiedad') is not None:
+                    # extraer pk de la acquisition
+                    prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+                if data['formInternal'].is_valid():
+                    data['formInternal'] = data['formInternal'].save(commit=False)
+                    if data['formTypeC'].is_valid():
+                        TypeC = DocumentTypeC()
+                        if ('ArDocTypeC' not in request.POST):
+                            TypeC.archive = request.FILES['ArDocTypeC']
+                        TypeC.comment = request.POST['CDocTypeC']
+                        TypeC.type = 'TC'
+                        TypeC.save()
+                        data['formInternal'].contract_type = TypeC
                     if data['formOther'].is_valid():
-                        data['formOther'].type = 'OT'
-                        data['formInternal'].others = data['formOther'].save()
-                        data['formInternal'].save()
+                        Other = DocumentOther()
+                        if ('ArDocOther' not in request.POST):
+                            Other.archive = request.FILES['ArDocOther']
+                        Other.comment = request.POST['CDocOther']
+                        Other.type = 'OT'
+                        Other.save()
+                        data['formInternal'].others = Other
                         # guardar en acquisition el intenal
-                        return JsonResponse({})
+                    data['formInternal'].save()
+                    prop.internal = data['formInternal']
+                    prop.save()
+                    return JsonResponse({})
 
-        elif request.POST['Tipo'] == 'Notary':
-            if data['formNotary'].is_valid():
-                data['formNotary'] = data['formNotary'].save(commit=False)
-                if data['formWR'].is_valid():
-                    data['formWR'].type = 'ES'
-                    data['formNotary'].writing = data['formWR'].save()
+        elif request.POST.get('Notary') is not None:
+            if request.POST['Notary'] == 'notary':
+                print('request notary: ',request.POST)
+                if request.POST.get('id_propiedad') is not None:
+                    # extraer pk de la acquisition
+                    prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+
+                if data['formNotary'].is_valid():
+                    data['formNotary'] = data['formNotary'].save(commit=False)
+                    if data['formWR'].is_valid():
+                        WR = DocumentWR()
+                        if ('ArDocWR' not in request.POST):
+                            WR.archive = request.FILES['ArDocWR']
+                        WR.comment = request.POST['CDocWR']
+                        WR.type = 'ES'
+                        WR.save()
+                        data['formNotary'].writing = WR
                     if data['formDC'].is_valid():
-                        data['formDC'].type = 'CD'
-                        data['formNotary'].domain_certificate = data['formDC'].save()
-                        if data['formPH'].is_valid():
-                            data['formPH'].type = 'PR'
-                            data['formNotary'].prohibitions = data['formPH'].save()
-                            if data['formEs'].is_valid():
-                                data['formEs'].type = 'SE'
-                                data['formNotary'].expropriation_serviu = data['formEs'].save()
-                                data['formNotary'].save()
-                                return JsonResponse({})
-
-        elif request.POST['Tipo'] == 'SII':
-            if data['formSII'].is_valid():
-                data['formSII'] = data['formSII'].save(commit=False)
-                if data['formAc'].is_valid():
-                    data['formAc'].type = 'CA'
-                    data['formSII'].appraisal_certificate = data['formAc'].save()
+                        DC = DocumentDC()
+                        if ('ArDocDC' not in request.POST):
+                            DC.archive = request.FILES['ArDocDC']
+                        DC.comment = request.POST['CDocDC']
+                        DC.type = 'CD'
+                        DC.save()
+                        data['formNotary'].domain_certificate = DC
+                    if data['formPH'].is_valid():
+                        PH = DocumentPH()
+                        if ('ArDocPH' not in request.POST):
+                            PH.archive = request.FILES['ArDocPH']
+                        PH.comment = request.POST['CDocPH']
+                        PH.type = 'PR'
+                        PH.save()
+                        data['formNotary'].prohibitions = PH
                     if data['formDB'].is_valid():
-                        data['formDB'].type = 'CD'
-                        data['formSII'].debt_certificate = data['formDB'].save()
-                        data['formSII'].save()
-                        return JsonResponse({})
+                        Es = DocumentEs()
+                        if ('ArDocDB' not in request.POST):
+                            Es.archive = request.FILES['ArDocDB']
+                        Es.comment = request.POST['CDocDB']
+                        Es.type = 'SE'
+                        Es.save()
+                        data['formNotary'].expropriation_serviu = Es
+                    data['formNotary'].save()
+                    prop.notary = data['formNotary']
+                    prop.save()
+                return JsonResponse({})
+
+        elif request.POST.get('SII') is not None:
+            if request.POST['SII'] == 'Sii':
+                if request.POST.get('id_propiedad') is not None:
+                    # extraer pk de la acquisition
+                    prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+                if data['formSII'].is_valid():
+                    data['formSII'] = data['formSII'].save(commit=False)
+                    if data['formAc'].is_valid():
+                        Ac = DocumentAc()
+                        if ('ArDocAc' not in request.POST):
+                            Ac.archive = request.FILES['ArDocAc']
+                        Ac.comment = request.POST['CDocAc']
+                        Ac.type = 'CA'
+                        Ac.save()
+                        data['formSII'].appraisal_certificate = Ac
+                    if data['formEs'].is_valid():
+                        DB = DocumentDB()
+                        if ('ArDocEs' not in request.POST):
+                            DB.archive = request.FILES['ArDocEs']
+                        DB.comment = request.POST['CDocEs']
+                        DB.type = 'CD'
+                        DB.save()
+                        data['formSII'].debt_certificate = DB
+                    data['formSII'].save()
+                    prop.SII = data['formSII']
+                    prop.save()
+                return JsonResponse({})
 
     else:
         data = {
             'formLocation': LocationForm, 'formAcquisition': AcquisitionForm, 'formArquitecture': ArquitectureForm,
-            'formEx': DocumentForm, 'formCip': DocumentForm, 'formCn': DocumentForm,
-            'formBlue': DocumentForm,
-            'formBuildP': DocumentForm, 'formMR': DocumentForm, 'formInternal': InternalForm,
-            'formTypeC': DocumentForm,
-            'formOther': DocumentForm, 'formNotary': NotaryForm, 'formWR': DocumentForm,
-            'formDC': DocumentForm,
-            'formPH': DocumentForm, 'formEs': DocumentForm, 'formSII': SII_recordForm,
-            'formAc': DocumentForm, 'formDB': DocumentForm,
+            'formEx': DocExForm, 'formCip': DocCipForm, 'formCn': DocCnForm,
+            'formBlue': DocBlueForm,
+            'formBuildP': DocBuildPForm, 'formMR': DocMRForm, 'formInternal': InternalForm,
+            'formTypeC': DocTypeCForm,
+            'formOther': DocOtherForm, 'formNotary': NotaryForm, 'formWR': DocWRForm,
+            'formDC': DocDCForm,
+            'formPH': DocPHForm, 'formEs': DocEsForm, 'formSII': SII_recordForm,
+            'formAc': DocAcForm, 'formDB': DocDBForm,
         }
 
     return render(request, 'add_acquisition.html', data)
@@ -231,7 +320,7 @@ def Add_rent(request):
     if request.method == "POST":
         data['formLocation'] = LocationForm(request.POST)
         data['formRent'] = RentForm(request.POST, request.FILES)
-        data['formDocument'] = DocumentForm(request.POST, request.FILES)
+        data['formDocument'] = DocTypeCForm(request.POST, request.FILES)
 
         if data['formRent'].is_valid():
             rent = data['formRent'].save(commit=False)
@@ -244,7 +333,7 @@ def Add_rent(request):
                     rent.save()
             return redirect('list_rent')
     else:
-        formDocument = DocumentForm()
+        formDocument = DocTypeCForm()
         formLocation = LocationForm()
         formRent = RentForm()
 
@@ -254,16 +343,203 @@ def Add_rent(request):
 
 @login_required(login_url='login')
 def Edit_acquisition(request, acq_id):
-    data = {}
-    if request.POST:
-        AcquisitionForm = EditAcquisition(request.POST, request.FILES, instance=Acquisition.objects.get(pk=acq_id))
-        if AcquisitionForm.is_valid():
-            AcquisitionForm.save()
-            return redirect('list_acquisitions')
-    template_name = 'edit.html'
+
+    AcquisitionForm = EditAcquisition(request.POST, request.FILES, instance=Acquisition.objects.get(pk=acq_id))
     data['data'] = EditAcquisition(instance=Acquisition.objects.get(pk=acq_id))
 
-    return render(request, template_name, data)
+    data = {}
+    if request.method == "POST":
+        # ArquitectureForm,InternalForm,NotaryForm,SII_recordForm
+        data['formAcquisition'] = AcquisitionForm(request.POST, request.FILES)
+        data['formLocation'] = LocationForm(request.POST, request.FILES)
+        # Arquitecture
+        data['formArquitecture'] = ArquitectureForm(request.POST, request.FILES)
+        data['formEx'] = DocExForm(request.POST, request.FILES)
+        data['formCip'] = DocCipForm(request.POST, request.FILES)
+        data['formCn'] = DocCnForm(request.POST, request.FILES)
+        data['formBlue'] = DocBlueForm(request.POST, request.FILES)
+        data['formBuildP'] = DocBuildPForm(request.POST, request.FILES)
+        data['formMR'] = DocMRForm(request.POST, request.FILES)
+        # Internal
+        data['formInternal'] = InternalForm(request.POST, request.FILES)
+        data['formTypeC'] = DocTypeCForm(request.POST, request.FILES)
+        data['formOther'] = DocOtherForm(request.POST, request.FILES)
+        # Notary
+        data['formNotary'] = NotaryForm(request.POST, request.FILES)
+        data['formWR'] = DocWRForm(request.POST, request.FILES)
+        data['formDC'] = DocDCForm(request.POST, request.FILES)
+        data['formPH'] = DocPHForm(request.POST, request.FILES)
+        data['formEs'] = DocEsForm(request.POST, request.FILES)
+        # Sii
+        data['formSII'] = SII_recordForm(request.POST, request.FILES)
+        data['formAc'] = DocAcForm(request.POST, request.FILES)
+        data['formDB'] = DocDBForm(request.POST, request.FILES)
+
+        if request.POST.get('Tipo') is not None:
+            if request.POST['Tipo'] == 'Propiedad':
+                if data['formAcquisition'].is_valid():
+                    data['formAcquisition'] = data['formAcquisition'].save(commit=False)
+                    if data['formLocation'].is_valid():
+                        data['formLocation'] = data['formLocation'].save()
+                        aux = Location.objects.get(pk=data['formLocation'].pk)
+                        data['formAcquisition'].location = aux
+                        data['formAcquisition'].save()
+                        return JsonResponse({'id': data['formAcquisition'].pk})
+
+        elif request.POST.get('Arquitecture') is not None:
+            if request.POST['Arquitecture'] == 'arquitecture':
+                if data['formArquitecture'].is_valid():
+                    data['formArquitecture'] = data['formArquitecture'].save(commit=False)
+                    if data['formEx'].is_valid():
+                        Ex = DocumentEx()
+                        if ('ArDocEx' not in request.POST):
+                            Ex.archive = request.FILES['ArDocEx']
+                        Ex.comment = request.POST['CDocEx']
+                        Ex.type = 'EM'
+                        Ex.save()
+                        data['formArquitecture'].expropriation_mun = Ex
+                    if data['formCip'].is_valid():
+                        Cip = DocumentCip()
+                        if ('ArDocCip' not in request.POST):
+                            Cip.archive = request.FILES['ArDocCip']
+                        Cip.comment = request.POST['CDocCip']
+                        Cip.type = 'CP'
+                        Cip.save()
+                        data['formArquitecture'].cip = Cip
+                    if data['formCn'].is_valid():
+                        cn = DocumentCn()
+                        if ('ArDocCn' not in request.POST):
+                            cn.archive = request.FILES['ArDocCn']
+                        cn.comment = request.POST['CDocCn']
+                        cn.type = 'NC'
+                        cn.save()
+                        data['formArquitecture'].certified_number = cn
+                    if data['formBlue'].is_valid():
+                        blue = DocumentBlue()
+                        if ('ArDocBlue' not in request.POST):
+                            blue.archive = request.FILES['ArDocBlue']
+                        blue.comment = request.POST['CDocBlue']
+                        blue.type = 'PL'
+                        blue.save()
+                        data['formArquitecture'].blueprints = blue
+                    if data['formBuildP'].is_valid():
+                        build = DocumentBuildP()
+                        if ('ArDocBuild' not in request.POST):
+                            build.archive = request.FILES['ArDocBuild']
+                        build.comment = request.POST['CDocBuild']
+                        build.type = 'PE'
+                        build.save()
+                        data['formArquitecture'].building_permit = build
+                    if data['formMR'].is_valid():
+                        MR = DocumentMR()
+                        if ('ArDocMR' not in request.POST):
+                            MR.archive = request.FILES['ArDocMR']
+                        MR.type = 'RM'
+                        MR.save()
+                        data['formArquitecture'].municipal_reception = MR
+                    data['formArquitecture'].save()
+                return JsonResponse({})
+
+        elif request.POST.get('Internal') is not None:
+            if request.POST['Internal'] == 'internal':
+                if data['formInternal'].is_valid():
+                    data['formInternal'] = data['formInternal'].save(commit=False)
+                    if data['formTypeC'].is_valid():
+                        TypeC = DocumentTypeC()
+                        if ('ArDocTypeC' not in request.POST):
+                            TypeC.archive = request.FILES['ArDocTypeC']
+                        TypeC.comment = request.POST['CDocTypeC']
+                        TypeC.type = 'TC'
+                        TypeC.save()
+                        data['formInternal'].contract_type = TypeC
+                    if data['formOther'].is_valid():
+                        Other = DocumentOther()
+                        if ('ArDocOther' not in request.POST):
+                            Other.archive = request.FILES['ArDocOther']
+                        Other.comment = request.POST['CDocOther']
+                        Other.type = 'OT'
+                        Other.save()
+                        data['formInternal'].others = Other
+                    data['formInternal'].save()
+                    # guardar en acquisition el intenal
+                    return JsonResponse({})
+
+        elif request.POST.get('Notary') is not None:
+            if request.POST['Notary'] == 'notary':
+                if data['formNotary'].is_valid():
+                    data['formNotary'] = data['formNotary'].save(commit=False)
+                    if data['formWR'].is_valid():
+                        WR = DocumentWR()
+                        if ('ArDocWR' not in request.POST):
+                            WR.archive = request.FILES['ArDocWR']
+                        WR.comment = request.POST['CDocWR']
+                        WR.type = 'ES'
+                        WR.save()
+                        data['formNotary'].writing = WR
+                    if data['formDC'].is_valid():
+                        DC = DocumentDC()
+                        if ('ArDocDC' not in request.POST):
+                            DC.archive = request.FILES['ArDocDC']
+                        DC.comment = request.POST['CDocDC']
+                        DC.type = 'CD'
+                        DC.save()
+                        data['formNotary'].domain_certificate = DC
+                    if data['formPH'].is_valid():
+                        PH = DocumentPH()
+                        if ('ArDocPH' not in request.POST):
+                            PH.archive = request.FILES['ArDocPH']
+                        PH.comment = request.POST['CDocPH']
+                        PH.type = 'PR'
+                        PH.save()
+                        data['formNotary'].prohibitions = PH
+                    if data['formEs'].is_valid():
+                        Es = DocumentEs()
+                        if ('ArDocEs' not in request.POST):
+                            Es.archive = request.FILES['ArDocEs']
+                        Es.comment = request.POST['CDocEs']
+                        Es.type = 'SE'
+                        Es.save()
+                        data['formNotary'].expropriation_serviu = Es
+                    data['formNotary'].save()
+                return JsonResponse({})
+
+        elif request.POST.get('SII') is not None:
+            if request.POST['SII'] == 'Sii':
+                if data['formSII'].is_valid():
+                    data['formSII'] = data['formSII'].save(commit=False)
+                    if data['formAc'].is_valid():
+                        Ac = DocumentAc()
+                        if ('ArDocAc' not in request.POST):
+                            Ac.archive = request.FILES['ArDocAc']
+                        Ac.comment = request.POST['CDocAc']
+                        Ac.type = 'CA'
+                        Ac.save()
+                        data['formSII'].appraisal_certificate = Ac
+                    if data['formDB'].is_valid():
+                        DB = DocumentDB()
+                        if ('ArDocDB' not in request.POST):
+                            DB.archive = request.FILES['ArDocDB']
+                        DB.comment = request.POST['CDocDB']
+                        DB.type = 'CD'
+                        DB.save()
+                        data['formSII'].debt_certificate = DB
+                    data['formSII'].save()
+                return JsonResponse({})
+
+    else:
+        data = {
+            'formLocation': LocationForm, 'formAcquisition': AcquisitionForm, 'formArquitecture': ArquitectureForm,
+            'formEx': DocExForm, 'formCip': DocCipForm, 'formCn': DocCnForm,
+            'formBlue': DocBlueForm,
+            'formBuildP': DocBuildPForm, 'formMR': DocMRForm, 'formInternal': InternalForm,
+            'formTypeC': DocTypeCForm,
+            'formOther': DocOtherForm, 'formNotary': NotaryForm, 'formWR': DocWRForm,
+            'formDC': DocDCForm,
+            'formPH': DocPHForm, 'formEs': DocEsForm, 'formSII': SII_recordForm,
+            'formAc': DocAcForm, 'formDB': DocDBForm,
+        }
+
+    return render(request, 'add_acquisition.html', data)
 
 
 @login_required(login_url='login')

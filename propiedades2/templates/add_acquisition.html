@@ -21,13 +21,13 @@
             <div class="col-md-12">
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 mx-auto">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
                             <h1>Agregar propiedad adquirida</h1>
                             <br>
                             <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card border-dark">
+                                    <div class="col-md-12 col-sm-12 col-lg-6">
+                                        <div class="card border-dark" id="adquisicion">
                                             <div class="card-header"><h2>Datos de propiedad</h2></div>
                                             <div class="card-body">
                                                 <label>Nombre propiedad: *</label>
@@ -54,7 +54,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-sm-12 col-lg-6">
                                         <div class="card border-dark">
                                             <div class="card-header"><h2>Datos de dirección</h2></div>
                                             <div class="card-body">
@@ -63,13 +63,15 @@
                                         </div>
                                     </div>
                                     <br>
-                                    <div class='col-md-12' style="padding: 30px;"><button id="enviarPropiedad" type="button"
-                                            class="btn btn-success btn-lg btn-block">Aceptar
-                                    </button></div>
+                                    <div class='col-md-12' style="padding: 30px;">
+                                        <button id="enviarPropiedad" type="button"
+                                                class="btn btn-success btn-lg btn-block">Aceptar
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <div class="card border-dark" id = 'Arquitecture' style="display: none">
+                                        <div class="card border-dark" id='Arquitecture' style="display: none">
                                             <div class="card-header"><h2>Datos de arquitectura</h2></div>
                                             <div class="card-body">
                                                 {{ formArquitecture.as_p }}
@@ -87,7 +89,7 @@
                                                         </div>
                                                         <div id="collapseEx" class="collapse" aria-labelledby="headEx"
                                                              data-parent="#accordionArquitecture">
-                                                            <div id="docEx">{{ formEx }}</div>
+                                                            <div>{{ formEx }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -103,7 +105,7 @@
                                                         </div>
                                                         <div id="collapseCIP" class="collapse" aria-labelledby="headCIP"
                                                              data-parent="#accordionArquitecture">
-                                                            <div id="docCip">{{ formCip }}</div>
+                                                            <div>{{ formCip }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -119,7 +121,7 @@
                                                         </div>
                                                         <div id="collapseCn" class="collapse" aria-labelledby="headCn"
                                                              data-parent="#accordionArquitecture">
-                                                            <div id="docCn">{{ formCn }}</div>
+                                                            <div>{{ formCn }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -136,7 +138,7 @@
                                                         <div id="collapseBlue" class="collapse"
                                                              aria-labelledby="headBlue"
                                                              data-parent="#accordionArquitecture">
-                                                            <div id="docBlue">{{ formBlue }}</div>
+                                                            <div>{{ formBlue }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -154,7 +156,7 @@
                                                         <div id="collapseBuild" class="collapse"
                                                              aria-labelledby="headBuild"
                                                              data-parent="#accordionArquitecture">
-                                                            <div id="docBuild">{{ formBuildP }}</div>
+                                                            <div>{{ formBuildP }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -170,7 +172,7 @@
                                                         </div>
                                                         <div id="collapseRM" class="collapse" aria-labelledby="headRM"
                                                              data-parent="#accordionArquitecture">
-                                                            <div id="docMR">{{ formMR }}</div>
+                                                            <div>{{ formMR }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -198,7 +200,7 @@
                                                         </div>
                                                         <div id="collapseOneN" class="collapse" aria-labelledby="headWr"
                                                              data-parent="#accordionNotary">
-                                                            <div id="docWR">{{ formWR }}</div>
+                                                            <div>{{ formWR }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -215,7 +217,7 @@
                                                         </div>
                                                         <div id="collapseTwoN" class="collapse" aria-labelledby="headDC"
                                                              data-parent="#accordionNotary">
-                                                            <div id="docDC">{{ formDC }}</div>
+                                                            <div>{{ formDC }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -233,7 +235,7 @@
                                                         <div id="collapseThreeN" class="collapse"
                                                              aria-labelledby="headPH"
                                                              data-parent="#accordionNotary">
-                                                            <div id="docPH">{{ formPH }}</div>
+                                                            <div>{{ formPH }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -251,10 +253,11 @@
                                                         <div id="collapseFourN" class="collapse"
                                                              aria-labelledby="headEs"
                                                              data-parent="#accordionNotary">
-                                                            <div id="docEs">{{ formEs }}</div>
+                                                            <div>{{ formDB }}</div>
                                                         </div>
                                                     </div>
-                                                    <button id="enviarNotaria" type="button" class="btn btn-success btn-lg btn-block">
+                                                    <button id="enviarNotaria" type="button"
+                                                            class="btn btn-success btn-lg btn-block">
                                                         Aceptar
                                                     </button>
                                                 </div>
@@ -278,14 +281,14 @@
                                                                         data-target="#collapseOneI"
                                                                         aria-expanded="true"
                                                                         aria-controls="collapseOneI">
-                                                                    Documento Tipo de contrato:*
+                                                                    Documento Tipo de contrato:
                                                                 </button>
                                                             </h2>
                                                         </div>
                                                         <div id="collapseOneI" class="collapse"
                                                              aria-labelledby="headTypeC"
                                                              data-parent="#accordionInternal">
-                                                            <div id="docTypeC">{{ formTypeC }}</div>
+                                                            <div>{{ formTypeC }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -304,10 +307,11 @@
                                                         <div id="collapseTwoI" class="collapse"
                                                              aria-labelledby="headOther"
                                                              data-parent="#accordionInternal">
-                                                            <div id="docOther">{{ formOther }}</div>
+                                                            <div>{{ formOther }}</div>
                                                         </div>
                                                     </div>
-                                                    <button id="enviarInternos" type="button" class="btn btn-success btn-lg btn-block">
+                                                    <button id="enviarInternos" type="button"
+                                                            class="btn btn-success btn-lg btn-block">
                                                         Aceptar
                                                     </button>
                                                 </div>
@@ -335,7 +339,7 @@
                                                         </div>
                                                         <div id="collapseOneS" class="collapse" aria-labelledby="headAc"
                                                              data-parent="#accordionSII">
-                                                            <div id="docAc">{{ formAc }}
+                                                            <div>{{ formAc }}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -355,10 +359,11 @@
                                                         <div id="collapseTwoS" class="collapse"
                                                              aria-labelledby="headAc"
                                                              data-parent="#accordionSII">
-                                                            <div id="docDB">{{ formDB }}</div>
+                                                            <div>{{ formEs }}</div>
                                                         </div>
                                                     </div>
-                                                    <button id="enviarSII" type="button" class="btn btn-success btn-lg btn-block">
+                                                    <button id="enviarSII" type="button"
+                                                            class="btn btn-success btn-lg btn-block">
                                                         Aceptar
                                                     </button>
                                                 </div>
@@ -366,6 +371,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br>
+                                <a href="{% url 'list_acquisition' %}">
+                                    <button id="listo" type="button" class="btn btn-primary btn-lg btn-block" style="display: none">Listo</button>
+                                </a>
                             </form>
                         </div>
                     </div>
@@ -377,6 +386,7 @@
     </body>
     <script type="text/javascript">
 
+        var id_p;
         $(document).ready(function () {
             function getCookie(name) {
                 var cookieValue = null;
@@ -394,146 +404,166 @@
                 return cookieValue;
             }
 
-            $("#enviarArquitecture").on("click", function () {
-                alert('hola 1');
-                var lista = [];
-                $("#accordionArquitecture").find('input:file,input:text').each(function () {
-                    $(this).val();
-                    alert(lista);
-                    lista.push(this.value);
-                    alert(lista[0]);
-                });
-                $.ajax({
-                    url: '{% url "add_acquisition" %}',
-                    type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: getCookie('csrftoken'),
-                        'Tipo': "arquitecture",
-                        'id': id,
-                        'ground_surface': $("#ground_surface").val(),
-                        'square_m_build': $("#square_m_build").val(),
-                        'e_construction_m': $("#e_construction_m").val(),
-                        'municipal_n': $("#municipal_n").val(),
-                        'n_building_permit': $("#n_building_permit").val(),
-                        'docEx': lista[0],
-                    },
-                    success: function () {
-                        alert('Guardado');
-                    }
-                })
-            });
             $("#enviarPropiedad").on("click", function () {
-                var lista = [];
-                $("#adquisicion").find('input:file').each(function () {
-                    $(this).val();
-                    alert(this.value);
-                    lista.push(this.value);
-                });
+                var formulario = new FormData();
+                formulario.append('image', $('#image')[0].files[0]);
+                formulario.append('Tipo', "Propiedad");
+                formulario.append('name', $("#name").val());
+                formulario.append('role_number', $("#role_number").val());
+                formulario.append('property_use', $("#property_use").val());
+                formulario.append('number_AASI', $("#number_AASI").val());
+                formulario.append('acquisition_date', $("#acquisition_date").val());
+                formulario.append('writing_data', $("#writing_data").val());
+                // Location
+                formulario.append('street', $("#street").val());
+                formulario.append('number', $("#number").val());
+                formulario.append('commune', $("#commune").val());
+                formulario.append('city', $("#city").val());
+                formulario.append('region', $("#region").val());
+                formulario.append('lot_number', $("#lot_number").val());
+                formulario.append('plot', $("#plot").val());
+                formulario.append("csrfmiddlewaretoken", getCookie('csrftoken'));
                 $.ajax({
                     url: '{% url "add_acquisition" %}',
                     type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: getCookie('csrftoken'),
-                        'Tipo': "Propiedad",
-                        'name': $("#name").val(),
-                        'role_number': $("#role_number").val(),
-
-                        'property_use': $("#property_use").val(),
-                        'number_AASI': $("#number_AASI").val(),
-                        'acquisition_date': $("#acquisition_date").val(),
-                        'writing_data': $("#writing_data").val(),
-
-                        'street': $("#street").val(),
-                        'number': $("#number").val(),
-                        'commune': $("#commune").val(),
-                        'city': $("#city").val(),
-                        'region': $("#region").val(),
-                        'lot_number': $("#lot_number").val(),
-                        'plot': $("#plot").val(),
-                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
                     success: function (id) {
-                        const global_id = id;
+                        id_p = id['id'];
                         $('#Arquitecture').show();
                         $('#Notary').show();
                         $('#Internos').show();
                         $('#SII').show();
                         $('#enviarPropiedad').hide();
-                        alert(global_id);
-                    }
-                })
+                        $('#listo').show();
 
-            });
-            $("#enviarNotaria").on("click", function () {
-                var lista = [];
-                $("#accordionNotary").find('input:file,input:text').each(function () {
-                    $(this).val();
-                    alert(this.value);
-                    lista.push(this.value)
+                        alert('Propiedad creada');
+                    }
                 });
+            });
+            $("#enviarArquitecture").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('Arquitecture', "arquitecture");
+                formulario.append('ground_surface', $("#ground_surface").val());
+                formulario.append('square_m_build', $("#square_m_build").val());
+                formulario.append('e_construction_m', $("#e_construction_m").val());
+                formulario.append('municipal_n', $("#municipal_n").val());
+                formulario.append('n_building_permit', $("#n_building_permit").val());
+
+                formulario.append('ArDocEx', $('#docEx')[0].files[0]);
+                formulario.append('CDocEx', $('#CdocEx').val());
+                formulario.append('ArDocCip', $('#docCip')[0].files[0]);
+                formulario.append('CDocCip', $('#CdocCip').val());
+                formulario.append('ArDocCn', $('#docCn')[0].files[0]);
+                formulario.append('CDocCn', $('#CdocCn').val());
+                formulario.append('ArDocBlue', $('#docBlue')[0].files[0]);
+                formulario.append('CDocBlue', $('#CdocBlue').val());
+                formulario.append('ArDocBuild', $('#docBuild')[0].files[0]);
+                formulario.append('CDocBuild', $('#CdocBuild').val());
+                formulario.append('ArDocMR', $('#docMR')[0].files[0]);
+                formulario.append('CDocMR', $('#CdocMR').val());
+                formulario.append('id_propiedad', id_p);
+
                 $.ajax({
                     url: '{% url "add_acquisition" %}',
                     type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: getCookie('csrftoken'),
-                        'Tipo': "Notary",
-                        'notary': $("#notary").val(),
-                        'writing_year': $("#writing_year").val(),
-                        'sale_price': $("#sale_price").val(),
-                        'previous_title': $("#previous_title").val(),
-                        'current_title': $("#current_title").val(),
-                    },
-                    success: function (id) {
-                        const global_id = id;
-                        alert(global_id);
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Guardado');
+                        alert(id_p)
+                    }
+                })
+            });
+            $("#enviarNotaria").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('Notary', "notary");
+                formulario.append('notary', $("#notary").val());
+                formulario.append('writing_year', $("#writing_year").val());
+                formulario.append('sale_price', $("#sale_price").val());
+                formulario.append('previous_title', $("#previous_title").val());
+                formulario.append('current_title', $("#current_title").val());
+
+                formulario.append('ArDocWR',$('#docWR')[0].files[0]);
+                formulario.append('CDocWR',$('#CdocWR').val());
+                formulario.append('ArDocDC',$('#docDC')[0].files[0]);
+                formulario.append('CDocDC',$('#CdocDC').val());
+                formulario.append('ArDocPH',$('#docPH')[0].files[0]);
+                formulario.append('CDocPH',$('#CdocPH').val());
+                formulario.append('ArDocDB',$('#docDB')[0].files[0]);
+                formulario.append('CDocDB',$('#CdocDB').val());
+                formulario.append('id_propiedad', id_p);
+
+                $.ajax({
+                    url: '{% url "add_acquisition" %}',
+                    type: "POST",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Datos de arquitectura guardados');
                     }
                 })
             });
             $("#enviarInternos").on("click", function () {
-                var lista = [];
-                $("#accordionInternal").find('input:file,input:text').each(function () {
-                    $(this).val();
-                    alert(this.value);
-                    lista.push(this.value)
-                });
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('Internal', "internal");
+                formulario.append('value_land', $("#value_land").val());
+                formulario.append('value_construction', $("#value_construction").val());
+                formulario.append('acquiring_name', $("#sale_price").val());
+                formulario.append('supplier_name', $("#previous_title").val());
+
+                formulario.append('ArDocTypeC',$('#docTypeC')[0].files[0]);
+                formulario.append('CDocTypeC',$('#CdocTypeC').val());
+                formulario.append('ArDocOther',$('#docOther')[0].files[0]);
+                formulario.append('CDocOther',$('#CdocOther').val());
+                formulario.append('id_propiedad', id_p);
+
                 $.ajax({
                     url: '{% url "add_acquisition" %}',
                     type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: getCookie('csrftoken'),
-                        'Tipo': "Internal",
-                        'value_land': $("#value_land").val(),
-                        'value_construction': $("#value_construction").val(),
-                        'acquiring_name': $("#sale_price").val(),
-                        'supplier_name': $("#previous_title").val(),
-                    },
-                    success: function (id) {
-                        const global_id = id;
-                        alert(global_id);
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Datos internos guardados');
                     }
                 })
-            })
+            });
             $("#enviarSII").on("click", function () {
-                var lista = [];
-                $("#accordionSII").find('input:file,input:text').each(function () {
-                    $(this).val();
-                    alert(this.value);
-                    lista.push(this.value)
-                });
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('SII', "Sii");
+                formulario.append('destiny', $("#destiny").val());
+                formulario.append('tax_appraisal', $("#tax_appraisal").val());
+                formulario.append('owner_name_SII', $("#owner_name_SII").val());
+                formulario.append('total_debt', $("#total_debt").val());
+                formulario.append('ex_contributions', $("#ex_contributions").val());
+
+                formulario.append('ArDocAc',$('#docAc')[0].files[0]);
+                formulario.append('CDocAc',$('#CdocAc').val());
+                formulario.append('ArDocEs',$('#docEs')[0].files[0]);
+                formulario.append('CDocEs',$('#CdocEs').val());
+                formulario.append('id_propiedad', id_p);
+
                 $.ajax({
                     url: '{% url "add_acquisition" %}',
                     type: "POST",
-                    data: {
-                        csrfmiddlewaretoken: getCookie('csrftoken'),
-                        'Tipo': "SII",
-                        'destiny': $("#destiny").val(),
-                        'tax_appraisal': $("#tax_appraisal").val(),
-                        'owner_name_SII': $("#owner_name_SII").val(),
-                        'total_debt': $("#total_debt").val(),
-                        'ex_contributions': $("#ex_contributions").val(),
-                    },
-                    success: function (id) {
-                        const global_id = id;
-                        alert(global_id);
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Datos de SII guardados');
                     }
                 })
             })

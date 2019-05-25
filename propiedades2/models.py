@@ -23,7 +23,7 @@ class Location(models.Model):
 
 # Documentos de arquitectura
 
-class Document(models.Model):
+class DocumentEx(models.Model):
     archive = models.FileField(upload_to='Documentos/', blank=True)
     publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
@@ -31,6 +31,143 @@ class Document(models.Model):
 
     def __str__(self):
         return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentCip(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentCn(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentBlue(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentBuildP(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentMR(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+# Documentos Internos
+
+class DocumentTypeC(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentOther(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+# Documentos Notariales
+
+class DocumentWR(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentDC(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentPH(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentEs(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+# Documentos de SII
+
+class DocumentAc(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
+
+class DocumentDB(models.Model):
+    archive = models.FileField(upload_to='Documentos/', blank=True)
+    publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+
+    def __str__(self):
+        return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
+
 
 class ArchitectureRecordAcq(models.Model):
     # Antecedentes de arquitectura
@@ -40,17 +177,17 @@ class ArchitectureRecordAcq(models.Model):
     municipal_n = models.PositiveIntegerField(blank=True, null=True)
     n_building_permit = models.PositiveIntegerField(blank=True, null=True)
     # Documentos de arquitectura
-    expropriation_mun = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    expropriation_mun = models.ForeignKey(DocumentEx, on_delete=models.CASCADE, blank=True, null=True,
                                           related_name='ExMunicipalidad')
-    cip = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    cip = models.ForeignKey(DocumentCip, on_delete=models.CASCADE, blank=True, null=True,
                             related_name='Cip')
-    certified_number = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    certified_number = models.ForeignKey(DocumentCn, on_delete=models.CASCADE, blank=True, null=True,
                                          related_name='NumCertificado')
-    blueprints = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    blueprints = models.ForeignKey(DocumentBlue, on_delete=models.CASCADE, blank=True, null=True,
                                    related_name='Planos')
-    building_permit = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    building_permit = models.ForeignKey(DocumentBuildP, on_delete=models.CASCADE, blank=True, null=True,
                                         related_name='PerEdificacion')
-    municipal_reception = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    municipal_reception = models.ForeignKey(DocumentMR, on_delete=models.CASCADE, blank=True, null=True,
                                             related_name='RecMunicipal')
 
 
@@ -59,8 +196,8 @@ class InternalAccountantsAcq(models.Model):
     value_construction = models.CharField(max_length=100, blank=True, null=True)
     acquiring_name = models.CharField(max_length=100, blank=True, null=True)
     supplier_name = models.CharField(max_length=100, blank=True, null=True)
-    contract_type = models.ForeignKey(Document, on_delete=models.CASCADE,related_name='TipoContratoAdquisicion')
-    others = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,related_name='Otros')
+    contract_type = models.ForeignKey(DocumentTypeC, on_delete=models.CASCADE, related_name='TipoContratoAdquisicion')
+    others = models.ForeignKey(DocumentOther, on_delete=models.CASCADE, blank=True, null=True, related_name='Otros')
 
 
 class NotaryAcquisition(models.Model):
@@ -70,13 +207,13 @@ class NotaryAcquisition(models.Model):
     # antecedentes de dominio
     previous_title = models.CharField(max_length=100, blank=True, null=True)
     current_title = models.CharField(max_length=100, blank=True, null=True)
-    writing = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    writing = models.ForeignKey(DocumentWR, on_delete=models.CASCADE, blank=True, null=True,
                                 related_name='Escritura')
-    domain_certificate = models.ForeignKey(Document, on_delete=models.CASCADE, null=True, blank=True,
+    domain_certificate = models.ForeignKey(DocumentDC, on_delete=models.CASCADE, null=True, blank=True,
                                            related_name='CertificadoDominio')
-    prohibitions = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    prohibitions = models.ForeignKey(DocumentPH, on_delete=models.CASCADE, blank=True, null=True,
                                      related_name='Prohibiciones')
-    expropriation_serviu = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    expropriation_serviu = models.ForeignKey(DocumentEs, on_delete=models.CASCADE, blank=True, null=True,
                                              related_name='Serviu')
 
 
@@ -87,9 +224,9 @@ class SiiRecord(models.Model):
     total_debt = models.PositiveIntegerField(blank=True, null=True)
     ex_contributions = models.BooleanField(default=False)
     # SII - TGR
-    appraisal_certificate = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    appraisal_certificate = models.ForeignKey(DocumentAc, on_delete=models.CASCADE, blank=True, null=True,
                                               related_name='CerAvaluo')
-    debt_certificate = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True,
+    debt_certificate = models.ForeignKey(DocumentDB, on_delete=models.CASCADE, blank=True, null=True,
                                          related_name='CerNoDeuda')
 
 
@@ -129,7 +266,8 @@ class Rent(models.Model):
     # contables internos
     value_land = models.CharField(max_length=100, blank=True, null=True)
     value_construction = models.CharField(max_length=100, blank=True, null=True)
-    contract_type = models.OneToOneField(Document,blank=True, null=True, on_delete=models.CASCADE, related_name='TipoContratoArriendo')
+    contract_type = models.OneToOneField(DocumentTypeC, blank=True, null=True, on_delete=models.CASCADE,
+                                         related_name='TipoContratoArriendo')
     acquiring_name = models.CharField(max_length=100)
     supplier_name = models.CharField(max_length=100)
     start_date = models.DateTimeField(default=timezone.now)
