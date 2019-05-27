@@ -1,24 +1,19 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.shortcuts import render
-from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
+from django.contrib.auth import authenticate, logout, login
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
-def login(request):
+def auth_login(request):
     template_name = 'login.html'
     data = {}
-    auth_logout(request)
+    logout(request)
     username = password = ''
 
     if request.POST:
-        username = request.POST.get('user')
+        username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(
             username=username,
@@ -26,8 +21,8 @@ def login(request):
         )
         if user is not None:
             if user.is_active:
-                auth_login(request, user)
-                return HttpResponseRedirect(reverse('list_acquisition'))
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
             else:
                 print("usuario o contraseña no validos")
                 messages.warning(
@@ -42,7 +37,6 @@ def login(request):
             )
     return render(request, template_name, data)
 
-@login_required(login_url='login')
-def logout(request):
-    auth_logout(request)
+def auth_logout(request):
+    logout(request)
     return HttpResponseRedirect(reverse('login'))

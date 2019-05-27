@@ -15,23 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Propiedades import views
-from Auth_users import views as view
-from django.conf import settings
 from django.conf.urls.static import static
-
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.index, name = 'index'),
-    path('login/', view.login, name = 'login'),
-    path('', view.logout, name = 'logout'),
-    path('list_acquisition/', views.list_acquisition, name="list_acquisition"),
-    path('list_rent/', views.list_rent, name="list_rent"),
-    path('list_total/', views.list_total, name="list_total"),
-    path('view_acquisition/<int:cli_id>', views.view_acquisition, name="view_acquisition"),
-    path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
-    path('add_acquisition/',views.Add_acquisition, name = "add_acquisition"),
-    path('view_archive/<str:document_id>', views.view_archive, name="view_archive"),
-path('search', views.search, name = "search"),
+    path('', include('propiedades2.urls'), name='propiedades'),
+    path('auth/', include('Auth_users.urls'), name='auth'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
