@@ -37,7 +37,7 @@ REGION_CHOICE = (
 ATTRIBUTES_CHOICE = (
     ('TC', 'Tipo contrato'),
     ('ES', 'Escritura'),
-    ('CD', 'Certificado de dominio'),
+    ('DC', 'Certificado de dominio'),
     ('PR', 'Prohibiciones'),
     ('SE', 'Expropiación SERVIU'),
     ('OT', 'Otro'),

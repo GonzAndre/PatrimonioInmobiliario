@@ -22,7 +22,11 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <h1>Agregar propiedad adquirida</h1>
+                            <h1>Editar propiedad adquirida
+                                <a href="{% url 'delete_acquisition' id %}" class="float-right">
+                                    <button type="button" class="btn btn-danger">Eliminar</button>
+                                </a>
+                            </h1>
                             <br>
                             <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
                                 <div class="row">
@@ -439,7 +443,7 @@
                         $('#enviarPropiedad').hide();
                         $('#listo').show();
 
-                        alert('Propiedad creada');
+                        alert('Datos de propiedad guardados');
                     }
                 });
             });

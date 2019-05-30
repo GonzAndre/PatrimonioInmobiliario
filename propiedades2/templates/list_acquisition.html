@@ -20,12 +20,27 @@
             <div class="col-md-10">
                 <h1>Listado Propiedades adquiridas</h1>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <form class="form mb-auto" method="GET" action="{% url 'search' %}">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" style="display:none" name="selection" type="radio" value="2"
+                               id="defaultCheck2" checked>
+                        <label class="form-check-label" for="defaultCheck2">
+                        </label>
+                    </div>
+                    <input type="text" class="form-control ml-sm-2" name="q" value="{{ request.GET.q }}"
+                           placeholder="Hola! ¿Buscas algo?..">
+                </form>
+            </div>
             <div class="col-md-2">
-                <a href="{% url 'add_acquisition' %}" >
-                  <button type="button" class="btn btn-success">Agregar</button>
+                <a class="float-right" href="{% url 'add_acquisition' %}" style="margin-top: 15%;">
+                    <button type="button" class="btn btn-success">Agregar</button>
                 </a>
             </div>
         </div>
+        <br>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-striped" id="datos">
@@ -35,21 +50,51 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Dirección</th>
                         <th scope="col">Uso propiedad</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for cli in object_list %}
                         <tr>
                             <td>{{ cli.role_number }}</td>
-                            <td><a href="{% url 'view_acquisition' cli.pk %}">{{ cli.name }}</a></td>
+                            <td>{{ cli.name }}</td>
                             <td>{{ cli.location }}</td>
                             <td>{{ cli.property_use }}</td>
-                            <td><a href="{% url 'edit_acquisition' cli.pk %}"><button>editar</button></a></td>
+                            <td>
+                                <a href="{% url 'view_acquisition' cli.pk %}">
+                                    <button type="button" class="btn btn-primary">Visualizar</button>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
 
                     </tbody>
                 </table>
+                <div class="row">
+                    {% if object_list.has_next or object_list.has_previous %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if object_list.has_previous %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ object_list.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in object_list.paginator.page_range %}
+                                    <li class="page-item {% if object_list.number == page %}active{% endif %}"><a
+                                            class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                                {% endfor %}
+
+                                {% if object_list.has_next %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ object_list.next_page_number }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
