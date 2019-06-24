@@ -33,24 +33,38 @@
                                                 <label>Nombre propiedad: *</label>
                                                 {{ formAcquisition.name }}
                                                 <p></p>
-                                                <label>Número de rol: *</label>
-                                                {{ formAcquisition.role_number }}
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Número de rol: *</label>
+                                                        {{ formAcquisition.role_number }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Uso de la propiedad: *</label>
+                                                        {{ formAcquisition.property_use }}
+                                                    </div>
+                                                </div>
                                                 <p></p>
-                                                <label>Imagen de la propiedad:</label>
-                                                {{ formAcquisition.image }}
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Imagen de la propiedad:</label>
+                                                        {{ formAcquisition.image }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Fecha de adquisición: *</label>
+                                                        {{ formAcquisition.acquisition_date }}
+                                                    </div>
+                                                </div>
                                                 <p></p>
-                                                <label>Uso de la propiedad: *</label>
-                                                {{ formAcquisition.property_use }}
-                                                <p></p>
-                                                <label>Fecha de adquisición: *</label>
-                                                {{ formAcquisition.acquisition_date }}
-                                                <p></p>
-                                                <label>Tipo de escritura: *</label>
-                                                {{ formAcquisition.writing_data }}
-                                                <p></p>
-                                                <label>Número AASI.net: *</label>
-                                                {{ formAcquisition.number_AASI }}
-                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Tipo de escritura: *</label>
+                                                        {{ formAcquisition.writing_data }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Número AASI.net: *</label>
+                                                        {{ formAcquisition.number_AASI }}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -58,7 +72,41 @@
                                         <div class="card border-dark">
                                             <div class="card-header"><h2>Datos de dirección</h2></div>
                                             <div class="card-body">
-                                                {{ formLocation.as_p }}
+                                                <label>Nombre de calle:*</label>
+                                                {{ formLocation.street }}
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Número propiedad:*</label>
+                                                        {{ formLocation.number }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Comuna:*</label>
+                                                        {{ formLocation.commune }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Ciudad:*</label>
+                                                        {{ formLocation.city }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Región:*</label>
+                                                        {{ formLocation.region }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Parcela:</label>
+                                                        {{ formLocation.plot }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Número de parcela:</label>
+                                                        {{ formLocation.lot_number }}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -74,7 +122,35 @@
                                         <div class="card border-dark" id='Arquitecture' style="display: none">
                                             <div class="card-header"><h2>Datos de arquitectura</h2></div>
                                             <div class="card-body">
-                                                {{ formArquitecture.as_p }}
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Superficie de terreno:</label>
+                                                        {{ formArquitecture.ground_surface }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>M&#178 construidos PE-RF:</label>
+                                                        {{ formArquitecture.square_m_build }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>M&#178 construcción existente:</label>
+                                                        {{ formArquitecture.e_construction_m }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Nro. de recepción municipal:</label>
+                                                        {{ formArquitecture.municipal_n }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nro. de permiso de edificación</label>
+                                                        {{ formArquitecture.n_building_permit }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
                                                 <div class="accordion" id="accordionArquitecture">
                                                     <div class="card border-dark">
                                                         <div class="card-header" id="headEx">
@@ -185,7 +261,36 @@
                                     <div class="col-lg-6">
                                         <div class="card border-dark" id="Notary" style="display: none">
                                             <div class="card-header"><h2>Datos de notaría</h2></div>
-                                            <div class="card-body">{{ formNotary.as_p }}
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <label>Notaría:</label>
+                                                        {{ formNotary.notary }}
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label>Año de escritura:</label>
+                                                        {{ formNotary.writing_year }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Precio de venta:</label>
+                                                        {{ formNotary.sale_price }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Titulo anterior:</label>
+                                                        {{ formNotary.previous_title }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Titulo actual:</label>
+                                                        {{ formNotary.current_title }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
                                                 <div class="accordion" id="accordionNotary">
                                                     <div class="card border-dark">
                                                         <div class="card-header" id="headWr">
@@ -270,7 +375,32 @@
                                     <div class="col-lg-6">
                                         <div class="card border-dark" id="Internos" style="display: none">
                                             <div class="card-header"><h3>Datos contables internos</h3></div>
-                                            <div class="card-body">{{ formInternal.as_p }}
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Valor del terreno:</label>
+                                                        {{ formInternal.value_land }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Valor de la construcción:</label>
+                                                        {{ formInternal.value_construction }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nombre de comprador o donador:</label>
+                                                        {{ formInternal.acquiring_name }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nombre de vendedor o donatario:</label>
+                                                        {{ formInternal.supplier_name }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
                                                 <div class="accordion" id="accordionInternal">
                                                     <div class="card border-dark">
                                                         <div class="card-header" id="headTypeC">
@@ -322,7 +452,36 @@
                                     <div class="col-lg-6">
                                         <div class="card border-dark" id="SII" style="display: none">
                                             <div class="card-header"><h2>Datos de SII</h2></div>
-                                            <div class="card-body">{{ formSII.as_p }}
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Destino SII:</label>
+                                                        {{ formSII.destiny }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Exención de contribuciones:</label>
+                                                        {{ formSII.ex_contributions }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nombre de propietario SII:</label>
+                                                        {{ formSII.owner_name_SII }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Avalúo fiscal:</label>
+                                                        {{ formSII.tax_appraisal }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Deuda total:</label>
+                                                        {{ formSII.total_debt }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
                                                 <div class="accordion" id="accordionSII">
                                                     <div class="card border-dark">
                                                         <div class="card-header" id="headAc">
@@ -508,7 +667,7 @@
                     processData: false,
                     data: formulario,
                     success: function () {
-                        alert('Datos de arquitectura guardados');
+                        alert('Datos de notaría guardados');
                     }
                 })
             });

@@ -1,17 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
-    Rent, Location, Post
+    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord
 from propiedades2.forms import DocExForm, DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
     DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
     ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.db.models import Q
 
 
@@ -38,9 +38,6 @@ def list_acquisition(request):
         data['object_list'] = paginator.page(paginator.num_pages)
     template_name = 'list_acquisition.html'
     return render(request, template_name, data)
-
-
-# agregar todas las weas vacias
 
 @login_required(login_url='login')
 def view_acquisition(request, cli_id):
@@ -344,14 +341,13 @@ def Add_rent(request):
 
 @login_required(login_url='login')
 def Edit_acquisition(request, acq_id):
-
-    AcquisitionForm = EditAcquisition(request.POST, request.FILES, instance=Acquisition.objects.get(pk=acq_id))
-    data['data'] = EditAcquisition(instance=Acquisition.objects.get(pk=acq_id))
-
     data = {}
+    propiedad = get_object_or_404(Acquisition, pk=acq_id)
+    print(propiedad)
+    print(propiedad)
     if request.method == "POST":
         # ArquitectureForm,InternalForm,NotaryForm,SII_recordForm
-        data['formAcquisition'] = AcquisitionForm(request.POST, request.FILES)
+        data['formArquitecture'] = AcquisitionForm(request.POST, request.FILES)
         data['formLocation'] = LocationForm(request.POST, request.FILES)
         # Arquitecture
         data['formArquitecture'] = ArquitectureForm(request.POST, request.FILES)
@@ -482,7 +478,7 @@ def Edit_acquisition(request, acq_id):
                         if ('ArDocDC' not in request.POST):
                             DC.archive = request.FILES['ArDocDC']
                         DC.comment = request.POST['CDocDC']
-                        DC.type = 'DC'
+                        DC.type = 'CD'
                         DC.save()
                         data['formNotary'].domain_certificate = DC
                     if data['formPH'].is_valid():
@@ -528,19 +524,66 @@ def Edit_acquisition(request, acq_id):
                 return JsonResponse({})
 
     else:
+        prop = AcquisitionForm(instance = propiedad)
+        loca = LocationForm(instance = propiedad.location)
+        # Arquitectura
+        arqui = ArquitectureForm()
+        docex = DocExForm()
+        doccip = DocCipForm()
+        doccn = DocCnForm()
+        docblue = DocBlueForm()
+        docbuild = DocBuildPForm()
+        docmr = DocMRForm()
+        # Internos
+        inter = InternalForm()
+        doctypec = DocTypeCForm()
+        docother = DocOtherForm()
+        # Notaria
+        notary = NotaryForm()
+        docwr = DocWRForm()
+        docdc = DocDCForm()
+        docph = DocPHForm()
+        doces = DocEsForm()
+        # SII
+        sii = SII_recordForm()
+        docac = DocAcForm()
+        docdb = DocDBForm()
+
+        if propiedad.arquitecture != None:
+            arqui = ArquitectureForm(instance= propiedad.arquitecture)
+            docex = DocExForm(instance= propiedad.arquitecture.expropriation_mun)
+            doccip = DocCipForm(instance=propiedad.arquitecture.cip)
+            doccn = DocCnForm(instance=propiedad.arquitecture.certified_number)
+            docblue = DocBlueForm(instance=propiedad.arquitecture.blueprints)
+            docbuild = DocBuildPForm(instance=propiedad.arquitecture.building_permit)
+            docmr = DocMRForm(instance=propiedad.arquitecture.municipal_reception)
+        if propiedad.internal != None:
+            inter = InternalForm(instance=propiedad.internal)
+            doctypec = DocTypeCForm(instance = propiedad.internal.contract_type)
+            docother = DocOtherForm(instance=propiedad.internal.others)
+        if propiedad.notary != None:
+            notary = NotaryForm(instance=propiedad.notary)
+            docwr = DocWRForm(instance=propiedad.notary.writing)
+            docdc = DocDCForm(instance=propiedad.notary.domain_certificate)
+            docph = DocPHForm(instance=propiedad.notary.prohibitions)
+            doces = DocEsForm(instance=propiedad.notary.expropriation_serviu)
+        if propiedad.SII != None:
+            sii = SII_recordForm(instance=propiedad.SII)
+            docac = DocAcForm(instance=propiedad.SII.appraisal_certificate)
+            docdb = DocDBForm(instance=propiedad.SII.debt_certificate)
         data = {
-            'formLocation': LocationForm, 'formAcquisition': AcquisitionForm, 'formArquitecture': ArquitectureForm,
-            'formEx': DocExForm, 'formCip': DocCipForm, 'formCn': DocCnForm,
-            'formBlue': DocBlueForm,
-            'formBuildP': DocBuildPForm, 'formMR': DocMRForm, 'formInternal': InternalForm,
-            'formTypeC': DocTypeCForm,
-            'formOther': DocOtherForm, 'formNotary': NotaryForm, 'formWR': DocWRForm,
-            'formDC': DocDCForm,
-            'formPH': DocPHForm, 'formEs': DocEsForm, 'formSII': SII_recordForm,
-            'formAc': DocAcForm, 'formDB': DocDBForm,
+            'formLocation': loca, 'formAcquisition': prop, 'formArquitecture':arqui,
+            'formEx': docex, 'formCip': doccip, 'formCn': doccn,
+            'formBlue': docblue,
+            'formBuildP': docbuild, 'formMR': docmr, 'formInternal': inter,
+            'formTypeC': doctypec,
+            'formOther': docother, 'formNotary': notary, 'formWR': docwr,
+            'formDC': docdc,
+            'formPH': docph, 'formEs': doces, 'formSII': sii,
+            'formAc': docac, 'formDB': docdb, 'id': propiedad.pk
         }
 
-    return render(request, 'add_acquisition.html', data)
+    return render(request, 'edit_acquisition.html', data)
 
 
 @login_required(login_url='login')
@@ -561,16 +604,55 @@ def Edit_rent(request, rent_id):
 @login_required(login_url='login')
 def Delete_acquisition(request, id):
     data = {}
-    template_name = ''
-    data['acquisition'] = Acquisition.objects.all()
-    Acquisition.objects.filter(pk=id).delete()
+    aux = Acquisition.objects.get(pk=id)
+    #Location.objects.filter(pk=aux.location.pk).delete()
+    if aux.arquitecture != None:
+        print('tiene arquitectura')
+        if aux.arquitecture.expropriation_mun != None:
+            print('tiene documentos')
+            DocumentEx.objects.filter(pk=aux.arquitecture.expropriation_mun.pk)
+        if aux.arquitecture.cip != None:
+            DocumentCip.objects.filter(pk=aux.arquitecture.cip.pk)
+        if aux.arquitecture.certified_number != None:
+            DocumentCn.objects.filter(pk=aux.arquitecture.certified_number.pk)
+        if aux.arquitecture.blueprints != None:
+            DocumentBlue.objects.filter(pk=aux.arquitecture.blueprints.pk)
+        if aux.arquitecture.building_permit != None:
+            DocumentBuildP.objects.filter(pk=aux.arquitecture.building_permit.pk)
+        if aux.arquitecture.municipal_reception != None:
+            DocumentMR.objects.filter(pk=aux.arquitecture.municipal_reception.pk)
+        ArchitectureRecordAcq.objects.filter(pk=aux.arquitecture.pk)
+    if aux.internal != None:
+        if aux.internal.contract_type != None:
+            DocumentTypeC.objects.filter(pk=aux.internal.contract_type.pk)
+        if aux.internal.others != None:
+            DocumentOther.objects.filter(pk=aux.internal.contract_type.pk)
+        InternalAccountantsAcq.objects.filter(pk=aux.internal.pk)
+    if aux.notary != None:
+        if aux.internal.writing != None:
+            DocumentWR.objects.filter(pk=aux.internal.writing.pk)
+        if aux.internal.domain_certificate != None:
+            DocumentDC.objects.filter(pk= aux.internal.domain_certificate.pk)
+        if aux.internal.prohibitions != None:
+            DocumentPH.objects.filter(pk=aux.internal.prohibitions.pk)
+        if aux.internal.expropriation_serviu != None:
+            DocumentEs.objects.filter(pk=aux.internal.expropriation_serviu.pk)
+        NotaryAcquisition.objects.filter(pk=aux.notary.pk)
+    if aux.SII != None:
+        if aux.SII.appraisal_certificate != None:
+            DocumentAc.objects.filter(pk= aux.SII.appraisal_certificate.pk)
+        if aux.SII.debt_certificate != None:
+            DocumentDB.objects.filter(pk = aux.SII.debt_certificate.pk)
+        SiiRecord.objects.filter(pk = aux.SII.pk)
+    Acquisition.objects.filter(pk=id)
+
+    # Acquisition.objects.filter(pk=id).delete()
     return HttpResponseRedirect(reverse('list_acquisition'))
 
 
 @login_required(login_url='login')
 def Delete_rent(request):
     data = {}
-    template_name = ''
     data['rent'] = Rent.objects.all()
     Rent.objects.filter(pk=id).delete()
     return HttpResponseRedirect(reverse('list_rent'))
@@ -696,19 +778,51 @@ def search(request):
     template = 'search.html'
     data = {}
     data[request] = request
-    query = request.GET.get('q')
-    object_list_acquisition = Acquisition.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
-    object_list_rent = Rent.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
-    paginator_acq = Paginator(object_list_acquisition, 5)
-    paginator_rent = Paginator(object_list_rent, 5)
-    page = request.GET.get('page')
-    try:
-        data['object_list_acquisition'] = paginator_acq.page(page)
-        data['object_list_rent'] = paginator_rent.page(page)
-    except PageNotAnInteger:
-        data['object_list_acquisition'] = paginator_acq.page(1)
-        data['object_list_rent'] = paginator_rent.page(1)
-    except EmptyPage:
-        data['object_list_acquisition'] = paginator_acq.page(paginator_acq.num_pages)
-        data['object_list_rent'] = paginator_rent.page(paginator_rent.num_pages)
-    return render(request, template, data)
+    if request.method == "GET":
+        selection = request.GET.get('selection')
+        if selection == '1':
+            query = request.GET.get('q')
+            object_list_acquisition = Acquisition.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
+            object_list_rent = Rent.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
+            paginator_acq = Paginator(object_list_acquisition, 50)
+            paginator_rent = Paginator(object_list_rent, 50)
+            page = request.GET.get('page')
+            try:
+                data['object_list_acquisition'] = paginator_acq.page(page)
+                data['object_list_rent'] = paginator_rent.page(page)
+            except PageNotAnInteger:
+                data['object_list_acquisition'] = paginator_acq.page(1)
+                data['object_list_rent'] = paginator_rent.page(1)
+            except EmptyPage:
+                data['object_list_acquisition'] = paginator_acq.page(paginator_acq.num_pages)
+                data['object_list_rent'] = paginator_rent.page(paginator_rent.num_pages)
+            return render(request, template, data)
+        elif selection == '2':
+            query = request.GET.get('q')
+            object_list_acquisition = Acquisition.objects.filter(
+                Q(property_use=query) | Q(name__contains=query)).order_by('id')
+            paginator_acq = Paginator(object_list_acquisition, 100)
+            page = request.GET.get('page')
+            try:
+                data['object_list_acquisition'] = paginator_acq.page(page)
+            except PageNotAnInteger:
+                data['object_list_acquisition'] = paginator_acq.page(1)
+            except EmptyPage:
+                data['object_list_acquisition'] = paginator_acq.page(paginator_acq.num_pages)
+            return render(request, template, data)
+        elif selection == '3':
+            query = request.GET.get('q')
+            object_list_rent = Rent.objects.filter(Q(property_use=query) | Q(name__contains=query)).order_by('id')
+            paginator_rent = Paginator(object_list_rent, 100)
+            page = request.GET.get('page')
+            try:
+                data['object_list_rent'] = paginator_rent.page(page)
+            except PageNotAnInteger:
+                data['object_list_rent'] = paginator_rent.page(1)
+            except EmptyPage:
+                data['object_list_rent'] = paginator_rent.page(paginator_rent.num_pages)
+            return render(request, template, data)
+        else:
+            return render(request, 'list_total.html')
+    else:
+        return render(request, 'list_total.html')

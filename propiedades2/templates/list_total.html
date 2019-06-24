@@ -24,21 +24,44 @@
         <div class="row">
             <div class="col-md-10">
                 <form method="GET" action="{% url 'search' %}">
-                    <input type="text" class="form-control" name="q" value="{{request.GET.q}}" placeholder="Buscar..">
+                    <form action="" method="GET">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="selection" type="radio" value="1" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">
+                                Todas
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="selection" type="radio" value="2" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Acquisición
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="selection" type="radio" value="3" id="defaultCheck3">
+                            <label class="form-check-label" for="defaultCheck3">
+                                Renta
+                            </label>
+                        </div>
+                        <input type="text" class="form-control ml-sm-2" name="q" value="{{ request.GET.q }}"
+                               placeholder="Hola! ¿Buscas algo?..">
+                    </form>
                 </form>
             </div>
             <div class="col-md-2">
-                <div class="dropdown">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Agregar
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% url 'add_acquisition' %}">Adquirida</a>
-                    <a class="dropdown-item" href="{% url 'add_rent' %}">Arrendada</a>
-                  </div>
+                <div class="dropdown float-right" style="margin-top: 15%;">
+                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Agregar
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{% url 'add_acquisition' %}">Adquirida</a>
+                        <a class="dropdown-item" href="{% url 'add_rent' %}">Arrendada</a>
+                    </div>
                 </div>
             </div>
         </div>
+        <br>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-striped" id="datos">
@@ -59,9 +82,9 @@
                             <td>{{ cli.location }}</td>
                             <td>{{ cli.property_use }}</td>
                             <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-warning" <td><a href="{% url 'view_acquisition' cli.pk %}" >Visualizar</a></td></button>
-                                </div>
+                                <a href="{% url 'view_acquisition' cli.pk %}">
+                                    <button type="button" class="btn btn-primary">Visualizar</button>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -73,13 +96,39 @@
                             <td>{{ clik.property_use }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <button type="button" class="btn btn-warning" <td><a href="{% url 'view_rent' clik.pk %}" >Visualizar</a></td></button>
-                                </div>
-                            </td>
+                                    <button type="button" class="btn btn-primary"
+                            <td><a href="{% url 'view_rent' clik.pk %}">Visualizar</a></td>
+                            </button>
+                        </div>
+                        </td>
                         </tr>
                     {% endfor %}
-                    </tbody>
-                </table>
+            </tbody>
+            </table>
+            <div class="row">
+                {% if object_list_acquisition.has_next or object_list_acquisition.has_previous %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if object_list_acquisition.has_previous %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ object_list_acquisition.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+
+                            {% for page in object_list_acquisition.paginator.page_range %}
+                                <li class="page-item {% if object_list_acquisition.number == page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                            {% endfor %}
+
+                            {% if object_list_acquisition.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ object_list_acquisition.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                {% endif %}
             </div>
         </div>
     </div>

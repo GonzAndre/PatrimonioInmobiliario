@@ -298,16 +298,16 @@ class ArquitectureForm(ModelForm):
 
         widgets = {
             'ground_surface': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Ingrese superficie del terreno',
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese superficie',
                        'id': 'ground_surface'}),
             'square_m_build': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Ingrese metros cuadrados construidos',
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese metros cuadrados',
                        'id': 'square_m_build'}),
             'e_construction_m': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Ingrese metros de construcción existentes',
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese metros cuadrados',
                        'id': 'e_construction_m'}),
             'municipal_n': forms.NumberInput(
-                attrs={'class': 'form-control', 'placeholder': 'Ingrese número de recepción municipal',
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese número',
                        'id': 'municipal_n'}),
             'n_building_permit': forms.NumberInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese número de permiso de edificación',
@@ -333,7 +333,7 @@ class InternalForm(ModelForm):
             'value_land': forms.NumberInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese valor del terreno', 'id': 'value_land'}),
             'value_construction': forms.NumberInput(
-                attrs={'class': 'form-control', 'placeholder': 'Ingrese valor de la construcción',
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese valor construcción',
                        'id': 'value_construction'}),
             'acquiring_name': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre del comprador o donador',

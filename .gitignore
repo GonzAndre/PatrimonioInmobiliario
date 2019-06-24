@@ -1,8 +1,6 @@
-*.pyc
-.env
-.idea
-.vscode
-settings.py
-static.rar
-requiriments.txt
 db.sqlite3
+manage.py
+.idea
+.git
+venv
+media
