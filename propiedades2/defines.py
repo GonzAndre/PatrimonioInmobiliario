@@ -50,3 +50,9 @@ ATTRIBUTES_CHOICE = (
     ('CA', 'Certificado avalúo'),
     ('CD', 'Certificado no deuda')
 )
+
+POSITION_CHOICE = (
+    ('DIG', 'Digitador'),
+    ('ADM', 'Administrador'),
+    ('VIS', 'Visualizador')
+)

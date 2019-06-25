@@ -336,6 +336,9 @@
                                 {% endif %}
                                 {% if acquisition.internal.contract_type %}
                                     <p>
+                                    <h1>{{ acquisition.internal.contract_type }}</h1>
+                                    <h2>{{ acquisition.internal.contract_type.pk }}</h2>
+                                    <h3>{{ acquisition.internel.contract_type.type }}</h3>
                                         <a href="{% url 'view_archive' acquisition.internal.contract_type.type acquisition.internal.contract_type.pk %}"
                                            style="color:blue">Tipo de
                                             contrato: {{ acquisition.internal.contract_type.archive }}</a></p>

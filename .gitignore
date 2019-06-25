@@ -4,3 +4,8 @@ manage.py
 .git
 venv
 media
+.gitignore
+requirements
+requirements.txt
+.gitignore
+README.md

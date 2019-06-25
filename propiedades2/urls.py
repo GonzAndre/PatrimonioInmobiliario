@@ -19,4 +19,6 @@ urlpatterns = [
     path('delete_rent/<int:id>', views.Delete_rent, name="delete_rent"),
     path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
     path('search', views.search, name="search"),
+    path('createstaff/', views.createstaff, name='createstaff'),
+
 ]

@@ -90,11 +90,12 @@
                                         {% else %}
                                             <p id="total">Nombre arrendador: No Registrado</p>
                                         {% endif %}
-                                        {% if acquisition.internal.contract_type %}
+                                        {% if rent.contract_type %}
                                             <p>
-                                                <a href="{% url 'view_archive' rent.contract_type.type rent.contract_type.pk %}"
-                                                   style="color:blue">Tipo de
-                                                    contrato: {{ rent.contract_type.archive }}</a></p>
+                                            <a href="{% url 'view_archive' rent.contract_type.type rent.contract_type.pk %}"
+                                           style="color:blue">Tipo de
+                                            contrato: {{ rent.contract_type.archive }}</a></p>
+                                            </p>
                                         {% else %}
                                             <p id="total">Tipo de contrato: No Registrado</p>
                                         {% endif %}

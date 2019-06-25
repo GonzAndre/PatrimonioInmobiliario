@@ -6,6 +6,11 @@ from propiedades2.models import Location, Acquisition, DocumentEx, DocumentCip, 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import ModelForm
+from propiedades2.models import *
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 # Documentos de arquitectura
 class DocExForm(ModelForm):
@@ -453,7 +458,38 @@ class RentForm(ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese fecha de duración del contrato'}),
         }
 
-    class PostForm(ModelForm):
-        class Meta:
-            model = Post
-            fields = ['title', 'description', 'author', 'publish_date', 'acquisition', 'rent', ]
+class StaffForm(ModelForm):
+    class Meta:
+        model = Staff
+        fields = ['type_user', 'email']
+        labels = {
+            'type_user': 'Tipo de usuario',
+            'email': 'Correo electronico'
+        }
+        widgets = {
+            'type_user': forms.Select(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
+
+class UserForm(ModelForm):
+    password1 = forms.CharField(help_text=None, label='Ingrese contraseña',
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirmar contraseña',
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2')
+
+        widgets = {
+            'username': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de usuario'}),
+        }
+
+class PostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'description', 'author', 'publish_date', 'acquisition', 'rent', ]
+
+
+

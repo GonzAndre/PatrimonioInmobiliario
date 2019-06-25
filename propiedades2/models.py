@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.utils import timezone
 from propiedades2.defines import *
-from Auth_users.models import UserProfile
-from datetime import datetime
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 # Create your models here.
@@ -89,7 +88,7 @@ class DocumentTypeC(models.Model):
     archive = models.FileField(upload_to='Documentos/', blank=True)
     publish_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE)
+    type = models.CharField(max_length=5, choices=ATTRIBUTES_CHOICE, default='TC')
 
     def __str__(self):
         return "Documento: %s, Fecha de subida: %s" % (self.archive, self.publish_date)
@@ -274,12 +273,20 @@ class Rent(models.Model):
     end_date = models.DateTimeField(default=timezone.now)
     duration = models.PositiveIntegerField()
 
+class Staff(models.Model):
+    username_staff = models.OneToOneField(User, on_delete=models.CASCADE)
+    type_user = models.CharField(max_length=3, choices=POSITION_CHOICE)
+    status = models.BooleanField(default=True)
+    email = models.EmailField()
+
+    def __str__(self):
+        return "nombre: %s Tipo de usuario: %s" % (self.username_staff, self.type_user)
 
 # Post
 class Post(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=500)
-    author = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
     acquisition = models.OneToOneField(Acquisition, on_delete=models.CASCADE, related_name='PostAcquisition')
     rent = models.OneToOneField(Rent, on_delete=models.CASCADE, related_name='PostRent')
@@ -288,3 +295,4 @@ class Post(models.Model):
         now = datetime.now(timezone.utc)
         difference = now - self.publish_date
         return int(difference.total_seconds() / 3600)
+

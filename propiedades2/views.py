@@ -4,15 +4,17 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
-    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord
-from propiedades2.forms import DocExForm, DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
+    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff
+from propiedades2.forms import DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
     DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
-    ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm
+    ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm, StaffForm, UserForm
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db.models import Q
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -25,10 +27,9 @@ def index(request):
 def list_acquisition(request):
     data = {}
     object_list = Acquisition.objects.all().order_by('-id')
-
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
-
+    data['staff'] = Staff.objects.get(username_staff=request.user)
     try:
         data['object_list'] = paginator.page(page)
     except PageNotAnInteger:
@@ -52,17 +53,17 @@ def view_rent(request, rent_id):
     data = {}
     template_name = 'detail_rent.html'
     data['rent'] = Rent.objects.get(pk=rent_id)
+    print(data['rent'])
     return render(request, template_name, data)
 
 
 @login_required(login_url='login')
 def list_rent(request):
     data = {}
-
     object_list = Rent.objects.all().order_by('-id')
-
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
+    data['staff'] = Staff.objects.get(username_staff=request.user)
 
     try:
         data['object_list'] = paginator.page(page)
@@ -73,21 +74,6 @@ def list_rent(request):
         data['object_list'] = paginator.page(paginator.num_pages)
     template_name = 'list_rent.html'
     return render(request, template_name, data)
-
-
-def user_leaderships(UserProfile, Leadership):
-    if (Leadership):
-        try:
-            Leadership.objects.get(UserProfile=UserProfile)
-            return False
-        except Exception as e:
-            return True
-    else:
-        try:
-            Leadership.objects.get(UserProfile=UserProfile)
-            return True
-        except Exception as e:
-            return False
 
 
 @login_required(login_url='login')
@@ -319,7 +305,6 @@ def Add_rent(request):
         data['formLocation'] = LocationForm(request.POST)
         data['formRent'] = RentForm(request.POST, request.FILES)
         data['formDocument'] = DocTypeCForm(request.POST, request.FILES)
-
         if data['formRent'].is_valid():
             rent = data['formRent'].save(commit=False)
             if data['formLocation'].is_valid():
@@ -589,15 +574,25 @@ def Edit_acquisition(request, acq_id):
 @login_required(login_url='login')
 def Edit_rent(request, rent_id):
     data = {}
-    data["request"] = request
+    propiedad = get_object_or_404(Rent, pk=rent_id)
+    print(propiedad)
     if request.POST:
-        RentForm = EditRent(request.POST, request.FILES, instance=Rent.objects.get(pk=rent_id))
-        if RentForm.is_valid():
-            RentForm.save()
+        FormRent = RentForm(request.POST, request.FILES, instance=Rent.objects.get(pk=rent_id))
+        FormLocation = LocationForm(request.POST, request.FILES, instance=Rent.objects.get(pk=rent_id))
+        FormDocTypeC = DocTypeCForm(request.POST, instance=Rent.objects.get(pk=rent_id))
+        if FormRent.is_valid():
+            if FormLocation.is_valid():
+                if FormDocTypeC.is_valid():
+                    FormRent.save()
+                    FormLocation.save()
+                    FormDocTypeC.save()
             return redirect('list_rent')
-    template_name = 'edit.html'
-    data['data'] = EditRent(instance=Rent.objects.get(pk=rent_id))
-
+    data['data'] = RentForm(instance=Rent.objects.get(pk=rent_id))
+    data['FormLocation']= LocationForm(instance=propiedad.location)
+    data['FormDocument'] = DocTypeCForm(instance=propiedad.contract_type)
+    print(data[''])
+    print(data)
+    template_name = 'edit_rent.html'
     return render(request, template_name, data)
 
 
@@ -760,7 +755,7 @@ def list_total(request):
     paginator_acq = Paginator(object_list_acquisition, 5)
     paginator_rent = Paginator(object_list_rent, 5)
     page = request.GET.get('page')
-
+    data['staff'] = Staff.objects.get(username_staff = request.user)
     try:
         data['object_list_acquisition'] = paginator_acq.page(page)
         data['object_list_rent'] = paginator_rent.page(page)
@@ -826,3 +821,43 @@ def search(request):
             return render(request, 'list_total.html')
     else:
         return render(request, 'list_total.html')
+
+
+def createstaff(request):
+    data = {}
+    data['title'] = 'Agregar Personal'
+    if request.method == 'POST':
+        data['form'] = StaffForm(request.POST)
+        data['form2'] = UserForm(request.POST)
+        print(request.POST['password1'])
+        print(request.POST['password2'])
+
+        if data['form2'].is_valid():
+            if data['form'].is_valid():
+                sav = data['form'].save(commit=False)
+                a = data['form2']
+                password = request.POST['password1']
+                print(password)
+                password2 = request.POST['password2']
+                print(password2)
+                if password == password2:
+                    sav2 = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'], )
+                    sav.username_staff = sav2
+                    sav.save()
+                    return HttpResponseRedirect(reverse('createstaff'))
+                else:
+                    data['resultado'] = 'Las contraseñas son diferentes'
+                    print(data)
+                    return render(request, 'createstaff.html', data)
+
+
+
+    else:
+        data['form2'] = UserForm()
+        data['form'] = StaffForm()
+
+    template = 'createstaff.html'
+
+    return render(request, template, data)
+
+

@@ -33,11 +33,13 @@
                            placeholder="Hola! ¿Buscas algo?..">
                 </form>
             </div>
-            <div class="col-md-2 col-sm-4">
-                <a class="float-right" href="{% url 'add_rent' %}" style="margin-top: 15%;">
-                    <button type="button" class="btn btn-success">Agregar</button>
-                </a>
-            </div>
+            {% if staff.type_user == 'DIG' or staff.type_user == 'ADM' %}
+                <div class="col-md-2 col-sm-4">
+                    <a class="float-right" href="{% url 'add_rent' %}" style="margin-top: 15%;">
+                        <button type="button" class="btn btn-success">Agregar</button>
+                    </a>
+                </div>
+            {% endif %}
         </div>
         <br>
         <div class="row">
