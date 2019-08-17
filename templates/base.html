@@ -40,8 +40,13 @@
                     </div>
                    </button>
             </li>
+             {% if staff.type_user == 'ADM' %}
+                 <li>
+                    <button class="btn btn-outline btn-sm" type="submit"> <a class="nav-link" href="{% url 'createstaff' %}">Crear Usuario</a> </button>
+                 </li>
+             {% endif %}
             <li>
-              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="#">{{request.user}}</a> </button>
+              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="#">{{request.user.first_name}}</a> </button>
             </li>
             <p> </p>
             <li>

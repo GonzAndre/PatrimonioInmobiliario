@@ -61,6 +61,10 @@
         </label>
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesion</button>{% csrf_token %}
+        <p></p>
+        <a href="{% url 'Login_email_password' %}">
+                <button type="button" class="btn btn-lg btn-primary btn-block">Recuperar password</button>
+        </a>
       <p class="mt-5 mb-3 text-muted text-center">&copy; 2019</p>
     </div>
     </form>

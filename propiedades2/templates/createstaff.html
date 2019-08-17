@@ -1,30 +1,62 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <title>Registro de usuario</title>
+    <title>{% block title %} Crear Usuario {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+
 </head>
+{% include "base.html" %}
+{% block content %}
 <body>
-<div class="container">
+    <div class="container">
+        <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
 
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-offset-12">
-            <h1 class='text-center' style="margin-top:30px;">Agregar clientes</h1>
+            <h1 class='text-center' style="margin-top:30px;">Agregar Usuario</h1>
 
             <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
                 <h1>{{ resultado }}</h1>
-                <h1>Ingrese Nombre de usuario</h1>
-                {{ form2.username }}
-                <h1>Ingrese Contraseña</h1>
-                {{ form2.password1 }}
-                <h1>Confirme Contraseña</h1>
-                {{ form2.password2 }}
-                <h1>Ingrese su Correo</h1>
-                {{ form.email }}
-                <h1>Elija Tipo de Usuario</h1>
-                {{ form.type_user }}
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="" placeholder="Ingrese su nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Apellido:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="" placeholder="Ingrese su apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" class="form-control" id="username" name="username" value="" placeholder="Ingrese su nombre de usuario" required>
+                </div>
+                 <div class="form-group">
+                    <label for="password1">Contraseña:</label>
+                    <input type="password" class="form-control" name="password1" id="InputPassword1" placeholder="Introduce tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Contraseña:</label>
+                    <input type="password" class="form-control" name="password2" id="InputPassword1" placeholder="Vuelve a introducir tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="" placeholder="Ingrese su correo electronico" required>
+                </div>
+                <div>
+                    <label for="type_user">Tipo de usuario:</label>
+                   <select class="form-control" id="Select" name="type_user">
+                        <option value="ADM" selected>Administrador</option>
+                        <option value="DIG">Digitador</option>
+                        <option value="VIS">Visualizador</option>
+                    </select>
+                </div>
+
 
 
                 <div>
@@ -69,6 +101,7 @@
     </div>
 </div>
 </body>
+{% endblock content %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

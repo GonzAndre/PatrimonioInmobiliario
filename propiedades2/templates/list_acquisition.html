@@ -21,6 +21,12 @@
                 <h1>Listado Propiedades adquiridas</h1>
             </div>
         </div>
+        {% if alerta %}
+            <div class="alert alert-success">
+                <button class="close" data-dismiss="alert"><span>&times;</span></button>
+                <strong>USTED NO TIENE LOS PRIVILEGIOS PARA AGREGAR UNA PROPIEDAD</strong>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-md-10">
                 <form class="form mb-auto" method="GET" action="{% url 'search' %}">

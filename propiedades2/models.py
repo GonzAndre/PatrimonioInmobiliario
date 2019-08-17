@@ -275,12 +275,14 @@ class Rent(models.Model):
 
 class Staff(models.Model):
     username_staff = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=50)
     type_user = models.CharField(max_length=3, choices=POSITION_CHOICE)
     status = models.BooleanField(default=True)
     email = models.EmailField()
 
     def __str__(self):
-        return "nombre: %s Tipo de usuario: %s" % (self.username_staff, self.type_user)
+        return "username: %s Tipo de usuario: %s" % (self.username_staff, self.type_user)
 
 # Post
 class Post(models.Model):

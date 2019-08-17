@@ -4,7 +4,7 @@ from propiedades2.models import Location, Acquisition, DocumentEx, DocumentCip, 
     DocumentBuildP, DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, \
     DocumentAc, DocumentEs, ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from propiedades2.models import *
@@ -461,12 +461,16 @@ class RentForm(ModelForm):
 class StaffForm(ModelForm):
     class Meta:
         model = Staff
-        fields = ['type_user', 'email']
+        fields = ['first_name', 'last_name','type_user', 'email']
         labels = {
+            'first_name': 'Nombre',
+            'last_name': 'Apellido',
             'type_user': 'Tipo de usuario',
-            'email': 'Correo electronico'
+            'email': 'Correo electronico',
         }
         widgets = {
+            'first_name':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su nombre'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su apellido'}),
             'type_user': forms.Select(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
@@ -479,11 +483,15 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2')
+        fields = ('username', 'password1', 'password2', 'first_name', 'last_name')
 
         widgets = {
             'username': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de usuario'}),
+            'first_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre'}),
+            'last_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Ingrese apellido'}),
         }
 
 class PostForm(ModelForm):
@@ -491,5 +499,21 @@ class PostForm(ModelForm):
         model = Post
         fields = ['title', 'description', 'author', 'publish_date', 'acquisition', 'rent', ]
 
+class EditStaffForm(UserChangeForm):
+    class Meta:
+        model = Staff
+        fields = ['first_name', 'last_name','type_user', 'email', 'status']
 
+class EditUserForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
 
+class PasswordChangeForm(UserChangeForm):
+    password1 = forms.CharField(help_text=None, label='Ingrese contraseña',
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirmar contraseña',
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    class Meta:
+        model = User
+        fields = ['password1', 'password2']

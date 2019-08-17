@@ -44,7 +44,7 @@
         {% endif %}
 
       </div>
-    <div id="login">
+    <button id="login">
       <div class="form-label-group">
         <input type="text" id="user" name="user" class="form-control" placeholder="Usuario" required autofocus>
         <label for="user"><i class="fas fa-user"></i> Nombre usuario</label>
@@ -58,9 +58,13 @@
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me"> Recordarme
+            <a href="{% url 'Login_email_password' %}">
+                <button type="button" class="btn btn-primary">Visualizar</button>
+            </a>
         </label>
       </div>
       <button class="btn btn-lg btn-primary btn-block" > Inicio Sesión </button>
+
       <p class="mt-5 mb-3 text-muted text-center">&copy; 2019</p>
     </div>
     </form>
