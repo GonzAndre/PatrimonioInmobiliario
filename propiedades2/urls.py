@@ -27,5 +27,6 @@ urlpatterns = [
     path('validatePassword/',views.Validate_password, name='Login_validate_password'),
     path('add_region/', views.add_region, name = 'add_region'),
     path('edit_region/<int:region_id>', views.edit_region, name = 'edit_region'),
-
+    path('list_region', views.list_region, name='list_region'),
+    path('delete_region/<int:region_id>', views.delete_region, name='delete_region'),
 ]

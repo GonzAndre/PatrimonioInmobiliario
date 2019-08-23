@@ -1071,10 +1071,13 @@ def Validate_password(request):
 def add_region(request):
     template = 'add_region.html'
     data = {}
-    p = request.POST.get('name')
+    p = str(request.POST.get('name'))
+    q = str(request.POST.get('acronym'))
+    p = p.upper()
+    q = q.upper()
     if Region.objects.filter(name=p).exists() == False:
         if request.POST:
-            x = Region.objects.create(name=request.POST['name'], acronym=request.POST['acronym'])
+            x = Region.objects.create(name=p, acronym=q)
             x.save()
             return JsonResponse({'result':True})
     else:
@@ -1089,14 +1092,41 @@ def edit_region(request, region_id):
     print(data)
     if request.method == 'POST':
         print('111111111111111111')
-        nombre = request.POST.get('info.name')
-        acronimo = request.POST.get('info.acronym')
+        nombre = request.POST.get('name')
+        acronimo = request.POST.get('acronym')
         print(nombre, acronimo)
         Region.objects.filter(pk = region_id).update(name = nombre, acronym = acronimo)
 
         return JsonResponse({'result': True})
     else:
         return render(request, template, data)
+
+def delete_region(request, region_id):
+    template = 'delete_region.html'
+    data = {}
+    data['info'] = Region.objects.get(pk = region_id)
+    if request.method == 'POST':
+        if request.POST['valor'] == 'True':
+            Region.objects.filter(pk = region_id).delete()
+            return JsonResponse({'result': True})
+        else:
+            return JsonResponse({'result': False})
+    else:
+        return render(request, template, data)
+
+def list_region(request):
+    template = 'list_region.html'
+    data = {}
+    object_list = Region.objects.all().order_by()
+    paginator = Paginator(object_list, 20)
+    page = request.GET.get('page')
+    try:
+        data['object_list'] = paginator.page(page)
+    except PageNotAnInteger:
+        data['object_list'] = paginator.page(1)
+    except EmptyPage:
+        data['object_list'] = paginator.page(paginator.num_pages)
+    return render(request, template, data)
 
 def change_status_acquisition(request, id):
     aux = Acquisition.objects.get(pk = id)
