@@ -6,13 +6,19 @@ from django.utils import timezone
 
 
 # Create your models here.
+class Region(models.Model):
+    acronym = models.CharField(max_length=3, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return "Acronimo: %s, nombre: %s" % (self.acronym, self.name)
 
 class Location(models.Model):
     street = models.CharField(max_length=200)
     number = models.PositiveIntegerField()
     commune = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    region = models.CharField(max_length=200, choices=REGION_CHOICE)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
     lot_number = models.PositiveIntegerField(blank=True, null=True)
     plot = models.CharField(max_length=100, blank=True, null=True)
 

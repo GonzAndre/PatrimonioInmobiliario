@@ -21,13 +21,11 @@ urlpatterns = [
     path('edit_staff/<int:staff_id>', views.edit_staff, name='edit_staff'),
     path('list_staff', views.list_staff, name="list_staff"),
     path('edit_password/<int:staff_id>', views.edit_password, name="edit_password"),
-    #path('password_reset', views.password_reset, {'template_name':'password_reset_form.html', 'email_template_name': 'password_reset_email.html'}, name='password_reset'),
-    #path('password_reset_done', views.password_reset_done, {'template_name':'password_reset_done.html'}, name='password_reset_done'),
-    #path('(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.password_reset_confirm, {'template_name':'password_reset_confirm.html'}, name='password_reset_confirm'),
-    #path('password_reset_complete', views.password_reset_complete, {'template_name':'password_reset_complete.html'} , name='password_reset_complete'),
     path('forgotPassword/',views.Forgot_password, name='Login_forgot_password'),
     path('emailPassword/',views.Email_password, name='Login_email_password'),
     path('validate/',views.Validate, name='Login_validate'),
     path('validatePassword/',views.Validate_password, name='Login_validate_password'),
+    path('add_region/', views.add_region, name = 'add_region'),
+    path('edit_region/<int:region_id>', views.edit_region, name = 'edit_region'),
 
 ]

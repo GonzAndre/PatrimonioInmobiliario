@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
-    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff
+    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff, Region
 from propiedades2.forms import DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
     DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
     ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm, StaffForm, UserForm, EditStaffForm, \
@@ -20,7 +20,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 import random
 import string
-
+from django.views.decorators.csrf import csrf_protect
 
 
 # Create your views here.
@@ -1068,3 +1068,50 @@ def Validate_password(request):
         return JsonResponse({'result':False})
     return render(request, template, data)
 
+def add_region(request):
+    template = 'add_region.html'
+    data = {}
+    p = request.POST.get('name')
+    if Region.objects.filter(name=p).exists() == False:
+        if request.POST:
+            x = Region.objects.create(name=request.POST['name'], acronym=request.POST['acronym'])
+            x.save()
+            return JsonResponse({'result':True})
+    else:
+        return JsonResponse({'result':False})
+
+    return render(request, template)
+
+def edit_region(request, region_id):
+    data = {}
+    template = 'edit_region.html'
+    data['info'] = Region.objects.get(pk = region_id)
+    print(data)
+    if request.method == 'POST':
+        print('111111111111111111')
+        nombre = request.POST.get('info.name')
+        acronimo = request.POST.get('info.acronym')
+        print(nombre, acronimo)
+        Region.objects.filter(pk = region_id).update(name = nombre, acronym = acronimo)
+
+        return JsonResponse({'result': True})
+    else:
+        return render(request, template, data)
+
+def change_status_acquisition(request, id):
+    aux = Acquisition.objects.get(pk = id)
+    print(aux)
+    if aux.status == True:
+        Acquisition.objects.filter(pk = id).update(status = False)
+    elif aux.status == False:
+        Acquisition.objects.filter(pk = id).update(status = True)
+
+    return HttpResponseRedirect(reverse(list_acquisition))
+
+def change_status_rent(request, id):
+    aux = Rent.objects.get(pk = id)
+    if aux.status == True:
+        Rent.objects.filter(pk = id).update(status = False)
+    elif aux.status == False:
+        Rent.objects.filter(pk = id).update(status = True)
+    return HttpResponseRedirect(reverse(list_rent))

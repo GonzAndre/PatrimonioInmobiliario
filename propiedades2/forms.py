@@ -2,7 +2,7 @@
 from django.forms import ModelForm
 from propiedades2.models import Location, Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, \
     DocumentBuildP, DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, \
-    DocumentAc, DocumentEs, ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post
+    DocumentAc, DocumentEs, ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post, Region
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
@@ -517,3 +517,16 @@ class PasswordChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ['password1', 'password2']
+
+class RegionForm(ModelForm):
+    class Meta:
+        model = Region
+        fields = ['acronym', 'name',]
+        labels = {
+            'acronym': 'Acronimo',
+            'name': 'Nombre',
+        }
+        widgets = {
+            'acronym':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el acronimo de la región'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el nombre de la regións'}),
+        }
