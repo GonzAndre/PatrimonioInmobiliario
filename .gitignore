@@ -9,3 +9,8 @@ requirements
 requirements.txt
 .gitignore
 README.md
+docker-compose.yml
+Dockerfile
+.env
+PatrimonioInmobiliario
+pip

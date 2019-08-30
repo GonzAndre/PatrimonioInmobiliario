@@ -26,7 +26,7 @@
     $(document).ready(function () {
         $("#info_region").on('click', function () {
             $.ajax({
-                url: '{% url 'edit_region' info.pk %}',
+                url: '{% url 'edit_property' info.pk %}',
                 type: 'POST',
                 data: {
                     'name': $("#nombre").val(),
@@ -36,7 +36,7 @@
                 success: function (data) {
                     if (data.result){
                         alert('Paso')
-                        window.location.href = "{% url 'list_region' %}"
+                        window.location.href = "{% url 'list_property' %}"
                     }
                     else {
                         alert('No paso')

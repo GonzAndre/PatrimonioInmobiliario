@@ -3,6 +3,8 @@ from django.db import models
 from propiedades2.defines import *
 from django.contrib.auth.models import User
 from django.utils import timezone
+from simple_history.models import HistoricalRecords
+
 
 
 # Create your models here.
@@ -12,6 +14,14 @@ class Region(models.Model):
 
     def __str__(self):
         return "Acronimo: %s, nombre: %s" % (self.acronym, self.name)
+
+class Property(models.Model):
+    acronym = models.CharField(max_length = 3, blank = True, null = True)
+    name = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return "Acronimo: %s, nombre: %s" % (self.acronym, self.name)
+
 
 class Location(models.Model):
     street = models.CharField(max_length=200)
@@ -239,7 +249,7 @@ class Acquisition(models.Model):
     name = models.CharField(max_length=200)
     role_number = models.PositiveIntegerField(blank=True, null=True)
     image = models.ImageField(upload_to='Fotos/', blank=True, null=True)
-    property_use = models.CharField(max_length=5, choices=PROPERTY_USE_CHOICE)
+    property_use = models.ForeignKey(Property, on_delete=models.CASCADE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
     acquisition_date = models.DateTimeField(default=timezone.now)
     writing_data = models.CharField(max_length=5, choices=WRITING_DATA_CHOICE)
@@ -251,7 +261,8 @@ class Acquisition(models.Model):
     notary = models.OneToOneField(NotaryAcquisition, on_delete=models.CASCADE, blank=True, null=True,
                                   related_name='notary_acq')
     SII = models.OneToOneField(SiiRecord, on_delete=models.CASCADE, blank=True, null=True, related_name='SII_acq')
-
+    status = models.BooleanField(default=True)
+    historyl = HistoricalRecords()
     def __str__(self):
         return "nombre: %s, rol: %s, uso: %s" % (self.name, self.role_number, self.property_use)
 
@@ -260,7 +271,7 @@ class Rent(models.Model):
     name = models.CharField(max_length=200)
     role_number = models.PositiveIntegerField(blank=True, null=True)
     image = models.ImageField(upload_to='Fotos/', blank=True, null=True)
-    property_use = models.CharField(max_length=100, choices=PROPERTY_USE_CHOICE)
+    property_use = models.ForeignKey(Property, on_delete=models.CASCADE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
     # antecedentes de arquitectura
     ground_surface = models.CharField(max_length=100, blank=True, null=True)
@@ -278,6 +289,8 @@ class Rent(models.Model):
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
     duration = models.PositiveIntegerField()
+    historyl = HistoricalRecords()
+    status = models.BooleanField(default=True)
 
 class Staff(models.Model):
     username_staff = models.OneToOneField(User, on_delete=models.CASCADE)

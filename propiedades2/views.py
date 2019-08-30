@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
-    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff, Region
+    Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff, Region, Property
 from propiedades2.forms import DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
     DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
     ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm, StaffForm, UserForm, EditStaffForm, \
@@ -75,6 +75,8 @@ def view_rent(request, rent_id):
     data['staff'] = Staff.objects.get(username_staff=request.user)
     template_name = 'detail_rent.html'
     data['rent'] = Rent.objects.get(pk=rent_id)
+    print(data['rent'])
+    print (data)
 
     return render(request, template_name, data)
 
@@ -626,6 +628,7 @@ def Edit_rent(request, rent_id):
                         FormDocTypeC.save()
                 return redirect('list_rent')
         data['data'] = RentForm(instance=Rent.objects.get(pk=rent_id))
+        data['pk'] = rent_id
         data['FormLocation']= LocationForm(instance=propiedad.location)
         data['FormDocument'] = DocTypeCForm(instance=propiedad.contract_type)
         template_name = 'edit_rent.html'
@@ -1061,9 +1064,7 @@ def Validate_password(request):
     template = 'validate_password.html'
     data = {}
     if request.POST:
-        print("1111111111111111111111")
         if CODE == request.POST['code']:
-            print("22222222222222222222")
             return JsonResponse({'result':True})
         return JsonResponse({'result':False})
     return render(request, template, data)
@@ -1091,10 +1092,8 @@ def edit_region(request, region_id):
     data['info'] = Region.objects.get(pk = region_id)
     print(data)
     if request.method == 'POST':
-        print('111111111111111111')
         nombre = request.POST.get('name')
         acronimo = request.POST.get('acronym')
-        print(nombre, acronimo)
         Region.objects.filter(pk = region_id).update(name = nombre, acronym = acronimo)
 
         return JsonResponse({'result': True})
@@ -1135,7 +1134,6 @@ def change_status_acquisition(request, id):
         Acquisition.objects.filter(pk = id).update(status = False)
     elif aux.status == False:
         Acquisition.objects.filter(pk = id).update(status = True)
-
     return HttpResponseRedirect(reverse(list_acquisition))
 
 def change_status_rent(request, id):
@@ -1145,3 +1143,60 @@ def change_status_rent(request, id):
     elif aux.status == False:
         Rent.objects.filter(pk = id).update(status = True)
     return HttpResponseRedirect(reverse(list_rent))
+
+def add_property(request):
+    template = 'add_property.html'
+    data = {}
+    p = str(request.POST.get('name'))
+    q = str(request.POST.get('acronym'))
+    p = p.upper()
+    q = q.upper()
+    if Region.objects.filter(name=p).exists() == False:
+        if request.POST:
+            x = Property.objects.create(name=p, acronym=q)
+            x.save()
+            return JsonResponse({'result':True})
+    else:
+        return JsonResponse({'result':False})
+
+    return render(request, template)
+
+def edit_property(request, property_id):
+    data = {}
+    template = 'edit_property.html'
+    data['info'] = Property.objects.get(pk = property_id)
+    if request.method == 'POST':
+        nombre = request.POST.get('name')
+        acronimo = request.POST.get('acronym')
+        Property.objects.filter(pk = property_id).update(name = nombre, acronym = acronimo)
+
+        return JsonResponse({'result': True})
+    else:
+        return render(request, template, data)
+
+def delete_property(request, property_id):
+    template = 'delete_property.html'
+    data = {}
+    data['info'] = Property.objects.get(pk = property_id)
+    if request.method == 'POST':
+        if request.POST['valor'] == 'True':
+            Property.objects.filter(pk = property_id).delete()
+            return JsonResponse({'result': True})
+        else:
+            return JsonResponse({'result': False})
+    else:
+        return render(request, template, data)
+
+def list_property(request):
+    template = 'list_property.html'
+    data = {}
+    object_list = Property.objects.all().order_by()
+    paginator = Paginator(object_list, 20)
+    page = request.GET.get('page')
+    try:
+        data['object_list'] = paginator.page(page)
+    except PageNotAnInteger:
+        data['object_list'] = paginator.page(1)
+    except EmptyPage:
+        data['object_list'] = paginator.page(paginator.num_pages)
+    return render(request, template, data)

@@ -4,13 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <div class="m-t">
-        <div class="form-group">
-            <input type="text" id="nombre" value="{{ info.name }}" class="form-control" placeholder="Nombre">
-            <input type="text" id="acronimo" value="{{ info.acronym }}" class="form-control" placeholder="Acrónimo">
+    <div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" class="custom-control-input" id="confirm" value="True" name="inlineDefaultRadiosExample">
+            <label class="custom-control-label" for="defaultInline1">Sí</label>
         </div>
-        <button type="button" id="info_region" class="btn btn-primary"> ENVIAR</button>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" class="custom-control-input" id="confirm" value="False" name="inlineDefaultRadiosExample">
+            <label class="custom-control-label" for="defaultInline2">No</label>
+        </div>
+        <button type="button" id="confirm_region" class="btn btn-primary"> Confirmar</button>
     </div>
+
 </head>
 <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -24,31 +29,29 @@
 
 <script>
     $(document).ready(function () {
-        $("#info_region").on('click', function () {
+        $("#confirm_region").on('click', function () {
             $.ajax({
-                url: '{% url 'edit_region' info.pk %}',
+                url: '{% url "delete_property" info.pk %}',
                 type: 'POST',
                 data: {
-                    'name': $("#nombre").val(),
-                    'acronym': $("#acronimo").val(),
+                    'valor': $("#confirm").val(),
                     'csrfmiddlewaretoken': '{{ csrf_token}}'
                 },
                 success: function (data) {
                     if (data.result){
                         alert('Paso')
-                        window.location.href = "{% url 'list_region' %}"
+                        window.location.href = "{% url 'list_property' %}"
                     }
                     else {
                         alert('No paso')
                         swal({
-                            title: 'Problemas',
-                            text: 'La región ya existe',
-                            type: 'error'
+                            type: 'error',
+                            text: 'La Región no se eliminó',
+                            footer: '<a href = {% url 'list_property' %}>Aceptar</a>'
                         })
                     }
                 },
                 error: function () {
-                    alert(acronimo.value)
                     alert('error')
                 }
             });

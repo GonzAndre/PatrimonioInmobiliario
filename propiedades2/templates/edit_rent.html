@@ -20,8 +20,8 @@
             <div class="container">
               <div class="row">
                   <div class="col-lg-12 col-offset-2">
-                    <h1 style="margin-top:30px;">{{title}} {{ pk.pk }}
-                        <a href="{% url 'change_status_rent' pk.pk %}" class="float-none">
+                    <h1 style="margin-top:30px;">{{title}} {{ pk }}
+                        <a href="{% url 'change_status_rent' pk %}" class="float-none">
                             <button type="button" class="btn btn-warning">Cambiar Status</button>
                         </a>
                     </h1>
@@ -61,5 +61,5 @@
         </div>
       </div>
 </body>
-{% endblock %}
+{% endblock content%}
 </html>

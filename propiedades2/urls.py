@@ -29,4 +29,9 @@ urlpatterns = [
     path('edit_region/<int:region_id>', views.edit_region, name = 'edit_region'),
     path('list_region', views.list_region, name='list_region'),
     path('delete_region/<int:region_id>', views.delete_region, name='delete_region'),
+    path('add_property/', views.add_property, name = 'add_property'),
+    path('edit_property/<int:property_id>', views.edit_property, name = 'edit_property'),
+    path('list_property', views.list_property, name='list_property'),
+    path('delete_property/<int:property_id>', views.delete_property, name='delete_property'),
+    path('change_status_rent/<int:id>', views.change_status_rent, name='change_status_rent')
 ]

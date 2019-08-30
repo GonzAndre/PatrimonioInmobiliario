@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'propiedades2',
     'Auth_users',
     'bootstrap4',
-
+    'simple_history',
 ]
 
 BOOTSTRAP4  =  {
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'PatrimonioInmobiliario.urls'
@@ -84,10 +85,18 @@ WSGI_APPLICATION = 'PatrimonioInmobiliario.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),  
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation

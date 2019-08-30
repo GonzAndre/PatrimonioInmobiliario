@@ -6,10 +6,11 @@ django-bootstrap4==0.0.8
 get==2019.4.13
 Pillow==6.0.0
 post==2019.4.13
-psycopg2==2.8.2
 public==2019.4.13
 pytz==2019.1
 query-string==2019.4.13
 request==2019.4.13
 sqlparse==0.3.0
 urllib3==1.24.2
+mysqlclient
+django-simple-history
