@@ -1,0 +1,23 @@
+
+.navbar{
+  background-color: #005a65;
+  border-radius: 1em;
+}
+
+button.navbar-toggler{
+  border-color: white;
+  border: 15px;
+}
+.collapse a{
+  color: white;
+}
+
+.collapse ul{
+  padding: 0 50px 0 0;
+}
+.dropdown-menu a{
+  color: black;
+}
+.btn a:hover{
+  color: black;
+}

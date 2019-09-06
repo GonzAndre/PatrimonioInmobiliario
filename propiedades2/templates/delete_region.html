@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" class="custom-control-input" id="confirm" value="True" name="inlineDefaultRadiosExample">
+            <label class="custom-control-label" for="defaultInline1">Sí</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" class="custom-control-input" id="confirm" value="False" name="inlineDefaultRadiosExample">
+            <label class="custom-control-label" for="defaultInline2">No</label>
+        </div>
+        <button type="button" id="confirm_region" class="btn btn-primary"> Confirmar</button>
+    </div>
+
+</head>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#confirm_region").on('click', function () {
+            $.ajax({
+                url: '{% url "delete_region" info.pk %}',
+                type: 'POST',
+                data: {
+                    'valor': $("#confirm").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function (data) {
+                    if (data.result){
+                        alert('Paso')
+                        window.location.href = "{% url 'list_region' %}"
+                    }
+                    else {
+                        alert('No paso')
+                        swal({
+                            type: 'error',
+                            text: 'La Región no se eliminó',
+                            footer: '<a href = {% url 'list_region' %}>Aceptar</a>'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+</script>
+</html>

@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %} Crear Usuario {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+
+</head>
+{% include "base.html" %}
+{% block content %}
+<body>
+    <div class="container">
+        <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-offset-12">
+            <h1 class='text-center' style="margin-top:30px;">Agregar Usuario</h1>
+
+            <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ingrese su nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Apellido:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="" placeholder="Ingrese su apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" class="form-control" id="username" name="username" value="" placeholder="Ingrese su nombre de usuario" required>
+                </div>
+                 <div class="form-group">
+                    <label for="password1">Contraseña:</label>
+                    <input type="password" class="form-control" name="password1" id="InputPassword1" placeholder="Introduce tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Contraseña:</label>
+                    <input type="password" class="form-control" name="password2" id="InputPassword2" placeholder="Vuelve a introducir tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="" placeholder="Ingrese su correo electronico" required>
+                    <div class="alert alert-danger" id="val_correo" style="display:none">
+                      <strong>Correo Erroneo</strong>
+                    </div>
+                </div>
+                <div>
+                    <label for="type_user">Tipo de usuario:</label>
+                   <select class="form-control" id="Select" name="type_user">
+                        <option value="ADM" selected>Administrador</option>
+                        <option value="DIG">Digitador</option>
+                        <option value="VIS">Visualizador</option>
+                    </select>
+                </div>
+                <button type="button" id="create" class="btn btn-primary block full-width m-b">Agregar</button>
+            </form>
+            <br>
+        </div>
+
+    </div>
+</div>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $("#create").on('click',function(){
+            $.ajax({
+                url: '{% url "create_staff" %}',
+                type: 'POST',
+                data: {
+                    'first_name': $("#first_name").val(),
+                    'last_name': $("#last_name").val(),
+                    'username': $('#username').val(),
+                    'password1': $('#InputPassword1').val(),
+                    'password2': $('#InputPassword2').val(),
+                    'email': $("#email").val(),
+                    'type_user': $("#Select").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function(data){
+                    if (data.result == 'True'){
+                        window.location.href = "{% url 'list_staff' %}"
+                    }
+                    else if(data.result == 'password'){
+                      swal({
+                          title: 'Oops...',
+                          text: 'Las contraseñas no son iguales',
+                          type: 'error',
+                      })
+                    }
+                    else if(data.result  == 'email'){
+                      swal({
+                        title: 'Oops...',
+                        text: 'El email ya se encuentra registrado',
+                        type: 'error',
+                      })
+                    }
+                    else if(data.result == 'username'){
+                      swal({
+                        title: 'Oops...',
+                        text: 'El nombre de usuario ya se encuentra registrado',
+                        type: 'error',
+                      })
+                    }
+                },
+                error: function(){
+                    alert("error")
+                }
+            });
+
+        })
+    });
+    $("#email").on('change',function(){
+    campo = $("#email").val();
+    if(campo != ''){
+
+        emailRegex = /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([^<>()[].,;:\s@"]+.)+[^<>()[].,;:\s@"]{2,})$/i;
+        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+        if (emailRegex.test(campo)) {
+          $("#val_correo").hide();
+
+        } else {
+          $("#val_correo").show();
+        }
+    }else{
+
+          $("#val_correo").hide();
+    }
+});
+</script>
+</body>
+{% endblock content %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
