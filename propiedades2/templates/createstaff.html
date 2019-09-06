@@ -22,10 +22,9 @@
             <h1 class='text-center' style="margin-top:30px;">Agregar Usuario</h1>
 
             <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                <h1>{{ resultado }}</h1>
                 <div class="form-group">
                     <label for="first_name">Nombre:</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" value="" placeholder="Ingrese su nombre" required>
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ingrese su nombre" required>
                 </div>
 
                 <div class="form-group">
@@ -42,11 +41,14 @@
                 </div>
                 <div class="form-group">
                     <label for="password2">Contraseña:</label>
-                    <input type="password" class="form-control" name="password2" id="InputPassword1" placeholder="Vuelve a introducir tu contraseña" value="" required>
+                    <input type="password" class="form-control" name="password2" id="InputPassword2" placeholder="Vuelve a introducir tu contraseña" value="" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email address:</label>
                     <input type="email" class="form-control" id="email" name="email" value="" placeholder="Ingrese su correo electronico" required>
+                    <div class="alert alert-danger" id="val_correo" style="display:none">
+                      <strong>Correo Erroneo</strong>
+                    </div>
                 </div>
                 <div>
                     <label for="type_user">Tipo de usuario:</label>
@@ -56,50 +58,89 @@
                         <option value="VIS">Visualizador</option>
                     </select>
                 </div>
-
-
-
-                <div>
-
-                </div>
-                <div class="col-md-12">
-                    <!-- Button trigger modal -->
-
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                        Enviar
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Encuesta para analisis GAP</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Si ha creado a todos los usuarios, seleccione "Enviar", de lo contrario presione
-                                    "Volver"
-                                </div>
-                                <div class="modal-footer">
-                                    <a href="{% url 'createstaff' %}">
-                                        <button type="button" class="btn btn-secondary">Volver</button>
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">Enviar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button type="button" id="create" class="btn btn-primary block full-width m-b">Agregar</button>
             </form>
             <br>
         </div>
 
     </div>
 </div>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $("#create").on('click',function(){
+            $.ajax({
+                url: '{% url "create_staff" %}',
+                type: 'POST',
+                data: {
+                    'first_name': $("#first_name").val(),
+                    'last_name': $("#last_name").val(),
+                    'username': $('#username').val(),
+                    'password1': $('#InputPassword1').val(),
+                    'password2': $('#InputPassword2').val(),
+                    'email': $("#email").val(),
+                    'type_user': $("#Select").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function(data){
+                    if (data.result == 'True'){
+                        window.location.href = "{% url 'list_staff' %}"
+                    }
+                    else if(data.result == 'password'){
+                      swal({
+                          title: 'Oops...',
+                          text: 'Las contraseñas no son iguales',
+                          type: 'error',
+                      })
+                    }
+                    else if(data.result  == 'email'){
+                      swal({
+                        title: 'Oops...',
+                        text: 'El email ya se encuentra registrado',
+                        type: 'error',
+                      })
+                    }
+                    else if(data.result == 'username'){
+                      swal({
+                        title: 'Oops...',
+                        text: 'El nombre de usuario ya se encuentra registrado',
+                        type: 'error',
+                      })
+                    }
+                },
+                error: function(){
+                    alert("error")
+                }
+            });
+
+        })
+    });
+    $("#email").on('change',function(){
+    campo = $("#email").val();
+    if(campo != ''){
+
+        emailRegex = /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([^<>()[].,;:\s@"]+.)+[^<>()[].,;:\s@"]{2,})$/i;
+        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+        if (emailRegex.test(campo)) {
+          $("#val_correo").hide();
+
+        } else {
+          $("#val_correo").show();
+        }
+    }else{
+
+          $("#val_correo").hide();
+    }
+});
+</script>
 </body>
 {% endblock content %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

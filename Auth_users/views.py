@@ -9,34 +9,36 @@ from django.contrib.auth.decorators import login_required
 def auth_login(request):
     template_name = 'login.html'
     data = {}
-    logout(request)
     username = password = ''
-
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(
-            username=username,
-            password=password
-        )
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('index'))
+    print(request.user)
+    if request.user.is_active == False:
+        if request.POST:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(
+                username=username,
+                password=password
+                )
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('index'))
+                else:
+                    print("usuario o contraseña no validos")
+                    messages.warning(
+                        request,
+                        'Usuario o contraseña incorrectos!'
+                        )
             else:
-                print("usuario o contraseña no validos")
-                messages.warning(
+                print("Usuario incorrecto")
+                messages.error(
                     request,
                     'Usuario o contraseña incorrectos!'
-                )
-        else:
-            print("Usuario incorrecto")
-            messages.error(
-                request,
-                'Usuario o contraseña incorrectos!'
-            )
-    return render(request, template_name, data)
+                    )
+        return render(request, template_name, data)
+    else:
+        return render(request, 'index.html', data)
 
 def auth_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('login'))
+    return HttpResponseRedirect(reverse('LOGIN'))

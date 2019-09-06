@@ -17,7 +17,7 @@ urlpatterns = [
     path('delete_rent/<int:id>', views.Delete_rent, name="delete_rent"),
     path('view_rent/<int:rent_id>', views.view_rent, name="view_rent"),
     path('search', views.search, name="search"),
-    path('createstaff/', views.createstaff, name='createstaff'),
+    path('create_staff/', views.create_staff, name='create_staff'),
     path('edit_staff/<int:staff_id>', views.edit_staff, name='edit_staff'),
     path('list_staff', views.list_staff, name="list_staff"),
     path('edit_password/<int:staff_id>', views.edit_password, name="edit_password"),
@@ -33,5 +33,6 @@ urlpatterns = [
     path('edit_property/<int:property_id>', views.edit_property, name = 'edit_property'),
     path('list_property', views.list_property, name='list_property'),
     path('delete_property/<int:property_id>', views.delete_property, name='delete_property'),
-    path('change_status_rent/<int:id>', views.change_status_rent, name='change_status_rent')
+    path('change_status_rent/<int:id>', views.change_status_rent, name='change_status_rent'),
+    path('change_status_acquisition/<int:id>', views.change_status_acquisition, name='change_status_acquisition')
 ]

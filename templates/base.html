@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'base.css'%}">
     <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
-      <link rel="stylesheet" href="{% static 'js/jquery-3.1.1.min.js' %}">
+    <link rel="stylesheet" href="{% static 'js/jquery-3.1.1.min.js' %}">
     <title>Propiedades</title>
   </head>
   <body>
@@ -42,11 +42,11 @@
             </li>
              {% if staff.type_user == 'ADM' %}
                  <li>
-                    <button class="btn btn-outline btn-sm" type="submit"> <a class="nav-link" href="{% url 'createstaff' %}">Crear Usuario</a> </button>
+                    <button class="btn btn-outline btn-sm" type="submit"> <a class="nav-link" href="{% url 'create_staff' %}">Crear Usuario</a> </button>
                  </li>
              {% endif %}
             <li>
-              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="#">{{request.user.first_name}}</a> </button>
+              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="#">{{request.user}}</a> </button>
             </li>
             <p> </p>
             <li>

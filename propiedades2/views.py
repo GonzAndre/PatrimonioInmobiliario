@@ -31,9 +31,6 @@ def randomString(stringLength=4):
     global CODE
     CODE = ''.join(random.choice(letters) for i in range(stringLength))
 
-def render_html(request,template_name, data):
-    return render(request, template_name, data)
-
 def index(request):
     data = {}
     data['staff'] = Staff.objects.get(username_staff = request.user)
@@ -75,10 +72,12 @@ def view_rent(request, rent_id):
     data['staff'] = Staff.objects.get(username_staff=request.user)
     template_name = 'detail_rent.html'
     data['rent'] = Rent.objects.get(pk=rent_id)
-    print(data['rent'])
-    print (data)
-
-    return render(request, template_name, data)
+    renta = Rent.objects.get(pk=rent_id)
+    if (renta.historyl.filter(pk=rent_id).exists()):
+        data['history'] = renta.historyl.most_recent()
+        return render(request, template_name, data)
+    else:
+        return render(request, template_name, data)
 
 
 @login_required(login_url='login')
@@ -365,6 +364,7 @@ def Add_rent(request):
 def Edit_acquisition(request, acq_id):
     data = {}
     propiedad = get_object_or_404(Acquisition, pk=acq_id)
+    data['pk'] = acq_id
     data['staff'] = Staff.objects.get(username_staff=request.user)
     if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
         if request.method == "POST":
@@ -612,25 +612,30 @@ def Edit_acquisition(request, acq_id):
 @login_required(login_url='login')
 def Edit_rent(request, rent_id):
     data = {}
+    print(rent_id)
     propiedad = get_object_or_404(Rent, pk=rent_id)
-    print(propiedad)
     data['staff'] = Staff.objects.get(username_staff=request.user)
     if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
         if request.POST:
             FormRent = RentForm(request.POST, request.FILES, instance=Rent.objects.get(pk=rent_id))
-            FormLocation = LocationForm(request.POST, request.FILES, instance=Rent.objects.get(pk=rent_id))
-            FormDocTypeC = DocTypeCForm(request.POST, instance=Rent.objects.get(pk=rent_id))
+            FormLocation = LocationForm(request.POST, request.FILES,instance=propiedad.location)
+            FormDocTypeC = DocTypeCForm(request.POST, request.FILES, instance=propiedad.contract_type)
             if FormRent.is_valid():
                 if FormLocation.is_valid():
                     if FormDocTypeC.is_valid():
+                        FormRent.save(commit=False)
+                        FormLocation.save(commit=False)
+                        FormDocTypeC.save(commit=False)
                         FormRent.save()
                         FormLocation.save()
                         FormDocTypeC.save()
                 return redirect('list_rent')
         data['data'] = RentForm(instance=Rent.objects.get(pk=rent_id))
         data['pk'] = rent_id
+        data['FormRent']  = RentForm(instance=propiedad)
         data['FormLocation']= LocationForm(instance=propiedad.location)
-        data['FormDocument'] = DocTypeCForm(instance=propiedad.contract_type)
+        print(propiedad.contract_type)
+        data['FormDocTypeC'] = DocTypeCForm(instance=propiedad.contract_type)
         template_name = 'edit_rent.html'
         return render(request, template_name, data)
     else:
@@ -875,7 +880,6 @@ def createstaff(request):
             data['form2'] = UserForm(request.POST)
             print(request.POST['password1'])
             print(request.POST['password2'])
-
             if data['form2'].is_valid():
                 print('tercer if')
                 if data['form'].is_valid():
@@ -885,15 +889,25 @@ def createstaff(request):
                     print(password)
                     password2 = request.POST['password2']
                     print(password2)
-                    if password == password2:
-                        print('quinto if')
-                        sav2 = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'], first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'],)
-                        sav.username_staff = sav2
-                        sav.save()
-                        return HttpResponseRedirect(reverse('createstaff'))
+                    username = request.POST['username']
+                    print(username)
+                    if User.objects.filter(username = username).exists() == False:
+                        if User.objects.filter(email = request.POST['email']).exists() == False:
+                            if password == password2:
+                                print('quinto if')
+                                sav2 = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'], first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'],)
+                                sav.username_staff = sav2
+                                sav.save()
+                                return HttpResponseRedirect(reverse('createstaff'))
+                            else:
+                                print('primer else')
+                                data['resultado'] = 'Las contraseñas son diferentes'
+                                return render(request, 'createstaff.html', data)
+                        else:
+                            data['resultado'] = 'El email ya esta registrado'
+                            return render(request, 'createstaff.html', data)
                     else:
-                        print('primer else')
-                        data['resultado'] = 'Las contraseñas son diferentes'
+                        data['resultado'] = 'El nombre de usuario ya esta registrado'
                         return render(request, 'createstaff.html', data)
         else:
             print('Segundo else')
@@ -1129,12 +1143,11 @@ def list_region(request):
 
 def change_status_acquisition(request, id):
     aux = Acquisition.objects.get(pk = id)
-    print(aux)
     if aux.status == True:
         Acquisition.objects.filter(pk = id).update(status = False)
     elif aux.status == False:
         Acquisition.objects.filter(pk = id).update(status = True)
-    return HttpResponseRedirect(reverse(list_acquisition))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def change_status_rent(request, id):
     aux = Rent.objects.get(pk = id)
@@ -1142,7 +1155,7 @@ def change_status_rent(request, id):
         Rent.objects.filter(pk = id).update(status = False)
     elif aux.status == False:
         Rent.objects.filter(pk = id).update(status = True)
-    return HttpResponseRedirect(reverse(list_rent))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def add_property(request):
     template = 'add_property.html'
@@ -1199,4 +1212,46 @@ def list_property(request):
         data['object_list'] = paginator.page(1)
     except EmptyPage:
         data['object_list'] = paginator.page(paginator.num_pages)
+    return render(request, template, data)
+
+def create_staff(request):
+    data = {}
+    data['title'] = 'Agregar Personal'
+    data['staff'] = Staff.objects.get(username_staff=request.user)
+    if data['staff'].type_user == 'ADM':
+        if request.method == 'POST':
+            data['form'] = StaffForm(request.POST)
+            data['form2'] = UserForm(request.POST)
+            if data['form2'].is_valid():
+                if data['form'].is_valid():
+                    sav = data['form'].save(commit=False)
+                    password = request.POST.get('password1')
+                    password2 = request.POST.get('password2')
+                    if password == password2:
+                        sav2 = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password1'), first_name=request.POST.get('first_name'), last_name=request.POST.get('last_name'), email=request.POST.get('email'))
+                        sav.username_staff = sav2
+                        sav.save()
+                        return JsonResponse({'result': 'True'})
+                    else:
+                        return JsonResponse({'result': 'password'})
+
+                else:
+                    data['form2'] = UserForm()
+                    data['form'] = StaffForm()
+                    template = 'createstaff.html'
+                    return render(request, template, data)
+            else:
+                if User.objects.filter(username = request.POST.get('username')).exists():
+                    if User.objects.filter(email = request.POST.get('email')).exists():
+                        return JsonResponse({'result':'email'})
+                    else:
+                        return JsonResponse({'result': 'username'})
+        else:
+            data['form2'] = UserForm()
+            data['form'] = StaffForm()
+            template = 'createstaff.html'
+            return render(request, template, data)
+    else:
+        return HttpResponseRedirect(reverse('list_total'))
+    template = 'createstaff.html'
     return render(request, template, data)

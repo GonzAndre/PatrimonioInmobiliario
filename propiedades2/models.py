@@ -291,6 +291,8 @@ class Rent(models.Model):
     duration = models.PositiveIntegerField()
     historyl = HistoricalRecords()
     status = models.BooleanField(default=True)
+    def __str__(self):
+        return "Nombre: %s" % (self.name)
 
 class Staff(models.Model):
     username_staff = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -316,4 +318,3 @@ class Post(models.Model):
         now = datetime.now(timezone.utc)
         difference = now - self.publish_date
         return int(difference.total_seconds() / 3600)
-

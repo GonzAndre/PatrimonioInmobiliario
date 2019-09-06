@@ -1,7 +1,7 @@
 from django.contrib import admin
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
-    Location,ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post, Staff, Region
+    Location,ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post, Staff, Region, Property
 # Register your models here.
 
 admin.site.register(Location)
@@ -28,3 +28,4 @@ admin.site.register(Post)
 admin.site.register(Rent)
 admin.site.register(Staff)
 admin.site.register(Region)
+admin.site.register(Property)

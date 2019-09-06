@@ -22,7 +22,7 @@ class DocExForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docEx'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docEx'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocEx'}),
         }
@@ -37,7 +37,7 @@ class DocCipForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docCip'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docCip'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocCip'}),
         }
@@ -52,7 +52,7 @@ class DocCnForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docCn'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docCn'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocCn'}),
         }
@@ -67,7 +67,7 @@ class DocBlueForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docBlue'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docBlue'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocBlue'}),
         }
@@ -82,7 +82,7 @@ class DocBuildPForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docBuild'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docBuild'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocBuild'}),
         }
@@ -97,7 +97,7 @@ class DocMRForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docMR'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docMR'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocMR'}),
         }
@@ -113,7 +113,7 @@ class DocTypeCForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docTypeC'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docTypeC'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocTypeC'}),
         }
@@ -128,7 +128,7 @@ class DocOtherForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docOther'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docOther'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocOther'}),
         }
@@ -144,7 +144,7 @@ class DocWRForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docWR'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docWR'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocWR'}),
         }
@@ -159,7 +159,7 @@ class DocDCForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docDC'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docDC'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocDC'}),
         }
@@ -174,7 +174,7 @@ class DocPHForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docPH'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docPH'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocPH'}),
         }
@@ -189,7 +189,7 @@ class DocDBForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docDB'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docDB'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocDB'}),
         }
@@ -204,7 +204,7 @@ class DocAcForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docAc'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docAc'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocAc'}),
         }
@@ -219,7 +219,7 @@ class DocEsForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docEs'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docEs'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocEs'}),
         }
@@ -274,7 +274,7 @@ class AcquisitionForm(ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de la propiedad', 'id': 'name'}),
             'role_number': forms.NumberInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese número de rol', 'id': 'role_number'}),
-            'image': forms.FileInput(
+            'image': forms.ClearableFileInput(
                 attrs={'class': 'form-control', 'placeholder': 'Seleccione una imagen', 'id': 'image', 'type': 'file'}),
             'property_use': forms.Select(attrs={'class': 'form-control', 'id': 'property_use'}),
             'number_AASI': forms.NumberInput(
@@ -433,7 +433,7 @@ class RentForm(ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de la propiedad'}),
             'role_number': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese número de rol'}),
-            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'property_use': forms.Select(attrs={'class': 'form-control'}),
             'ground_surface': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese superficie del terreno'}),

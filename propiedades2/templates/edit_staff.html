@@ -57,17 +57,17 @@
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 {% if data.status.value == True %}
                     <label class="btn btn-secondary active">
-                        <input type="radio" name="status" id="True" autocomplete="off" value="True" checked> Activo
+                        <input type="radio" name="status" id="True" autocomplete="off" value="True"> Activo
                     </label>
                     <label class="btn btn-secondary">
                         <input type="radio" name="status" id="False" autocomplete="off" value="False"> Inactivo
                     </label>
                 {% elif data.status.value == False %}
-                    <label class="btn btn-secondary active">
+                    <label class="btn btn-secondary">
                         <input type="radio" name="status" id="True" autocomplete="off" value="True" > Activo
                     </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="status" id="False" autocomplete="off" value="False"checked> Inactivo
+                    <label class="btn btn-secondary active">
+                        <input type="radio" name="status" id="False" autocomplete="off" value="False"> Inactivo
                     </label>
                 {% endif %}
             </div>
