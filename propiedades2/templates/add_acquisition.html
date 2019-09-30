@@ -42,6 +42,10 @@
                                                         <label>Uso de la propiedad: *</label>
                                                         {{ formAcquisition.property_use }}
                                                     </div>
+                                                    <div class="col">
+                                                        <label>Distrito: *</label>
+                                                        {{ formAcquisition.district }}
+                                                    </div>
                                                 </div>
                                                 <p></p>
                                                 <div class="row">
@@ -570,6 +574,7 @@
                 formulario.append('name', $("#name").val());
                 formulario.append('role_number', $("#role_number").val());
                 formulario.append('property_use', $("#property_use").val());
+                formulario.append('district', $("#district").val());
                 formulario.append('number_AASI', $("#number_AASI").val());
                 formulario.append('acquisition_date', $("#acquisition_date").val());
                 formulario.append('writing_data', $("#writing_data").val());
@@ -597,7 +602,7 @@
                         $('#SII').show();
                         $('#enviarPropiedad').hide();
                         $('#listo').show();
-
+                        alert(id_p)
                         alert('Propiedad creada');
                     }
                 });

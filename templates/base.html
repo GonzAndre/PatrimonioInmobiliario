@@ -41,8 +41,35 @@
                    </button>
             </li>
              {% if staff.type_user == 'ADM' %}
-                 <li>
-                    <button class="btn btn-outline btn-sm" type="submit"> <a class="nav-link" href="{% url 'create_staff' %}">Crear Usuario</a> </button>
+             <li class="nav-item dropdown">
+                    <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                       Usuarios
+                     </a>
+                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                         <a class="dropdown-item" href="{% url 'create_staff' %}">Crear Nuevo Usuario</a>
+                       <a class="dropdown-item" href="{% url 'list_staff' %}">Listado de usuario </a>
+                     </div>
+                    </button>
+             </li>
+                 <li class="nav-item dropdown">
+                        <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                           Región
+                         </a>
+                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                             <a class="dropdown-item" href="{% url 'add_region' %}">Crear Región</a>
+                           <a class="dropdown-item" href="{% url 'list_region' %}">Listado de regiones </a>
+                         </div>
+                        </button>
+                 </li>
+                 <li class="nav-item dropdown">
+                        <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                           Tipo de propiedades
+                         </a>
+                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                             <a class="dropdown-item" href="{% url 'add_property' %}">Crear Tipo de propiedad</a>
+                           <a class="dropdown-item" href="{% url 'list_property' %}">Listado de tipo de propiedades</a>
+                         </div>
+                        </button>
                  </li>
              {% endif %}
             <li>

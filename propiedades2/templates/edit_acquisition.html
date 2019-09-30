@@ -23,9 +23,6 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <h1>Editar propiedad adquirida
-                                <a href="{% url 'delete_acquisition' id %}" class="float-right">
-                                    <button type="button" class="btn btn-danger">Eliminar</button>
-                                </a>
                                 <a href="{% url 'change_status_acquisition' id %}" class="float-right">
                                     <button type="button" class="btn btn-warning">Cambiar Status</button>
                                 </a>
@@ -538,6 +535,13 @@
                                     </div>
                                 </div>
                                 <br>
+                                <div class="card" style="display:none" id="comentario">
+                                  <h5 class="card-header">Comentario Actualización</h5>
+                                  <div class="card-body">
+                                    <input type="text" class="form-control" name="comment" id="comment" placeholder="Porfavor Indique lo editado" value="" required>
+                                  </div>
+                                </div>
+                                <br>
                                 <a href="{% url 'list_acquisition' %}">
                                     <button id="listo" type="button" class="btn btn-primary btn-lg btn-block" style="display: none">Listo</button>
                                 </a>
@@ -590,7 +594,7 @@
                 formulario.append('plot', $("#plot").val());
                 formulario.append("csrfmiddlewaretoken", getCookie('csrftoken'));
                 $.ajax({
-                    url: '{% url "add_acquisition" %}',
+                    url: '{% url "edit_acquisition" id  %}',
                     type: "POST",
                     cache: false,
                     contentType: false,
@@ -604,6 +608,7 @@
                         $('#SII').show();
                         $('#enviarPropiedad').hide();
                         $('#listo').show();
+                        $('#comentario').show();
 
                         alert('Datos de propiedad guardados');
                     }
@@ -634,7 +639,7 @@
                 formulario.append('id_propiedad', id_p);
 
                 $.ajax({
-                    url: '{% url "add_acquisition" %}',
+                    url: '{% url "edit_acquisition" id  %}',
                     type: "POST",
                     cache: false,
                     contentType: false,
@@ -667,7 +672,7 @@
                 formulario.append('id_propiedad', id_p);
 
                 $.ajax({
-                    url: '{% url "add_acquisition" %}',
+                    url: '{% url "edit_acquisition" id  %}',
                     type: "POST",
                     cache: false,
                     contentType: false,
@@ -694,7 +699,7 @@
                 formulario.append('id_propiedad', id_p);
 
                 $.ajax({
-                    url: '{% url "add_acquisition" %}',
+                    url: '{% url "edit_acquisition" id  %}',
                     type: "POST",
                     cache: false,
                     contentType: false,
@@ -722,7 +727,7 @@
                 formulario.append('id_propiedad', id_p);
 
                 $.ajax({
-                    url: '{% url "add_acquisition" %}',
+                    url: '{% url "edit_acquisition" id  %}',
                     type: "POST",
                     cache: false,
                     contentType: false,
@@ -732,6 +737,16 @@
                         alert('Datos de SII guardados');
                     }
                 })
+            })
+            $("#listo").on("click", function(){
+              $.ajax({
+                url: '{% url "edit_acquisition" id  %}',
+                type: "POST",
+                data: {
+                  'commentacq': $('#comment').val(),
+                  'csrfmiddlewaretoken': '{{ csrf_token}}'
+                }
+              })
             })
         })
     </script>

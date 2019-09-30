@@ -2,7 +2,7 @@
 from django.forms import ModelForm
 from propiedades2.models import Location, Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, \
     DocumentBuildP, DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, \
-    DocumentAc, DocumentEs, ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post, Region
+    DocumentAc, DocumentEs, ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post, Region, District
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
@@ -258,12 +258,13 @@ class LocationForm(ModelForm):
 class AcquisitionForm(ModelForm):
     class Meta:
         model = Acquisition
-        fields = ['name', 'role_number', 'image', 'property_use', 'acquisition_date', 'writing_data', 'number_AASI', ]
+        fields = ['name', 'role_number', 'image', 'property_use','district', 'acquisition_date', 'writing_data', 'number_AASI', ]
 
         labels = {'name': 'Nombre*',
                   'role_number': 'Número de rol*',
                   'image': 'Imagen',
                   'property_use': 'Uso de la propiedad*',
+                  'district': 'Distrito Perteneciente',
                   'number_AASI': 'Número AASI.net*',
                   'acquisition_date': 'Fecha de adquisición*',
                   'writing_data': 'Datos de escritura*',
@@ -277,6 +278,7 @@ class AcquisitionForm(ModelForm):
             'image': forms.ClearableFileInput(
                 attrs={'class': 'form-control', 'placeholder': 'Seleccione una imagen', 'id': 'image', 'type': 'file'}),
             'property_use': forms.Select(attrs={'class': 'form-control', 'id': 'property_use'}),
+            'district': forms.Select(attrs={'class': 'form-control', 'id': 'district'}),
             'number_AASI': forms.NumberInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese número de AASI.net', 'id': 'number_AASI'}),
             'acquisition_date': forms.DateInput(
@@ -409,7 +411,7 @@ class SII_recordForm(ModelForm):
 class RentForm(ModelForm):
     class Meta:
         model = Rent
-        fields = ['name', 'role_number', 'image', 'property_use', 'ground_surface', 'square_m_build',
+        fields = ['name', 'role_number', 'image', 'property_use', 'district' , 'ground_surface', 'square_m_build',
                   'e_construction_m', 'municipal_n', 'n_building_permit', 'value_land', 'value_construction',
                   'acquiring_name', 'supplier_name', 'start_date', 'end_date', 'duration', ]
         labels = {
@@ -417,6 +419,7 @@ class RentForm(ModelForm):
             'role_number': 'Número de rol',
             'image': 'Imagen',
             'property_use': 'Uso de la propiedad',
+            'district': 'Distrito Perteneciente',
             'ground_surface': 'Superficie de terreno',
             'square_m_build': 'Metros cuadrados construidos PE-RF',
             'e_construction_m': 'Metros construcción existente',
@@ -435,6 +438,7 @@ class RentForm(ModelForm):
             'role_number': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese número de rol'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'property_use': forms.Select(attrs={'class': 'form-control'}),
+            'district': forms.Select(attrs={'class': 'form-control'}),
             'ground_surface': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese superficie del terreno'}),
             'square_m_build': forms.TextInput(

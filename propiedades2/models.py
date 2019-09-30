@@ -8,20 +8,34 @@ from simple_history.models import HistoricalRecords
 
 
 # Create your models here.
+class District(models.Model):
+    acronym = models.CharField(max_length=5, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return "Acronimo: %s, nombre: %s" % (self.acronym, self.name)
+
 class Region(models.Model):
-    acronym = models.CharField(max_length=3, blank=True, null=True)
+    acronym = models.CharField(max_length=5, blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return "Acronimo: %s, nombre: %s" % (self.acronym, self.name)
 
 class Property(models.Model):
-    acronym = models.CharField(max_length = 3, blank = True, null = True)
+    acronym = models.CharField(max_length=5, blank = True, null = True)
     name = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return "Acronimo: %s, nombre: %s" % (self.acronym, self.name)
 
+class Stats(models.Model):
+    total = models.PositiveIntegerField(blank=True, null=True)
+    complete = models.PositiveIntegerField(blank=True, null=True)
+    percentage = models.FloatField()
+
+    def __str__(self):
+        return "Completado %s, total %s" % (self.complete, self.total)
 
 class Location(models.Model):
     street = models.CharField(max_length=200)
@@ -250,6 +264,7 @@ class Acquisition(models.Model):
     role_number = models.PositiveIntegerField(blank=True, null=True)
     image = models.ImageField(upload_to='Fotos/', blank=True, null=True)
     property_use = models.ForeignKey(Property, on_delete=models.CASCADE)
+    district = models.ForeignKey(District, on_delete=models.CASCADE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
     acquisition_date = models.DateTimeField(default=timezone.now)
     writing_data = models.CharField(max_length=5, choices=WRITING_DATA_CHOICE)
@@ -272,6 +287,7 @@ class Rent(models.Model):
     role_number = models.PositiveIntegerField(blank=True, null=True)
     image = models.ImageField(upload_to='Fotos/', blank=True, null=True)
     property_use = models.ForeignKey(Property, on_delete=models.CASCADE)
+    district = models.ForeignKey(District, on_delete=models.CASCADE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
     # antecedentes de arquitectura
     ground_surface = models.CharField(max_length=100, blank=True, null=True)
@@ -286,11 +302,11 @@ class Rent(models.Model):
                                          related_name='TipoContratoArriendo')
     acquiring_name = models.CharField(max_length=100)
     supplier_name = models.CharField(max_length=100)
-    start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField(default=timezone.now)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     duration = models.PositiveIntegerField()
-    historyl = HistoricalRecords()
     status = models.BooleanField(default=True)
+    stats_rent = models.ForeignKey(Stats,blank=True, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return "Nombre: %s" % (self.name)
 
@@ -318,3 +334,24 @@ class Post(models.Model):
         now = datetime.now(timezone.utc)
         difference = now - self.publish_date
         return int(difference.total_seconds() / 3600)
+
+class Change_property(models.Model):
+    id_property = models.PositiveIntegerField()
+    type = models.CharField(max_length=20)
+    user = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
+    publish_date = models.DateTimeField(default=timezone.now)
+    comment = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "Username: %s, Fecha de Cambio: %s" % (self.user, self.publish_date)
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True)
+    description = models.CharField(max_length=500)
+    author = models.ForeignKey(Staff,on_delete=models.SET_NULL, null=True)
+    publish_date = models.DateTimeField(default=timezone.now)
+    last_mod = models.DateTimeField(default=timezone.now)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "el usuario %s %s comentó: %s ,en la publicación: %s" % (self.author.first_name, self.author.last_name, self.description, self.post.description)

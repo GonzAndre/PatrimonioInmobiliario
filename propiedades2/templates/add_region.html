@@ -37,6 +37,12 @@
                     if (data.result){
                         alert('Paso')
                         window.location.href = "{% url 'list_region' %}"
+                    }else if(data.result  == 'Max'){
+                      swal({
+                        title: 'Oops...',
+                        text: 'El acrónimo supero el largo máximo',
+                        type: 'error',
+                      })
                     }
                     else {
                         alert('No paso')

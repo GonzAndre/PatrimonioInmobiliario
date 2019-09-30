@@ -1,5 +1,60 @@
 {% load static %}
 <!DOCTYPE html>
+<style>
+/* Style all input fields */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+/* Style the submit button */
+input[type=button] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#message p {
+  padding: 10px 35px;
+  font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
+}
+</style>
 <html>
 <head>
     <title>{% block title %} Crear Usuario {% endblock %}</title>
@@ -35,9 +90,16 @@
                     <label for="username">Nombre de usuario:</label>
                     <input type="text" class="form-control" id="username" name="username" value="" placeholder="Ingrese su nombre de usuario" required>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="password1">Contraseña:</label>
-                    <input type="password" class="form-control" name="password1" id="InputPassword1" placeholder="Introduce tu contraseña" value="" required>
+                    <input type="password" id="pass" name="pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  title="Debe contener 1 Mayúscula, 1 Minúscula, 1 Número y un largo de 8 Caracteres" class="form-control" placeholder="Nueva contraseña" required>
+                </div>
+                <div id="message">
+                  <h3>Debe contener las siguentes caracteristicas:</h3>
+                  <p id="letter" class="invalid"><b>Minúscula</b></p>
+                  <p id="capital" class="invalid"><b>Mayúscula</b></p>
+                  <p id="number" class="invalid"><b>Número</b></p>
+                  <p id="length" class="invalid">Mínimo<b> 8 Caracteres</b></p>
                 </div>
                 <div class="form-group">
                     <label for="password2">Contraseña:</label>
@@ -58,98 +120,126 @@
                         <option value="VIS">Visualizador</option>
                     </select>
                 </div>
-                <button type="button" id="create" class="btn btn-primary block full-width m-b">Agregar</button>
+                <button type="button" id="create" class="btn btn-success">Agregar Usuario</button>
             </form>
             <br>
         </div>
 
     </div>
 </div>
-<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script href="https://code.jquery.com/jquery-3.1.1.slim.js"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
 <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
-
 <!-- Custom and plugin javascript -->
 <script src="{% static 'js/inspinia.js' %}"></script>
 <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
-<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.js' %}"></script>
 <script>
-    $(document).ready(function(){
-        $("#create").on('click',function(){
-            $.ajax({
-                url: '{% url "create_staff" %}',
-                type: 'POST',
-                data: {
-                    'first_name': $("#first_name").val(),
-                    'last_name': $("#last_name").val(),
-                    'username': $('#username').val(),
-                    'password1': $('#InputPassword1').val(),
-                    'password2': $('#InputPassword2').val(),
-                    'email': $("#email").val(),
-                    'type_user': $("#Select").val(),
-                    'csrfmiddlewaretoken': '{{ csrf_token}}'
-                },
-                success: function(data){
-                    if (data.result == 'True'){
-                        window.location.href = "{% url 'list_staff' %}"
-                    }
-                    else if(data.result == 'password'){
-                      swal({
-                          title: 'Oops...',
-                          text: 'Las contraseñas no son iguales',
-                          type: 'error',
-                      })
-                    }
-                    else if(data.result  == 'email'){
-                      swal({
+$(document).ready(function(){
+      $("#create").on('click',function(){
+          $.ajax({
+              url: '{% url "create_staff" %}',
+              type: 'POST',
+              data: {
+                  'first_name': $("#first_name").val(),
+                  'last_name': $("#last_name").val(),
+                  'username': $('#username').val(),
+                  'password1': $('#pass').val(),
+                  'password2': $('#InputPassword2').val(),
+                  'email': $("#email").val(),
+                  'type_user': $("#Select").val(),
+                  'csrfmiddlewaretoken': '{{ csrf_token}}'
+              },
+              success: function(data){
+                  if (data.result == 'True'){
+                      window.location.href = "{% url 'list_staff' %}"
+                  }
+                  else if(data.result == 'password'){
+                    swal({
                         title: 'Oops...',
-                        text: 'El email ya se encuentra registrado',
+                        text: 'Las contraseñas no son iguales',
                         type: 'error',
-                      })
-                    }
-                    else if(data.result == 'username'){
-                      swal({
-                        title: 'Oops...',
-                        text: 'El nombre de usuario ya se encuentra registrado',
-                        type: 'error',
-                      })
-                    }
-                },
-                error: function(){
-                    alert("error")
-                }
-            });
+                    })
+                  }
+                  else if(data.result  == 'email'){
+                    swal({
+                      title: 'Oops...',
+                      text: 'El email ya se encuentra registrado',
+                      type: 'error',
+                    })
+                  }
+                  else if(data.result == 'username'){
+                    swal({
+                      title: 'Oops...',
+                      text: 'El nombre de usuario ya se encuentra registrado',
+                      type: 'error',
+                    })
+                  }
+              },
+              error: function(){
+                  alert("error")
+              }
+          });
+      })
+      var myInput = document.getElementById("pass");
+      var letter = document.getElementById("letter");
+      var capital = document.getElementById("capital");
+      var number = document.getElementById("number");
+      var length = document.getElementById("length");
 
-        })
-    });
-    $("#email").on('change',function(){
-    campo = $("#email").val();
-    if(campo != ''){
+      // When the user clicks on the password field, show the message box
+      myInput.onfocus = function() {
+        document.getElementById("message").style.display = "block";
+      }
 
-        emailRegex = /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([^<>()[].,;:\s@"]+.)+[^<>()[].,;:\s@"]{2,})$/i;
-        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
-        if (emailRegex.test(campo)) {
-          $("#val_correo").hide();
+      // When the user clicks outside of the password field, hide the message box
+      myInput.onblur = function() {
+        document.getElementById("message").style.display = "none";
+      }
 
+      // When the user starts to type something inside the password field
+      myInput.onkeyup = function() {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if(myInput.value.match(lowerCaseLetters)) {
+          letter.classList.remove("invalid");
+          letter.classList.add("valid");
         } else {
-          $("#val_correo").show();
+          letter.classList.remove("valid");
+          letter.classList.add("invalid");
         }
-    }else{
 
-          $("#val_correo").hide();
-    }
-});
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if(myInput.value.match(upperCaseLetters)) {
+          capital.classList.remove("invalid");
+          capital.classList.add("valid");
+        } else {
+          capital.classList.remove("valid");
+          capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if(myInput.value.match(numbers)) {
+          number.classList.remove("invalid");
+          number.classList.add("valid");
+        } else {
+          number.classList.remove("valid");
+          number.classList.add("invalid");
+        }
+
+        // Validate length
+        if(myInput.value.length >= 8) {
+          length.classList.remove("invalid");
+          length.classList.add("valid");
+        } else {
+          length.classList.remove("valid");
+          length.classList.add("invalid");
+        }
+      }
+  });
 </script>
 </body>
 {% endblock content %}
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
