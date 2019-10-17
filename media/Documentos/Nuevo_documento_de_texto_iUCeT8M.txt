@@ -1,0 +1,12 @@
+docker-compose exec web bash
+docker-compose up
+docker-compose up --build
+docker-compose down
+
+
+
+proyecto de titulo:
+-Proposito de la reunion: avances
+-Dar a conocer los ultimos puntos (reunión anterior)
+-Compromiso
+-Conclusiones del avance
