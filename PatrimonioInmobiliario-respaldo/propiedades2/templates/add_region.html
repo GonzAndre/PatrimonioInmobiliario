@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div class="m-t">
+        <div class="form-group">
+            <input type="text" id="name" class="form-control" placeholder="Nombre">
+            <input type="text" id="acronym" class="form-control" placeholder="Acrónimo">
+        </div>
+        <button type="button" id="info_region" class="btn btn-primary"> ENVIAR</button>
+    </div>
+</head>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#info_region").on('click', function () {
+            $.ajax({
+                url: '{% url "add_region" %}',
+                type: 'POST',
+                data: {
+                    'name': $("#name").val(),
+                    'acronym': $("#acronym").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function (data) {
+                    if (data.result){
+                        alert('Paso')
+                        window.location.href = "{% url 'list_region' %}"
+                    }
+                    else {
+                        alert('No paso')
+                        swal({
+                            title: 'Problemas',
+                            text: 'La región ya existe',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+</script>
+</html>

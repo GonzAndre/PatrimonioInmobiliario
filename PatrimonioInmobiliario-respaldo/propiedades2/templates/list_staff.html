@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %} Usuarios {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+
+</head>
+{% include "base.html" %}
+{% block content %}
+    <body>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-md-10">
+                <h1>Listado de usuarios registrados</h1>
+            </div>
+        </div>
+        {% if alerta %}
+            <div class="alert alert-success">
+                <button class="close" data-dismiss="alert"><span>&times;</span></button>
+                <strong>USTED NO TIENE LOS PRIVILEGIOS PARA AGREGAR UNA PROPIEDAD</strong>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-10">
+                <form class="form mb-auto" method="GET" action="{% url 'search' %}">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" style="display:none" name="selection" type="radio" value="2"
+                               id="defaultCheck2" checked>
+                        <label class="form-check-label" for="defaultCheck2">
+                        </label>
+                    </div>
+                    <input type="text" class="form-control ml-sm-2" name="q" value="{{ request.GET.q }}"
+                           placeholder="Hola! ¿Buscas algo?..">
+                </form>
+            </div>
+            {% if staff.type_user == 'DIG' or staff.type_user == 'ADM' %}
+                <div class="col-md-2">
+                    <a class="float-right" href="{% url 'add_acquisition' %}" style="margin-top: 15%;">
+                        <button type="button" class="btn btn-success">Agregar</button>
+                    </a>
+                </div>
+            {% endif%}
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped" id="datos">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Tipo de usuario</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cli in object_list %}
+                        <tr>
+                            <td>{{ cli.pk }}</td>
+                            <td>{{ cli.first_name }}</td>
+                            <td>{{ cli.last_name }}</td>
+                            <td>{{ cli.type_user }}</td>
+                            <td>
+                                <a href="{% url 'edit_staff' cli.pk %}">
+                                    <button type="button" class="btn btn-primary">Editar</button>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_password' cli.pk %}">
+                                    <button type="button" class="btn btn-primary">Cambiar Contraseña</button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <div class="row">
+                    {% if object_list.has_next or object_list.has_previous %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if object_list.has_previous %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ object_list.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in object_list.paginator.page_range %}
+                                    <li class="page-item {% if object_list.number == page %}active{% endif %}"><a
+                                            class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                                {% endfor %}
+
+                                {% if object_list.has_next %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ object_list.next_page_number }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock content %}
+</html>

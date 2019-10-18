@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+{% include "base.html" %}
+{% block content %}
+<body>
+    <div class="container">
+        <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-offset-12">
+            <h1 class='text-center' style="margin-top:30px;">Agregar Usuario</h1>
+
+            <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <h1>{{ resultado }}</h1>
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="" placeholder="Ingrese su nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Apellido:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="" placeholder="Ingrese su apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" class="form-control" id="username" name="username" value="" placeholder="Ingrese su nombre de usuario" required>
+                </div>
+                 <div class="form-group">
+                    <label for="password1">Contraseña:</label>
+                    <input type="password" class="form-control" name="password1" id="InputPassword1" placeholder="Introduce tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Contraseña:</label>
+                    <input type="password" class="form-control" name="password2" id="InputPassword1" placeholder="Vuelve a introducir tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="" placeholder="Ingrese su correo electronico" required>
+                </div>
+                <div>
+                    <label for="type_user">Tipo de usuario:</label>
+                   <select class="form-control" id="Select" name="type_user">
+                        <option value="ADM" selected>Administrador</option>
+                        <option value="DIG">Digitador</option>
+                        <option value="VIS">Visualizador</option>
+                    </select>
+                </div>
+
+
+
+                <div>
+
+                </div>
+                <div class="col-md-12">
+                    <!-- Button trigger modal -->
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        Enviar
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Si los datos del usuario son correctos, seleccione "Enviar", de lo contrario presione
+                                    "Volver"
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="{% url 'createstaff' %}">
+                                        <button type="button" class="btn btn-secondary">Volver</button>
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br>
+        </div>
+
+    </div>
+</div>
+</body>
+{% endblock content %}
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
