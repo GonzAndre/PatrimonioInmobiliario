@@ -46,4 +46,6 @@ urlpatterns = [
     path('edit_comment', views.edit_comment, name='edit_comment'),
     path('delete_comment', views.delete_comment, name='delete_comment'),
     path('report', views.generate_report_excel, name='generate_report'),
+    path('view_notifications', views.view_notificaction, name='view_notifications'),
+    path('delete_notification', views.delete_notification, name='delete_notification'),
 ]

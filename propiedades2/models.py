@@ -278,6 +278,7 @@ class Acquisition(models.Model):
     SII = models.OneToOneField(SiiRecord, on_delete=models.CASCADE, blank=True, null=True, related_name='SII_acq')
     status = models.BooleanField(default=True)
     historyl = HistoricalRecords()
+    stats_acquisition = models.ForeignKey(Stats,blank=True, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return "nombre: %s, rol: %s, uso: %s" % (self.name, self.role_number, self.property_use)
 
@@ -304,7 +305,6 @@ class Rent(models.Model):
     supplier_name = models.CharField(max_length=100)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    duration = models.PositiveIntegerField()
     status = models.BooleanField(default=True)
     stats_rent = models.ForeignKey(Stats,blank=True, null=True, on_delete=models.CASCADE)
     def __str__(self):
@@ -355,3 +355,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return "el usuario %s %s comentó: %s ,en la publicación: %s" % (self.author.first_name, self.author.last_name, self.description, self.post.description)
+
+class Notification(models.Model):
+    user_transmitter = models.ForeignKey(Staff,on_delete=models.SET_NULL, null=True, related_name='Transmisor')
+    user_receiver = models.ForeignKey(Staff,on_delete=models.SET_NULL, null=True,related_name='Receptor')
+    action = models.CharField(max_length=2, choices=ACTION_CHOICE)
+    id_property = models.PositiveIntegerField(blank=True, null=True)
+    type_property = models.CharField(max_length=2, choices=ACTION_CHOICE)
+    time_str = models.CharField(max_length=100,default='0')
+    time = models.DateTimeField(default=timezone.now)
+    read_status = models.BooleanField(default=False)
+    link = models.CharField(max_length=100)
+    text = models.CharField(max_length=100)

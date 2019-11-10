@@ -56,3 +56,20 @@ POSITION_CHOICE = (
     ('ADM', 'Administrador'),
     ('VIS', 'Visualizador')
 )
+ACTION_CHOICE = (
+    ('AA', 'Añadir adquisición'),
+    ('AR', 'Añadir renta'),
+    ('EA', 'Editar adquisición'),
+    ('ER', 'Editar renta'),
+    ('SA', 'Estatus Activo'),
+    ('SI', 'Estatus Inactivo'),
+    ('PA', 'Post adquisición'),
+    ('PR', 'Post renta'),
+    ('RA', 'Respuesta adquisición'),
+    ('RR', 'Respuesta renta'),
+)
+
+PROPERTY_CHOICE = (
+    ('AC', 'Acquisition'),
+    ('RT', 'Rent'),
+)

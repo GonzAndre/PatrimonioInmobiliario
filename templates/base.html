@@ -1,4 +1,6 @@
 {% load static %}
+{% load propiedades_tags %}
+{% tag_notification request as list_notifications %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -12,14 +14,18 @@
     <link rel="stylesheet" href="{% static 'base.css'%}">
     <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'js/jquery-3.1.1.min.js' %}">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
     <title>Propiedades</title>
   </head>
   <body>
     <br>
     <div class="container">
       <nav class="navbar navbar-expand-lg" id="header">
+        <a>
+          <input type="image" src="{% static 'boton atras.png' %}" width="40" height="40" class="d-inline-block align-top"  onclick="history.back()" alt="">
+        </a>    
         <a class="navbar-brand" href="#">
-          <img src="{% static 'logoA.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
+          <img src="{% static 'logoA.png' %}" width="40" height="40" class="d-inline-block align-top" style="margin-left:2.5px" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <i class="fa fa-bars" style="color:white;"></i>
@@ -27,14 +33,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px"><a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a></button>
+              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px"><a
+                  class="nav-link" href="{% url 'index' %}">Home {{ llega }}<span
+                    class="sr-only">(current)</span></a></button>
             </li>
             <li class="nav-item dropdown">
                    <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                       Propiedades
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{% url 'list_total' %}">Todas</a>
+                      <a class="dropdown-item" href="{% url 'list_total' %}">Todas</a>
                       <a class="dropdown-item" href="{% url 'list_acquisition' %}">Adquiridas</a>
                       <a class="dropdown-item" href="{% url 'list_rent' %}">Arrendadas</a>
                     </div>
@@ -76,6 +84,29 @@
               <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="#">{{request.user}}</a> </button>
             </li>
             <p> </p>
+            <li class="nav-item dropdown" id='alert_notifications'>
+              <button class="btn btn-outline btn-md dropleft" type="submit"
+                style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#"
+                  id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="true">
+                  <ion-icon style="color:white;" name="notifications"></ion-icon><span
+                    class="badge badge-pill badge-light" style="margin-bottom:2px;">{{ list_notifications.count }}</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  {% for cli in list_notifications %}
+                  <a class="dropdown-item notification_" id="notification_{{ cli.pk }}" data-pk='{{ cli.pk }}'
+                    style="background:#CDE4E7;"
+                    href="{% if cli.link == 'view_acquisition' %}{% url 'view_acquisition' cli.id_property %}{% elif cli.link == 'view_rent' %}{% url 'view_rent' cli.id_property %}{% endif %}">
+                    <strong>{{ cli.user_transmitter.first_name }} {{ cli.user_transmitter.last_name }}</strong>
+                    {{ cli.text }}
+                    <small style="color:gray">{{ cli.time_str }}</small>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  {% endfor %}
+                </div>
+              </button>
+            </li>
+            <p></p>
             <li>
               <button class="btn btn-outline btn-sm" type="submit"> <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a> </button>
             </li>
@@ -86,8 +117,58 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script  src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+    integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+    integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+</body>
+<script>
+  $(document).ready(function () {
+    //Cada 10 segundos (10000 milisegundos) se ejecutará la función refrescar
+    setInterval(refrescar, 20000);
+  });
+  function refrescar() {
+    //Actualiza la página
+    $.ajax({
+      url: '{% url "view_notifications" %}',
+      type: 'POST',
+      data: {
+        'csrfmiddlewaretoken': '{{ csrf_token}}',
+      },
+      success: function (data) {
+        console.log(data)
+        $('#alert_notifications').html(data)
+      }
+    });
+  }
+  $(".notification_").on('click', function () {
+    alert($(this).data('pk'))
+    $.ajax({
+      url: '{% url "delete_notification" %}',
+      type: 'POST',
+      data: {
+        'id_notification': $(this).data('pk'),
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function (data) {
+        if (data.result == false) {
+          swal({
+            title: 'Problemas',
+            text: 'ha ocurrido un error en la notificación',
+            type: 'error'
+          })
+        }
+      }
+    });
+  });
+
+</script>
+
 </html>

@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
     Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff, Region, Property, Change_property, \
-    Comment, Stats, District
+    Comment, Stats, District, Notification
 from propiedades2.forms import DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
     DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
     ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm, StaffForm, UserForm, EditStaffForm, \
@@ -23,6 +23,7 @@ import random
 import string
 import reversion
 import datetime
+from django.forms.models import model_to_dict
 from reversion.models import Version
 from django.views.decorators.csrf import csrf_protect
 import re
@@ -121,7 +122,6 @@ def Add_acquisition(request):
     cantidad = []
     data['staff'] = Staff.objects.get(username_staff=request.user)
     if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
-
         if request.method == "POST":
             # ArquitectureForm,InternalForm,NotaryForm,SII_recordForm
             data['formAcquisition'] = AcquisitionForm(request.POST, request.FILES)
@@ -150,9 +150,6 @@ def Add_acquisition(request):
             data['formDB'] = DocDBForm(request.POST, request.FILES)
             if request.POST.get('Tipo') is not None:
                 if request.POST['Tipo'] == 'Propiedad':
-                    y = contador(request.POST)
-                    cantidad.append(y)
-                    print(cantidad)
                     if data['formAcquisition'].is_valid():
                         data['formAcquisition'] = data['formAcquisition'].save(commit=False)
                         if data['formLocation'].is_valid():
@@ -164,13 +161,9 @@ def Add_acquisition(request):
                             return JsonResponse({'id': data['formAcquisition'].pk})
             if request.POST.get('Arquitecture') is not None:
                 if request.POST['Arquitecture'] == 'arquitecture':
-                    print(cantidad)
-                    #y = contador(request.POST)
-                    #cantidad.append(y)
                     if request.POST.get('id_propiedad') is not None:
-                        # extraer pk de la acquisition
-                        print(request.POST.get('id_propiedad'))
                         prop = Acquisition.objects.get(pk=request.POST.get('id_propiedad'))
+                        id = request.POST.get('id_propiedad')
                         if data['formArquitecture'].is_valid():
                             data['formArquitecture'] = data['formArquitecture'].save(commit=False)
                         if data['formEx'].is_valid():
@@ -223,12 +216,11 @@ def Add_acquisition(request):
                         data['formArquitecture'].save()
                         prop.arquitecture = data['formArquitecture']
                         prop.save()
+
                     return JsonResponse({})
 
             elif request.POST.get('Internal') is not None:
                 if request.POST['Internal'] == 'internal':
-                    y = contador(request.POST)
-                    cantidad.append(y)
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
                         prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
@@ -258,8 +250,6 @@ def Add_acquisition(request):
 
             elif request.POST.get('Notary') is not None:
                 if request.POST['Notary'] == 'notary':
-                    y = contador(request.POST)
-                    cantidad.append(y)
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
                         prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
@@ -305,8 +295,6 @@ def Add_acquisition(request):
 
             elif request.POST.get('SII') is not None:
                 if request.POST['SII'] == 'Sii':
-                    y = contador(request.POST)
-                    cantidad.append(y)
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
                         prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
@@ -331,8 +319,10 @@ def Add_acquisition(request):
                         data['formSII'].save()
                         prop.SII = data['formSII']
                         prop.save()
+                        valores = walk_object(prop.pk)
+                        prop.stats_acquisition = create_stats(valores[0], valores[1])
+                        prop.save()
                     return JsonResponse({})
-
         else:
             data = {
                 'formLocation': LocationForm, 'formAcquisition': AcquisitionForm, 'formArquitecture': ArquitectureForm,
@@ -372,16 +362,22 @@ def Add_rent(request):
                         document = data['formDocument'].save()
                         rent.contract_type = document
                         total = 0
-                        nocontestado = 0
+                        contestado = 0
+                        if request.POST['plot'] == '':
+                            print('vacio')
+                            total -= 1
+                        if request.POST['lot_number'] == '':
+                            print('vacio2')
+                            total -= 1
                         for val in request.POST:
-                            print(val, request.POST[val])
                             if request.POST[val] != '':
-                                nocontestado += 1
+                                contestado += 1
                                 total += 1
                             else:
                                 total += 1
+                        
                             #y es donde se modifica el stats correspondiente a la propiedad
-                    rent.stats_rent = create_stats(total, nocontestado)
+                    rent.stats_rent = create_stats(total-1, contestado-1)
                     rent.save()
                 return redirect('list_rent')
 
@@ -401,9 +397,7 @@ def Add_rent(request):
 def Edit_acquisition(request, acq_id):
     data = {}
     propiedad = get_object_or_404(Acquisition, pk=acq_id)
-    print(acq_id)
     data['pk'] = acq_id
-    print(data['pk'])
     data['staff'] = Staff.objects.get(username_staff=request.user)
     if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
         if request.method == "POST":
@@ -450,7 +444,7 @@ def Edit_acquisition(request, acq_id):
                 if request.POST['Arquitecture'] == 'arquitecture':
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
-                        prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+                        prop = Acquisition.objects.get(pk=acq_id)
                     if data['formArquitecture'].is_valid():
                         data['formArquitecture'] = data['formArquitecture'].save(commit=False)
                         if data['formEx'].is_valid():
@@ -509,7 +503,7 @@ def Edit_acquisition(request, acq_id):
                 if request.POST['Internal'] == 'internal':
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
-                        prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+                        prop = Acquisition.objects.get(pk=acq_id)
                     if data['formInternal'].is_valid():
                         data['formInternal'] = data['formInternal'].save(commit=False)
                         if data['formTypeC'].is_valid():
@@ -536,10 +530,9 @@ def Edit_acquisition(request, acq_id):
 
             elif request.POST.get('Notary') is not None:
                 if request.POST['Notary'] == 'notary':
-                    print('request notary: ',request.POST)
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
-                        prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+                        prop = Acquisition.objects.get(pk=acq_id)
 
                     if data['formNotary'].is_valid():
                         data['formNotary'] = data['formNotary'].save(commit=False)
@@ -584,7 +577,7 @@ def Edit_acquisition(request, acq_id):
                 if request.POST['SII'] == 'Sii':
                     if request.POST.get('id_propiedad') is not None:
                         # extraer pk de la acquisition
-                        prop = Acquisition.objects.get(pk=request.POST['id_propiedad'])
+                        prop = Acquisition.objects.get(pk=acq_id)
                     if data['formSII'].is_valid():
                         data['formSII'] = data['formSII'].save(commit=False)
                         if data['formAc'].is_valid():
@@ -606,9 +599,19 @@ def Edit_acquisition(request, acq_id):
                         data['formSII'].save()
                         prop.SII = data['formSII']
                         prop.save()
+                        print('dsajkdhsakdhsajkdhsakdah')
+                        valores = walk_object(acq_id)
+                        prop.stats_acquisition = create_stats(valores[0], valores[1])
+                        prop.save()
                     return JsonResponse({})
-            x = Change_property.objects.create(id_property = acq_id, type = 'Acq', user = data['staff'], comment = request.POST.get("commentacq"))
-            x.save()
+                print('xxxxxxxxxxxxxxxxxxxx')
+                print(request.POST.get("commentacq"))
+                print('xxxxxxxxxxxxxxxxxxxx')
+            if request.POST.get("commentacq") == None:
+                pass
+            else:
+                x = Change_property.objects.create(id_property = acq_id, type = 'Acq', user = data['staff'], comment = request.POST.get("commentacq"))
+                x.save()
 
         else:
             prop = AcquisitionForm(instance = propiedad)
@@ -695,18 +698,24 @@ def Edit_rent(request, rent_id):
                         FormLocation.save()
                         FormDocTypeC.save()
                         total = 0
-                        nocontestado = 0
+                        contestado = 0
+                        if request.POST['plot'] == '':
+                            print('vacio')
+                            total -= 1
+                        if request.POST['lot_number'] == '':
+                            print('vacio2')
+                            total -= 1
                         for val in request.POST:
                             print(val, request.POST[val])
                             if request.POST[val] != '':
-                                nocontestado += 1
+                                contestado += 1
                                 total += 1
                             else:
                                 total += 1
-                        #y es donde se modifica el stats correspondiente a la propiedad
-                        y = create_stats(total, nocontestado)
-                        propiedad.stats_rent = y
-                        #x es donde se crea el modelo change_property
+                        stats = Stats.objects.get(pk = propiedad.stats_rent.pk)
+                        stats.total = total-2
+                        stats.complete = contestado-2
+                        stats.save()
                         x = Change_property.objects.create(id_property = rent_id, type = 'Rent', user = data['staff'], comment = request.POST.get("commentrent"))
                         x.save()
                 return redirect('list_rent')
@@ -1558,8 +1567,8 @@ def delete_comment(request):
         JsonResponse({'result': False})
 
 def create_stats(total, complete):
-    complete = complete - 1
-    total = total - 1
+    complete = complete
+    total = total
     percentage = (complete/total)*100
     x = Stats.objects.create(total = total, complete = complete, percentage = percentage)
     return x
@@ -2011,3 +2020,228 @@ def generate_report_excel(request):
 
     wb.save(response)
     return response
+
+
+def walk_object(id):
+    prop = Acquisition.objects.get(pk=id)
+    a = model_to_dict(prop)
+    arq, internal, notary, SII = ArchitectureRecordAcq.objects.get(pk = a.get('arquitecture')), InternalAccountantsAcq.objects.get(pk = a.get('internal')), NotaryAcquisition.objects.get(pk = a.get('notary')), SiiRecord.objects.get(pk = a.get('SII'))
+    d_arq, d_internal, d_notary, d_SII = model_to_dict(arq), model_to_dict(internal), model_to_dict(notary), model_to_dict(SII)
+    #Elementos de arquitectura
+    exp_num, cip, cer_num, bluprin, bui_per, mun_rec = DocumentEx.objects.get(pk = d_arq.get('expropriation_mun')), DocumentCip.objects.get(pk = d_arq.get('cip')), DocumentCn.objects.get(pk = d_arq.get('certified_number')), DocumentBlue.objects.get(pk = d_arq.get('blueprints')), DocumentBuildP.objects.get(pk = d_arq.get('building_permit')), DocumentMR.objects.get(pk = d_arq.get('municipal_reception'))
+    #elementos de interno
+    con_typ, other = DocumentTypeC.objects.get(pk = d_internal.get('contract_type')), DocumentOther.objects.get(pk = d_internal.get('others'))
+    #elementos de notaria
+    write, dom_cer, proh, exp_ser = DocumentWR.objects.get(pk=d_notary.get('writing')), DocumentDC.objects.get(pk = d_notary.get('domain_certificate')), DocumentPH.objects.get(pk=d_notary.get('prohibitions')), DocumentEs.objects.get(pk=d_notary.get('expropriation_serviu'))
+    #elementos de SII
+    app_cer, deb_cer = DocumentAc.objects.get(pk = d_SII.get('appraisal_certificate')), DocumentDB.objects.get(pk = d_SII.get('debt_certificate'))
+    contestado = 0
+    total = 0
+    valores = []
+    for val in d_arq:
+        print(val, d_arq[val])
+        if d_arq[val] == None:
+            total += 1
+        else:
+            total += 1
+            contestado += 1
+    print('prueba')
+    print(exp_num.archive)
+    print('fin prueba')
+    if exp_num.archive != '':   
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #-------------------------
+    if cip.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    if cer_num.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    if bluprin.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    if bui_per.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    if mun_rec.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    for val in d_internal:
+        print(val, d_internal[val])
+        if d_internal[val] == None:
+            total += 1
+        else:
+            total += 1
+            contestado += 1
+
+    if con_typ.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #-------------------------
+    if other.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #-------------------------
+    for val in d_notary:
+        print(val, d_notary[val])
+        if d_notary[val] == None:
+            total += 1
+        else:
+            total += 1
+            contestado += 1
+
+    if write.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #-------------------------
+    if dom_cer.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    if proh.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #------------------------
+    if exp_ser.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    print('-------------------------')
+    for val in d_SII:
+        print(val, d_SII[val])
+        if d_SII[val] == None:
+            total += 1
+        else:
+            total += 1
+            contestado += 1
+    if con_typ.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #-------------------------
+    if other.archive != '':
+        total += 1
+        contestado += 1
+    else:
+        total += 1
+    #-------------------------
+    total -= 18
+    contestado -=18
+    valores.append(total)
+    valores.append(contestado)
+    return valores
+def delete_notification(request):
+    pk_noti = request.POST.get('id_notification')
+    print(pk_noti)
+    if request.POST.get('id_notification') != None:
+        Notification.objects.filter(pk = pk_noti).delete()
+        return JsonResponse({'result':True})
+    else:
+        return JsonResponse({'result':False})
+
+
+def view_notificaction(request):
+    data = {}
+    data['Notifications'] = Notification.objects.filter(user_receiver__username_staff = request.user).order_by('-time')
+    for noti in data['Notifications']:
+        delta = timezone.now()-noti.time
+        if delta.days != 0:
+            Notification.objects.filter(pk = noti.pk).update(time_str = (str(delta.days)+' d'))
+        else:
+            aux = str(delta).split(':')
+            if aux[0] != '0':
+                Notification.objects.filter(pk = noti.pk).update(time_str=(aux[0]+' h'))
+            else:
+                if aux[1][0] != '0':
+                    Notification.objects.filter(pk = noti.pk).update(time_str=(aux[1]+' m'))
+                else:
+                    Notification.objects.filter(pk = noti.pk).update(time_str=(aux[1][1]+' m'))
+    return render(request, 'notifications.html', data)
+
+def create_notification(user, action, id_property, type_p):
+    users = Staff.objects.all()
+    for a in users:
+        if a.username_staff != user:
+            alert = Notification()
+            alert.user_transmitter = Staff.objects.get(username_staff=user)
+            alert.user_receiver = a
+            alert.type_property = type_p
+            alert.id_property = id_property
+            alert.action = action
+            if action == 'AA':
+                alert.text = 'añadió una propiedad adquirida'
+                string_2 = 'view_acquisition'
+                alert.link = string_2
+            if action == 'AR':
+                alert.text = 'añadió una propiedad rentada'
+                string_2 = 'view_rent'
+                alert.link = string_2
+            if action == 'EA':
+                alert.text = 'modificó una propiedad adquirida'
+                string_2 = 'view_acquisition'
+                alert.link = string_2
+            if action == 'ER':
+                alert.text = 'modificó una propiedad rentada'
+                string_2 = 'view_rent'
+                alert.link = string_2
+            if action == 'SA':
+                alert.text = 'habilitó el estatus de una propiedad'
+                if type_p == 'AC':
+                    string_2 = 'view_acquisition'
+                else:
+                    string_2 = 'view_rent'
+                alert.link = string_2
+            if action == 'SI':
+                alert.text = 'deshabilitó el estatus de una propiedad'
+                if type_p == 'AC':
+                    string_2 = 'view_acquisition'
+                else:
+                    string_2 = 'view_rent'
+                alert.link = string_2
+            if action == 'PA':
+                alert.text = 'comentó en una propiedad adquirida'
+                string_2 = 'view_acquisition'
+                alert.link = string_2
+            if action == 'PR':
+                alert.text = 'comentó en una propiedad rentada'
+                string_2 = 'view_rent'
+                alert.link = string_2
+            if action == 'RA':
+                alert.text = 'respondió en una propiedad adquirida'
+                string_2 = 'view_acquisition'
+                alert.link = string_2
+            if action == 'RR':
+                alert.text = 'respondió en una propiedad rentada'
+                string_2 = 'view_rent'
+                alert.link = string_2
+            alert.save()

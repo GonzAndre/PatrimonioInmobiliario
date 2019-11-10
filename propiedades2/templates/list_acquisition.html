@@ -1,4 +1,5 @@
 {% load static %}
+{% load mathfilters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,21 +55,42 @@
                 <table class="table table-striped" id="datos">
                     <thead>
                     <tr>
-                        <th scope="col">N° de rol</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Dirección</th>
-                        <th scope="col">Uso propiedad</th>
-                        <th scope="col"></th>
+                        <th scope="col" style="width:5px">N° de rol</th>
+                        <th scope="col" style="width:15px">Nombre</th>
+                        <th scope="col" style="width:15px">Dirección</th>
+                        <th scope="col" style="width:15px">Uso propiedad</th>
+                        <th scope="col" style="width:40px"></th>
+                        <th scope="col" style="width:15px"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for cli in object_list %}
                         <tr>
-                            <td>{{ cli.role_number }}</td>
-                            <td>{{ cli.name }}</td>
-                            <td>{{ cli.location }}</td>
-                            <td>{{ cli.property_use }}</td>
-                            <td>
+                            <td style="width:5px">{{ cli.role_number }}</td>
+                            <td style="width:15px">{{ cli.name }}</td>
+                            <td style="width:15px">{{ cli.location }}</td>
+                            <td style="width:15px">{{ cli.property_use }}</td>
+                            <td style="width:40px">
+                              <h1>{{cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100|floatformat:"0"}}%</h1>
+                              {% if cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 >= 0.0 and cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 < 25.0 %}
+                              <div class="progress">
+                                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100}}%"></div>
+                              </div>
+                              {% elif cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 >= 25.0 and cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 < 50.0 %}
+                              <div class="progress">
+                                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100}}%"></div>
+                              </div>
+                              {% elif cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 >= 50.0 and cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 < 75.0 %}
+                              <div class="progress">
+                                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100}}%"></div>
+                              </div>
+                              {% elif cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 >= 75.0 and cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 <= 100.0 %}
+                              <div class="progress">
+                                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100}}%"></div>
+                              </div>
+                              {% endif %}
+                            </td>
+                            <td style="width:15px">
                                 <a href="{% url 'view_acquisition' cli.pk %}">
                                     <button type="button" class="btn btn-primary">Visualizar</button>
                                 </a>

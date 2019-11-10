@@ -87,12 +87,12 @@
                                 {% else %}
                                     <p id="total">Nombre Notaria: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.notary.writing %}
+                                {% if acquisition.notary.writing.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.notary.writing.type acquisition.notary.writing.pk %}"
                                            style="color:blue">Escritura: {{ acquisition.notary.writing.archive }}</a>
                                     </p>
-                                {% elif acquisition.notary.writing == '' %}
+                                {% elif acquisition.notary.writing %}
                                     <p id="total">Escritura: No Registrado</p>
                                 {% else %}
                                     <p id="total">Escritura: No Registrado</p>
@@ -117,18 +117,16 @@
                                 {% else %}
                                     <p id="total">Título Anterior: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.notary.domain_certificate %}
+                                {% if acquisition.notary.domain_certificate.archive != '' %}
                                     <td>
                                         <a href="{% url 'view_archive' acquisition.notary.domain_certificate.type acquisition.notary.domain_certificate.pk %}"
                                            style="color:blue">Certificado de dominio:
                                             --------{{ acquisition.notary.domain_certificate.archive }}----------</a>
                                     </td>
-                                {% elif acquisition.notary.domain_certificate == "" %}
-                                    <p id="total">Certificado de dominio: No Registrado</p>
                                 {% else %}
                                     <p id="total">Certificado de dominio: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.notary.prohibition %}
+                                {% if acquisition.notary.prohibitions.archive != '' %}
                                     <td>
                                         <a href="{% url 'view_archive' acquisition.notary.prohibitions.type acquisition.notary.prohibitions.pk %}"
                                            style="color:blue">Gravamen y
@@ -136,11 +134,11 @@
                                 {% else %}
                                     <p id="total">Gravamen y Prohibiciones: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.notary.expropiation_serviu %}
-                                    <td>
-                                        <a href="{% url 'view_archive' acquisition.notary.expropiation_serviu.type acquisition.notary.expropiation_serviu.pk %}"
-                                           style="color:blue">Certificado de no
-                                            Expropiación: {{ acquisition.notary.expropiation_serviu }}</a></td>
+                                {% if acquisition.notary.expropriation_serviu.archive != '' %}
+                                <td>
+                                <a href="{% url 'view_archive' acquisition.notary.expropriation_serviu.type acquisition.notary.expropriation_serviu.pk %}"
+                                   style="color:blue">Certificado de no
+                                    Expropiación: {{ acquisition.notary.expropriation_serviu.archive }}</a></td>
                                 {% else %}
                                     <p id="total">Certificado de no Expropiación: No Registrado</p>
                                 {% endif %}
@@ -179,13 +177,13 @@
                                 {% else %}
                                     <p id="total">Deuda Total: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.SII.ex_contributions %}
+                                {% if acquisition.SII.ex_contributions == True %}
                                     <p id="total">Exención de
-                                        Contribuciones: {{ acquisition.SII.ex_contribuciones }}</p>
+                                        Contribuciones: Sí</p>
                                 {% else %}
-                                    <p id="total">Exención de Contribuciones: No Registrado</p>
+                                    <p id="total">Exención de Contribuciones: No</p>
                                 {% endif %}
-                                {% if acquisition.SII.appraisal_certificate %}
+                                {% if acquisition.SII.appraisal_certificate.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.SII.appraisal_certificate.type acquisition.SII.appraisal_certificate.pk %}"
                                            style="color:blue">Certificado de
@@ -193,7 +191,7 @@
                                 {% else %}
                                     <p id="total">Certificado de Avalúo: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.SII.debt_certificate %}
+                                {% if acquisition.SII.debt_certificate.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.SII.debt_certificate.type acquisition.SII.debt_certificate.pk %}"
                                            style="color:blue">Certificado de No
@@ -420,7 +418,7 @@
                                 {% else %}
                                     <p id="total">Número de permiso de edificación: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.arquitecture.expropriation_mun %}
+                                {% if acquisition.arquitecture.expropriation_mun.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.expropriation_mun.type acquisition.arquitecture.expropriation_mun.pk %}"
                                            style="color:blue">Número de NO
@@ -429,14 +427,14 @@
                                 {% else %}
                                     <p id="total">Número de No Expropiación Municipal: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.arquitecture.cip %}
+                                {% if acquisition.arquitecture.cip.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.cip.type acquisition.arquitecture.cip.pk %}"
                                            style="color:blue">CIP: {{ acquisition.arquitecture.cip.archive }}</a></p>
                                 {% else %}
                                     <p id="total">CIP: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.arquitecture.certified_number %}
+                                {% if acquisition.arquitecture.certified_number.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.certified_number.type acquisition.arquitecture.certified_number.pk %}"
                                            style="color:blue">Número de
@@ -444,7 +442,7 @@
                                 {% else %}
                                     <p id="total">Número de Certificado: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.blueprints %}
+                                {% if acquisition.arquitecture.blueprints.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.blueprints.type acquisition.arquitecture.blueprints.pk %}"
                                            style="color:blue">Planos: {{ acquisition.arquitecture.blueprints.archive }}</a>
@@ -452,7 +450,7 @@
                                 {% else %}
                                     <p id="total">Planos: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.arquitecture.building_permit %}
+                                {% if acquisition.arquitecture.building_permit.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.building_permit.type acquisition.arquitecture.building_permit.pk %}"
                                            style="color:blue">Permiso de
@@ -460,7 +458,7 @@
                                 {% else %}
                                     <p id="total">Permiso de Edificación: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.municipal_reception %}
+                                {% if acquisition.arquitecture.municipal_reception.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.municipal_reception.type acquisition.arquitecture.municipal_reception.pk %}"
                                            style="color:blue">Recepción
@@ -506,11 +504,8 @@
                                 {% else %}
                                     <p id="total">Nombre Vendedor: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.internal.contract_type %}
-                                    <p>
-                                    <h1>{{ acquisition.internal.contract_type }}</h1>
-                                    <h2>{{ acquisition.internal.contract_type.pk }}</h2>
-                                    <h3>{{ acquisition.internel.contract_type.type }}</h3>
+                                {% if acquisition.internal.contract_type.archive != '' %}
+                                    <p id="total">
                                         <a href="{% url 'view_archive' acquisition.internal.contract_type.type acquisition.internal.contract_type.pk %}"
                                            style="color:blue">Tipo de
                                             contrato: {{ acquisition.internal.contract_type.archive }}</a>
@@ -518,7 +513,7 @@
                                 {% else %}
                                     <p id="total">Tipo de contrato: No Registrado</p>
                                 {% endif %}
-                                {% if acquisition.internal.others %}
+                                {% if acquisition.internal.others.archive != '' %}
                                     <p>
                                         <a href="{% url 'view_archive' acquisition.internal.others.type acquisition.internal.others.pk %}"
                                            style="color:blue">Otros: {{ acquisition.internal.others.archive }}</a></p>

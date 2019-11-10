@@ -413,7 +413,7 @@ class RentForm(ModelForm):
         model = Rent
         fields = ['name', 'role_number', 'image', 'property_use', 'district' , 'ground_surface', 'square_m_build',
                   'e_construction_m', 'municipal_n', 'n_building_permit', 'value_land', 'value_construction',
-                  'acquiring_name', 'supplier_name', 'start_date', 'end_date', 'duration', ]
+                  'acquiring_name', 'supplier_name', 'start_date', 'end_date', ]
         labels = {
             'name': 'Nombre',
             'role_number': 'Número de rol',
@@ -431,7 +431,6 @@ class RentForm(ModelForm):
             'supplier_name': 'Nombre del arrendador',
             'start_date': 'Fecha de comienzo del contrato',
             'end_date': 'Fecha de finalización del contrato',
-            'duration': 'Duración del contrato',
         }
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de la propiedad'}),
@@ -458,8 +457,6 @@ class RentForm(ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre del arrendador'}),
             'start_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'date'}),
             'end_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'duration': forms.NumberInput(
-                attrs={'class': 'form-control', 'placeholder': 'Ingrese fecha de duración del contrato'}),
         }
 
 class StaffForm(ModelForm):

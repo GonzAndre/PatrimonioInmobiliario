@@ -2,7 +2,7 @@ from django.contrib import admin
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
     Location,ArchitectureRecordAcq, InternalAccountantsAcq, NotaryAcquisition, SiiRecord, Rent, Post, Staff, Region, Property, Change_property, \
-    Comment, Stats, District
+    Comment, Stats, District, Notification
 from reversion.admin import VersionAdmin
 
 # Register your models here.
@@ -146,4 +146,8 @@ class statsAdmin(VersionAdmin):
     pass
 @admin.register(District)
 class districtAdmin(VersionAdmin):
+    pass
+
+@admin.register(Notification)
+class notificationAdmin(VersionAdmin):
     pass

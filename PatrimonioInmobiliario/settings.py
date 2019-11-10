@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'simple_history',
     'reversion',
+    'mathfilters'
 ]
 
 BOOTSTRAP4  =  {
@@ -61,7 +62,6 @@ MIDDLEWARE = [
     'reversion.middleware.RevisionMiddleware'
 ]
 
-#EASY_MAPS_GOOGLE_KEY = "your-google-maps-api-key"
 
 ROOT_URLCONF = 'PatrimonioInmobiliario.urls'
 TEMPLATES = [
@@ -76,6 +76,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': 
+                {'propiedades_tags':'propiedades2.template_tag.propiedades_tags'},
         },
     },
 ]
