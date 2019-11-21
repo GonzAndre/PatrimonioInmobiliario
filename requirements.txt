@@ -17,4 +17,4 @@ django-simple-history
 django-reversion
 django-extensions
 openpyxl==3.0.0
-
+django-mathfilters

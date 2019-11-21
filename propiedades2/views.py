@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from propiedades2.models import Acquisition, DocumentEx, DocumentCip, DocumentCn, DocumentBlue, DocumentBuildP, \
     DocumentMR, DocumentTypeC, DocumentOther, DocumentWR, DocumentDC, DocumentPH, DocumentDB, DocumentAc, DocumentEs, \
     Rent, Location, Post, ArchitectureRecordAcq, InternalAccountantsAcq,NotaryAcquisition,SiiRecord, Staff, Region, Property, Change_property, \
-    Comment, Stats, District, Notification
+    Comment, Stats, District, Notification, Report
 from propiedades2.forms import DocCipForm, DocCnForm, DocBlueForm, DocBuildPForm, DocMRForm, DocTypeCForm, \
     DocOtherForm, DocWRForm, DocDCForm, DocPHForm, DocDBForm, DocAcForm, DocEsForm, LocationForm, AcquisitionForm, \
     ArquitectureForm, InternalForm, NotaryForm, SII_recordForm, RentForm, DocExForm, StaffForm, UserForm, EditStaffForm, \
@@ -28,6 +28,7 @@ from reversion.models import Version
 from django.views.decorators.csrf import csrf_protect
 import re
 from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.drawing.image import Image
 from django.utils import timezone
 from openpyxl.styles import Alignment,Border, Font, PatternFill, Side, Color, NamedStyle
@@ -44,7 +45,6 @@ def randomString(stringLength=4):
 def index(request):
     data = {}
     data['staff'] = Staff.objects.get(username_staff = request.user)
-    print(data['staff'])
     return render(request, 'index.html', data)
 
 
@@ -1011,39 +1011,11 @@ def createstaff(request):
 
         return render(request, template, data)
 
-#def edit_staff(request, staff_id):
-    #data = {}
-    #staff = get_object_or_404(Staff, pk=staff_id)
-    #if request.POST:
-        #FormStaff = StaffForm(request.POST, instance=Staff.objects.get(pk=staff_id))
-        ##Cambiar PK
-        #FormUser = UserForm(request.POST, instance = User.objects.get(username = staff.username_staff))
-        #print(FormUser)
-        #if FormStaff.is_valid():
-            #print('paso1 ')
-            #if FormUser.is_valid():
-            #users = FormUser.save(commit = False)
-            #if users.first_name != None:
-               # users.first_name = users.first_name
-            #if users.last_name != None:
-                #users.last_name = users.last_name
-            #if users.type_user != None:
-                #users.type_user = users.type_user
-            #print('paso 2')
-            #FormStaff.save()
-            #FormUser.save()
-        #return redirect('index')
-    #data['data'] = StaffForm(instance=Staff.objects.get(pk=staff_id))
-    ##Cambiar pk
-    #data['User'] = UserForm(instance=User.objects.get(username = staff.username_staff))
-    #template_name = 'edit_staff.html'
-    #return render(request, template_name, data)
-
-#@login_required(login_url='login')
 def list_staff(request):
+    data = {}
     staff = Staff.objects.get(username_staff = request.user)
+    data['staff'] = staff
     if staff.type_user == 'ADM':
-        data = {}
         object_list = Staff.objects.all().order_by('-id')
         paginator = Paginator(object_list, 10)
         page = request.GET.get('page')
@@ -1062,6 +1034,8 @@ def list_staff(request):
 
 def edit_staff(request,staff_id):
     data = {}
+    staff = Staff.objects.get(username_staff = request.user)
+    data['staff'] = staff
     staff = get_object_or_404(Staff, pk=staff_id)
     if request.method == 'POST':
         print(request.POST)
@@ -1219,6 +1193,7 @@ def Validate_password(request):
 def add_region(request):
     template = 'add_region.html'
     data = {}
+    data['staff'] = Staff.objects.get(username_staff = request.user)
     print(request.POST.get('acronym'))
     p = str(request.POST.get('name'))
     q = str(request.POST.get('acronym'))
@@ -1235,7 +1210,7 @@ def add_region(request):
     else:
         return JsonResponse({'result':False})
 
-    return render(request, template)
+    return render(request, template, data)
 
 def edit_region(request, region_id):
     data = {}
@@ -1266,6 +1241,8 @@ def delete_region(request, region_id):
 def list_region(request):
     template = 'list_region.html'
     data = {}
+    staff = Staff.objects.get(username_staff = request.user)
+    data['staff'] = staff
     object_list = Region.objects.all().order_by()
     paginator = Paginator(object_list, 20)
     page = request.GET.get('page')
@@ -1296,6 +1273,7 @@ def change_status_rent(request, id):
 def add_property(request):
     template = 'add_property.html'
     data = {}
+    data['staff'] = Staff.objects.get(username_staff = request.user)
     p = str(request.POST.get('name'))
     q = str(request.POST.get('acronym'))
     p = p.upper()
@@ -1311,7 +1289,7 @@ def add_property(request):
     else:
         return JsonResponse({'result':False})
 
-    return render(request, template)
+    return render(request, template, data)
 
 def edit_property(request, property_id):
     data = {}
@@ -1359,6 +1337,8 @@ def delete_property(request, property_id):
 def list_property(request):
     template = 'list_property.html'
     data = {}
+    staff = Staff.objects.get(username_staff = request.user)
+    data['staff'] = staff
     object_list = Property.objects.all().order_by()
     paginator = Paginator(object_list, 20)
     page = request.GET.get('page')
@@ -1588,6 +1568,7 @@ def contador(x):
 def add_district(request):
     template = 'add_district.html'
     data = {}
+    data['staff'] = Staff.objects.get(username_staff = request.user)
     p = str(request.POST.get('name'))
     q = str(request.POST.get('acronym'))
     print('---------------------')
@@ -1606,7 +1587,7 @@ def add_district(request):
     else:
         return JsonResponse({'result':False})
 
-    return render(request, template)
+    return render(request, template, data)
 
 def edit_district(request, district_id):
     data = {}
@@ -1651,8 +1632,35 @@ def list_district(request):
 
 def generate_report_excel(request):
     # para mandar al html que es un Excel
+    if request.POST.get('texto') != None:
+        query = request.POST.get('texto')
+        if request.POST.get('filtro') != None:
+            if request.POST.get('filtro') == 'comuna_true':
+                object_list_acquisition = Acquisition.objects.filter(
+                    Q(location__commune=query)).order_by('id')
+            if request.POST.get('filtro') == 'ciudad_true':
+                object_list_acquisition = Acquisition.objects.filter(
+                    Q(location__city=query)).order_by('id')
+            if request.POST.get('filtro') == 'region_true':
+                object_list_acquisition = Acquisition.objects.filter(
+                    Q(location__region__name=query)).order_by('id')
+            if request.POST.get('filtro') == 'tipo_true':
+                object_list_acquisition = Acquisition.objects.filter(
+                    Q(writing_data=query)).order_by('id')
+            if request.POST.get('filtro') == 'uso_true':
+                object_list_acquisition = Acquisition.objects.filter(
+                    Q(property_use__name=query)).order_by('id')
+    else:
+        return JsonResponse({'result': False})
+
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename=Reporte_propiedades.xlsx'
+    excel = Report()
+    time = str(timezone.now())
+    datetime = str(time)
+    excel.date = time
+    filename_excel = 'Reporte_propiedades' + datetime + '.xlsx'
+    
     # Hoja de trabajo
     wb = Workbook()
     ws = wb.active
@@ -1685,7 +1693,7 @@ def generate_report_excel(request):
     my_style2.alignment = align
 
     #cabeceras de la tabla
-    ws['B6'] = 'N°ASSI'
+    ws['B6'] = 'N°AASI'
     ws['B6'].style = my_style
 
     ws['C6'] = 'N°ROL'
@@ -1798,7 +1806,6 @@ def generate_report_excel(request):
 
 
     #LLamar a objetos
-    info = Acquisition.objects.all()
     ven = 'Sin registro'
     adq = 'Sin registro'
     nota = 'Sin registro'
@@ -1819,11 +1826,10 @@ def generate_report_excel(request):
     me = 'Sin registro'
     rm = 'Sin registro'
     pe = 'Sin registro'
-
-
-    #Recorrer objetos
-    cont = 7
-    for prop in info:
+    
+    for prop in object_list_acquisition:
+        #Recorrer objetos
+        cont = 7
         calle = prop.location.street
         if prop.location.plot != None and prop.location.lot_number != None:
             calle = str(calle) + ',' + str(prop.location.plot) + ' ' + str(prop.location.lot_number)
@@ -2014,12 +2020,12 @@ def generate_report_excel(request):
         ws.cell(row=cont, column=59).style = my_style2
         ws.cell(row=cont, column=60).style = my_style2
 
+        cont= cont+1
+    
+    wb.save('media/Reportes/'+filename_excel)
 
-        cont+=1
-
-
-    wb.save(response)
-    return response
+    print('se hace el excel')
+    return JsonResponse({'url': '/media/Reportes/'+filename_excel})
 
 
 def walk_object(id):

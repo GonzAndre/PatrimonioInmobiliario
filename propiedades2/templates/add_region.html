@@ -3,11 +3,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <div class="m-t">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'base.css'%}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'js/jquery-3.1.1.min.js' %}">
+    <title>Agregar nueva región</title>
+    {% include "base.html" %}
+    <div class="container">
         <div class="form-group">
+          <label for="Nameofdistrict">Nombre de la región</label>
             <input type="text" id="name" class="form-control" placeholder="Nombre">
-            <input type="text" id="acronym" class="form-control" placeholder="Acrónimo">
+          <label for="Acronycofdistrict">Acrónimo</label>
+            <input type="text" id="acronym" class="form-control" placeholder="Maximo 5 letras">
         </div>
         <button type="button" id="info_region" class="btn btn-primary"> ENVIAR</button>
     </div>

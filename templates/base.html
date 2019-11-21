@@ -79,11 +79,27 @@
                          </div>
                         </button>
                  </li>
+                 <li class="nav-item dropdown">
+                  <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                     Distritos
+                   </a>
+                   <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                       <a class="dropdown-item" href="{% url 'add_district' %}">Crear Distrito</a>
+                     <a class="dropdown-item" href="{% url 'list_district' %}">Listado de distritos</a>
+                   </div>
+                  </button>
+           </li>
              {% endif %}
+             {% if staff.id != None %}
+            <li>
+              <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="{% url 'edit_staff' staff.id %}">{{request.user}}</a> </button>
+            </li>
+            {% elif staff.id == None %}
             <li>
               <button class="btn btn-outline btn-sm" type="submit" style="margin-left:2.5px; margin-right:5px"> <a class="nav-link" href="#">{{request.user}}</a> </button>
             </li>
-            <p> </p>
+            {% endif %}
+            <p></p>
             <li class="nav-item dropdown" id='alert_notifications'>
               <button class="btn btn-outline btn-md dropleft" type="submit"
                 style="margin-left:2.5px; margin-right:2.5px;"> <a class="nav-link dropdown-toggle" href="#"
@@ -102,6 +118,10 @@
                     <small style="color:gray">{{ cli.time_str }}</small>
                   </a>
                   <div class="dropdown-divider"></div>
+                  {% empty %}
+                  <a>
+                  <strong>No tienes notificaciones</strong>
+                  </a>
                   {% endfor %}
                 </div>
               </button>

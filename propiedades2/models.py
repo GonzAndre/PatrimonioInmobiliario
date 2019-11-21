@@ -367,3 +367,7 @@ class Notification(models.Model):
     read_status = models.BooleanField(default=False)
     link = models.CharField(max_length=100)
     text = models.CharField(max_length=100)
+
+class Report(models.Model):
+    file = models.FileField(upload_to='Reportes/')
+    date = models.DateTimeField()

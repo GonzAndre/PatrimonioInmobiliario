@@ -29,7 +29,7 @@
             </div>
         {% endif %}
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <form class="form mb-auto" method="GET" action="{% url 'search' %}">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" style="display:none" name="selection" type="radio" value="2"
@@ -40,6 +40,73 @@
                     <input type="text" class="form-control ml-sm-2" name="q" value="{{ request.GET.q }}"
                            placeholder="Hola! ¿Buscas algo?..">
                 </form>
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-success" style="margin-top:15%;" data-toggle="modal"
+                    data-target="#generar_reporte">
+                    Generar reporte
+                </button>
+            
+                <!-- Modal -->
+                <div class="modal fade" id="generar_reporte" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Generación de reporte</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="POST">
+                                    <h6>Seleccione una opción para filtrar: </h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exampleRadios"
+                                            id="filter_comuna" value="comuna_true">
+                                        <label class="form-check-label" for="filter_comuna">
+                                            Comuna
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exampleRadios"
+                                            id="filter_ciudad" value="ciudad_true">
+                                        <label class="form-check-label" for="filter_ciudad">
+                                            Ciudad
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exampleRadios"
+                                            id="filter_tipo" value="tipo_true">
+                                        <label class="form-check-label" for="filter_tipo">
+                                            Tipo escritura
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exampleRadios"
+                                            id="filter_uso" value="uso_true">
+                                        <label class="form-check-label" for="filter_uso">
+                                            Uso de propiedad
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="filter_text">
+                                            <h6>Filtrar por:</h6>
+                                        </label>
+                                        <input type="text" class="form-control" id="filter_text"
+                                            placeholder="Escriba aquí">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                                <button type="button" class="btn btn-primary" id='enviar_reporte'>Generar
+                                    reporte</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             {% if staff.type_user == 'DIG' or staff.type_user == 'ADM' %}
                 <div class="col-md-2">
@@ -68,8 +135,8 @@
                         <tr>
                             <td style="width:5px">{{ cli.role_number }}</td>
                             <td style="width:15px">{{ cli.name }}</td>
-                            <td style="width:15px">{{ cli.location }}</td>
-                            <td style="width:15px">{{ cli.property_use }}</td>
+                            <td style="width:15px">{{ cli.location.street }} {{ cli.location.number}}, {{ cli.location.commune }}</td>
+                            <td style="width:15px">{{ cli.property_use.name }}</td>
                             <td style="width:40px">
                               <h1>{{cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100|floatformat:"0"}}%</h1>
                               {% if cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 >= 0.0 and cli.stats_acquisition.complete|div:cli.stats_acquisition.total|mul:100 < 25.0 %}
@@ -131,3 +198,35 @@
     </body>
 {% endblock content %}
 </html>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+        $('#enviar_reporte').on('click', function () {
+            alert($("input:radio[name ='exampleRadios']:checked").val())
+            $.ajax({
+                url: '{% url "generate_report" %}',
+                type: 'POST',
+                data: {
+                    'filtro': $("input:radio[name ='exampleRadios']:checked").val(),
+                    'texto': $('#filter_text').val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function (data) {
+                    if (data.url) {
+                        alert('Paso')
+                        window.location.href = data.url
+                    } else if (data.result == 'False') {
+                        swal({
+                            title: 'Oops...',
+                            text: 'No se pudo filtar',
+                            type: 'error',
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+    </script>

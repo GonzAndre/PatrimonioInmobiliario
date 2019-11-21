@@ -4,13 +4,13 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from propiedades2.models import Staff
 
 
 def auth_login(request):
     template_name = 'login.html'
     data = {}
     username = password = ''
-    print(request.user)
     if request.user.is_active == False:
         if request.POST:
             username = request.POST.get('username')
@@ -37,6 +37,7 @@ def auth_login(request):
                     )
         return render(request, template_name, data)
     else:
+        data['staff'] = Staff.objects.get(username_staff=request.user)
         return render(request, 'index.html', data)
 
 def auth_logout(request):

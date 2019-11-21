@@ -61,8 +61,8 @@
                         <tr>
                             <td style="width:5px">{{ cli.role_number }}</td>
                             <td style="width:15px">{{ cli.name }}</td>
-                            <td style="width:15px">{{ cli.location }}</td>
-                            <td style="width:15px">{{ cli.property_use }}</td>
+                            <td style="width:15px">{{ cli.location.street }} {{ cli.location.number}}, {{ cli.location.commune }}</td>
+                            <td style="width:15px">{{ cli.property_use.name }}</td>
                             <td style="width:40px">
                               <h1>{{cli.stats_rent.complete|div:cli.stats_rent.total|mul:100|floatformat:"0"}}%</h1>
                               {% if cli.stats_rent.complete|div:cli.stats_rent.total|mul:100 >= 0.0 and cli.stats_rent.complete|div:cli.stats_rent.total|mul:100 < 25.0 %}
