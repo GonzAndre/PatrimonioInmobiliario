@@ -1,0 +1,746 @@
+{% load static %}
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8" />
+{% block navbar %}
+{% endblock %}
+{% include "base.html" %}
+{% block content %}
+<html>
+
+<head>
+    <title>{% block title %} Propiedades {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'propiedades.css' %}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <!-- CDN de mapbox -->
+    <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}" />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+</head>
+
+<body style="background-color:#FFFFFF  ">
+    <div class="container">
+        <div class="row">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h1>Información Propiedad</h1>
+                    </div>
+                    {% if staff.type_user == 'DIG' or staff.type_user == 'ADM' %}
+                    {% csrf_token %}
+                    <div class="col-md-2">
+                        <a href="{% url 'edit_rent' rent.pk %}">
+                            <button type="button" class="btn btn-info btn-block" style="margin-top:10px">Editar</button>
+                        </a>
+                    </div>
+                    {% endif%}
+                    <div class="col-lg-12">
+                        <div class="card border-white">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {% if rent.image %}
+                                    <img src="/media/{{ rent.image }}" class="card-img" width="100%" height="100%">
+                                    {% else %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card-body">
+                                        <p id="total"><strong>Nombre</strong>: {{ rent.name }}</p>
+                                        {% if rent.role_number %}
+                                        <p id="total"><strong>Número de Rol: </strong>{{ rent.role_number }}</p>
+                                        {% else %}
+                                        <p id="total"><strong>Número de Rol: </strong>No Registrado</p>
+                                        {% endif %}
+                                        <p id="total"><strong>Dirección: </strong>{{ rent.location.street }}
+                                            {{ rent.location.number }},
+                                            {% if rent.location.plot %}{{ rent.location.plot }}{{ rent.location.lot_number }}{% endif %}
+                                            {{ rent.location.commune }},{{ rent.location.city }},{{ rent.location.region.name }}
+                                        </p>
+                                        <p id="total"><strong>Uso Propiedad: </strong>{{ rent.property_use.name }}</p>
+                                    </div>
+                                </div>
+                                <!-- Mapa -->
+                                <div class="col-md-5">
+                                    <div id="MyMap"
+                                        style='width: 430px; height: 300px;border:solid black;border-radius: 5px;border-width: 1px'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="accordion" id="informacion">
+                            <div class="card border-dark">
+                                <div class="card-header" id="contables">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-outline-secondary btn-lg btn-block" type="button"
+                                            data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                            Contables Internos
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div id="collapseOne" class="collapse" aria-labelledby="contables">
+                                    <div class="card-body">
+                                        {% if rent.acquiring_name %}
+                                        <li class="list-group-item" id="total"><strong>Nombre arrendatario
+                                                :</strong>{{ rent.acquiring_name }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Nombre arrendatario: </strong>No
+                                            Registrado</li>
+                                        {% endif %}
+                                        {% if rent.supplier_name %}
+                                        <li class="list-group-item" id="total"><strong>Nombre arrendador:
+                                            </strong>{{ rent.supplier_name }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Nombre arrendador: </strong>No
+                                            Registrado</li>
+                                        {% endif %}
+                                        {% if rent.contract_type %}
+                                        <li class="list-group-item"><strong>Tipo de contrato: </strong>
+                                            <a href="{% url 'view_archive' rent.contract_type.type rent.contract_type.pk %}"
+                                                style="color:blue">{{ rent.contract_type.archive|cut:"Documentos/" }}</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Tipo de contrato: </strong>No
+                                            Registrado</li>
+                                            {% endif %}
+                                            {% if rent.value_land %}
+                                        <li class="list-group-item" id="total"><strong>Valor Contabilizado Terreno:
+                                            </strong>
+                                            {{ rent.value_land }}</li>
+                                            {% else %}
+                                        <li class="list-group-item" id="total"><strong>Valor Contabilizado Terreno:
+                                            </strong>No
+                                            Registrado</li>
+                                            {% endif %}
+                                            {% if rent.value_contruction %}
+                                        <li class="list-group-item" id="total"><strong>Valor Contabilizado
+                                                Construcción: </strong>{{ rent.value_contruction }}</li>
+                                            {% else %}
+                                        <li class="list-group-item" id="total"><strong>Valor Contabilizado Construcción:
+                                            </strong>No
+                                            Registrado</li>
+                                            {% endif %}
+                                            {% if rent.start_date %}
+                                        <li class="list-group-item" id="total"><strong>Comienzo Arriendo o Comodato:
+                                            </strong>
+                                            {{ rent.start_date }}</li>
+                                            {% else %}
+                                        <li class="list-group-item" id="total"><strong>Comienzo Arriendo o Comodato: No
+                                                Registrado</strong></li>
+                                        {% endif %}
+                                        {% if rent.end_date %}
+                                        <li class="list-group-item" id="total"><strong>Termino Arriendo o Comodato: </strong>{{ rent.end_date }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Termino Arriendo o Comodato: </strong>No Registrado</li>
+                                        {% endif %}
+                                        {% if rent.duration %}
+                                        <li class="list-group-item" id="total"><strong>Duración Arriendo o Comodato: </strong>{{ rent.duration }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Duración Arriendo o Comodato: </strong>No Registrado</li>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <form action="POST">
+                                <div class="card border-dark mb-12">
+                                    <div class="card-header">Comentarios</div>
+                                    <div class="card-body text-dark mb-auto">
+                                        <div class="row" style="margin-bottom: 14px">
+                                            <div class="col-md-2 col-lg-2">
+                                                <label class="col-form-label"
+                                                    style="color:#005a65;margin-left: 14px"><strong>{{request.user.first_name}}</strong></label>
+                                            </div>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="text" class="form-control" id="Description_post"
+                                                    placeholder="Añade un comentario...">
+                                            </div>
+                                            <div class="col-sm-12 col-md-2 col-lg-2"><button id="Post" type="button"
+                                                    class="btn btn-primary float-right"
+                                                    href="{% url 'add_post' %}">Comentar</button></div>
+                                        </div>
+                                        <table class="table">
+                                            <tbody class="text-center">
+                                                {% for cli in post_list %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="media-body border rounded-top">
+                                                                <ul class='float-left'
+                                                                    style="color:#005a65;margin-left: 14px;margin-top: 10px">
+                                                                    <strong>{{ cli.author.first_name }}</strong>
+                                                                    <spam style="color:grey; margin-left: 10px">
+                                                                        {{ cli.publish_date }}</spam>
+                                                                </ul>
+                                                                {% if cli.author.pk == request.user.pk %}
+                                                                <!-- Modal de delete post -->
+                                                                <button type="button"
+                                                                    class="btn btn-light float-right align-content-center"
+                                                                    data-toggle="modal"
+                                                                    data-target="#del_modal_{{ cli.pk }}"
+                                                                    style="margin-top: 6px">
+                                                                    <ion-icon name="close"></ion-icon>
+                                                                </button>
+                                                                <div class="modal fade" id="del_modal_{{ cli.pk }}"
+                                                                    tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="exampleModalLabel">Confirmación
+                                                                                </h5>
+                                                                                <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    <span
+                                                                                        aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <ul>¿Estas seguro que deseas borrar el
+                                                                                    comentario?</ul>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-dismiss="modal">Cerrar</button>
+                                                                                <button type="button"
+                                                                                    class="delete_post btn btn-primary"
+                                                                                    data-pk="{{ cli.pk }}">Borrar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {% endif %}
+                                                                <!-- Modal de comentar post -->
+                                                                <button type="button"
+                                                                    class="btn btn-light float-right align-content-center"
+                                                                    data-toggle="modal"
+                                                                    data-target="#comment_modal_{{ cli.pk }}"
+                                                                    style="margin-top: 6px">
+                                                                    <ion-icon name="share-alt"></ion-icon>
+                                                                </button>
+                                                                <div class="modal fade" id="comment_modal_{{ cli.pk }}"
+                                                                    tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="exampleModalLabel">
+                                                                                    {{ cli.author.first_name }}</h5>
+                                                                                <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    <span
+                                                                                        aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <input type="text"
+                                                                                    class="comment_post form-control"
+                                                                                    id="text_comment{{ cli.pk }}"
+                                                                                    placeholder="Añade un comentario...">
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-dismiss="modal">Cerrar</button>
+                                                                                <button type="button"
+                                                                                    class="Comment_post btn btn-primary"
+                                                                                    data-pk="{{ cli.pk }}">Comentar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {% if cli.author.pk == request.user.pk %}
+                                                                <!-- Modal de editar post -->
+                                                                <button type="button"
+                                                                    class="btn btn-light float-right align-content-center"
+                                                                    data-toggle="modal"
+                                                                    data-target="#modal_{{ cli.pk }}"
+                                                                    style="margin-top: 6px">
+                                                                    <ion-icon name="create"></ion-icon>
+                                                                </button>
+                                                                <div class="modal fade" id="modal_{{ cli.pk }}"
+                                                                    tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="exampleModalLabel">
+                                                                                    {{ cli.author.first_name }}</h5>
+                                                                                <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    <span
+                                                                                        aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <input type="text"
+                                                                                    class="post_edit form-control"
+                                                                                    id="text_post{{ cli.pk }}"
+                                                                                    placeholder="Añade un comentario...">
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-dismiss="modal">Cerrar</button>
+                                                                                <button type="button"
+                                                                                    class="Edit_post btn btn-primary"
+                                                                                    data-pk="{{ cli.pk }}">Guardar
+                                                                                    cambios</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <!-- Descripción del post -->
+                                                        <div class="row border rounded-bottom">
+                                                            <ul class="float-left text-center"
+                                                                style="margin-left: 14px;margin-top: 10px">
+                                                                {{ cli.description }}</ul>
+                                                        </div>
+                                                        {% for com in comment_post %}
+                                                        {% if cli.pk == com.post.pk %}
+                                                        <!-- Comentarios de los post -->
+                                                        <div class="row" style="margin-left: 36px">
+                                                            <div class="media-body border rounded-top">
+                                                                <ul class='float-left'
+                                                                    style="color:#005a65;margin-top: 10px">
+                                                                    <strong>{{ com.author.first_name }}</strong>
+                                                                    <spam style="color:grey; margin-left: 10px">
+                                                                        {{ com.publish_date }}</spam>
+                                                                </ul>
+                                                                {% if com.author.pk == request.user.pk %}
+                                                                <!-- Modal eliminar comentario -->
+                                                                <button type="button"
+                                                                    class="btn btn-light float-right align-content-center"
+                                                                    data-toggle="modal"
+                                                                    data-target="#del_comment_{{ com.pk }}"
+                                                                    style="margin-top: 6px">
+                                                                    <ion-icon name="close"></ion-icon>
+                                                                </button>
+                                                                <div class="modal fade" id="del_comment_{{ com.pk }}"
+                                                                    tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="exampleModalLabel">Confirmación
+                                                                                </h5>
+                                                                                <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    <span
+                                                                                        aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <ul>¿Estas seguro que deseas borrar el
+                                                                                    comentario?</ul>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-dismiss="modal">Cerrar</button>
+                                                                                <button type="button"
+                                                                                    class="delete_comment btn btn-primary"
+                                                                                    data-pk="{{ com.pk }}">Borrar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Modal editar comentario -->
+                                                                <button type="button"
+                                                                    class="btn btn-light float-right align-content-center"
+                                                                    data-toggle="modal"
+                                                                    data-target="#edit_comment_{{ com.pk }}"
+                                                                    style="margin-top: 6px">
+                                                                    <ion-icon name="create"></ion-icon>
+                                                                </button>
+                                                                <div class="modal fade" id="edit_comment_{{ com.pk }}"
+                                                                    tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="exampleModalLabel">
+                                                                                    {{ com.author.first_name }}</h5>
+                                                                                <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    <span
+                                                                                        aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <input type="text"
+                                                                                    class="comment_edit form-control"
+                                                                                    id="text_comment{{ com.pk }}"
+                                                                                    placeholder="Añade un comentario...">
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-dismiss="modal">Cerrar</button>
+                                                                                <button type="button"
+                                                                                    class="Edit_comment btn btn-primary"
+                                                                                    data-pk="{{ com.pk }}">Guardar
+                                                                                    cambios</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row border rounded-bottom"
+                                                            style="margin-left: 36px">
+                                                            <ul class="float-left text-center" style="margin-top: 10px">
+                                                                {{ com.description }}</ul>
+                                                        </div>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card-footer text-muted"> </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="accordion" id="info">
+                            <div class="card border-dark">
+                                <div class="card-header" id="antecedentes">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-outline-secondary btn-lg btn-block" type="button"
+                                            data-toggle="collapse" data-target="#collapseThree" aria-expanded="true"
+                                            aria-controls="collapseThree">
+                                            Antecedentes Arquitectonicos
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div id="collapseThree" class="collapse" aria-labelledby="antecedentes">
+                                    <div class="card-body">
+                                        {% if rent.ground_surface %}
+                                        <li class="list-group-item" id="total"><strong>Superficie de Terreno: </strong>{{ rent.ground_surface }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Superficie de Terreno: </strong>No Registrado</li>
+                                        {% endif %}
+                                        {% if rent.square_m_build %}
+                                        <li class="list-group-item" id="total"><strong>Metros Cuadrados Construidos: </strong>{{ rent.square_m_build }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Metros Cuadrados Construidos: </strong>No Registrado</li>
+                                        {% endif %}
+                                        {% if rent.e_construction_m %}
+                                        <li class="list-group-item" id="total"><strong>Metros Construcción Existente: </strong>{{ rent.e_construction_m }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Metros Construcción Existente: </strong>No Registrado</li>
+                                        {% endif %}
+                                        {% if rent.municipal_n %}
+                                        <li class="list-group-item" id="total"><strong>Número de recepción municipal: </strong>{{ rent.municipal_n }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Número de recepción municipal: </strong>No Registrado</li>
+                                        {% endif %}
+                                        {% if rent.n_building_permit %}
+                                        <li class="list-group-item" id="total"><strong>Número de permiso de
+                                            edificación: </strong>{{ rent.n_building_permit }}</li>
+                                        {% else %}
+                                        <li class="list-group-item" id="total"><strong>Número de permiso de edificación: </strong>No Registrado</li>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        {% if change %}
+                        <div class="col-md-12">
+                            <table class="table table-sm" id="datos">
+                                <thead>
+                                    <tr class="table-success">
+                                        <th scope="col">Usuario</th>
+                                        <th scope="col">Fecha de cambio</th>
+                                        <th Scope="col">Comentario</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for x in change %}
+                                    <tr>
+                                        <td>{{ x.user.username_staff }}</td>
+                                        <td>{{ x.publish_date }}</td>
+                                        <td>{{ x.comment}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<!-- Direccion de mapas -->
+<script src="{% static 'leaflet/leaflet.js' %}"></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+
+<!-- Direccion de mapas -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+<script>
+    $(document).ready(function () {
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZ29uemFuZHJlczIzIiwiYSI6ImNrMGgwMm1qbjBkZGgzbnBuNWR4c2dhcXcifQ.-CKew9xYdZql0kyxzZuHnQ';
+        var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+        var calle = '{{ acquisition.location.street }} {{ acquisition.location.number }} {{ acquisition.location.commune }} {{ acquisition.location.city }}.json?country=CL&';
+        var token = 'access_token=pk.eyJ1IjoiZ29uemFuZHJlczIzIiwiYSI6ImNrMGgwMm1qbjBkZGgzbnBuNWR4c2dhcXcifQ.-CKew9xYdZql0kyxzZuHnQ';
+        var consulta = url.concat(calle);
+        var consulta_final = consulta.concat(token);
+        fetch(consulta_final)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.features[0].center[1], data.features[0].center[0])
+                console.log(data.features[0])
+                var longitud = data.features[0].center[0]
+                var latitud = data.features[0].center[1]
+                let MyMap = new mapboxgl.Map({
+                    container: 'MyMap',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [longitud, latitud],
+                    zoom: 17,
+                });
+                MyMap.scrollZoom.disable();
+                var marker = new mapboxgl.Marker() // initialize a new marker
+                    .setLngLat([longitud, latitud]) // Marker [lng, lat] coordinates
+                    .addTo(MyMap); // Add the marker to the map
+            });
+    });
+
+    $(document).ready(function () {
+        $('#Description_post').keypress(function (e) {
+            if (e.keyCode == 13) {
+                $('#Post').click();
+                window.location.reload()
+            };
+        });
+    });
+    $(document).ready(function () {
+        $("#Post").on('click', function () {
+            $.ajax({
+                url: '{% url "add_post" %}',
+                type: 'POST',
+                data: {
+                    'description': $("#Description_post").val(),
+                    'prop': 'rent',
+                    'prop_id': '{{ rent.pk }}',
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function (data) {
+                    if (data.result) {
+                        window.location.reload()
+                    }
+                    else {
+                        swal({
+                            title: 'Problemas',
+                            text: 'Por favor agrega algo que comentar',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+    $(document).ready(function () {
+        $(".Edit_post").on('click', function () {
+            var str1 = String("#text_post");
+            var str2 = String($(this).data('pk'));
+            var res = str1.concat(str2);
+            $.ajax({
+                url: '{% url "edit_post" %}',
+                type: 'POST',
+                data: {
+                    'description': $(res).val(),
+                    'id': $(this).data('pk'),
+                    'prop': 'rent',
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    if (data.result) {
+                        window.location.reload()
+                    }
+                    else {
+                        swal({
+                            title: 'Problemas',
+                            text: 'Por favor agrega algo que comentar',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+    $(document).ready(function () {
+        $(".delete_post").on('click', function () {
+            $.ajax({
+                url: '{% url "delete_post" %}',
+                type: 'POST',
+                data: {
+                    'id': $(this).data('pk'),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    if (data.result) {
+                        window.location.reload()
+                    }
+                    else {
+                        swal({
+                            title: 'Problemas',
+                            text: 'No se pudo eliminar el comentario',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+    $(document).ready(function () {
+        $(".Comment_post").on('click', function () {
+            var str3 = String("#text_comment");
+            var str4 = String($(this).data('pk'));
+            var res = str3.concat(str4);
+            $.ajax({
+                url: '{% url "add_comment" %}',
+                type: 'POST',
+                data: {
+                    'description': $(res).val(),
+                    'prop': 'rent',
+                    'prop_id': $(this).data('pk'),
+                    'csrfmiddlewaretoken': '{{ csrf_token}}'
+                },
+                success: function (data) {
+                    if (data.result) {
+                        window.location.reload()
+                    }
+                    else {
+                        swal({
+                            title: 'Problemas',
+                            text: 'Por favor agrega algo que comentar',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+    $(document).ready(function () {
+        $(".Edit_comment").on('click', function () {
+            var str1 = String("#text_comment");
+            var str2 = String($(this).data('pk'));
+            var res = str1.concat(str2);
+            $.ajax({
+                url: '{% url "edit_comment" %}',
+                type: 'POST',
+                data: {
+                    'description': $(res).val(),
+                    'id': $(this).data('pk'),
+                    'prop': 'rent',
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    if (data.result) {
+                        window.location.reload()
+                    }
+                    else {
+                        swal({
+                            title: 'Problemas',
+                            text: 'Por favor agrega algo que comentar',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+    $(document).ready(function () {
+        $(".delete_comment").on('click', function () {
+            $.ajax({
+                url: '{% url "delete_comment" %}',
+                type: 'POST',
+                data: {
+                    'id': $(this).data('pk'),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    if (data.result) {
+                        window.location.reload()
+                    }
+                    else {
+                        swal({
+                            title: 'Problemas',
+                            text: 'No se pudo eliminar el comentario',
+                            type: 'error'
+                        })
+                    }
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
+        })
+    });
+</script>
+
+</html>
+{% endblock %}

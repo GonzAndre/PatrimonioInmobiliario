@@ -1,0 +1,754 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %} Propiedades {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'js/jquery-3.1.1.min.js' %}">
+
+</head>
+{% include "base.html" %}
+{% block content %}
+    <body>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <h1>Editar propiedad adquirida
+                                <a href="{% url 'change_status_acquisition' id %}" class="float-right">
+                                    <button type="button" class="btn btn-warning">Cambiar Status</button>
+                                </a>
+                            </h1>
+                            <br>
+                            <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-6">
+                                        <div class="card border-dark" id="adquisicion">
+                                            <div class="card-header"><h2>Datos de propiedad</h2></div>
+                                            <div class="card-body">
+                                                <label>Nombre propiedad: *</label>
+                                                {{ formAcquisition.name }}
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Número de rol: *</label>
+                                                        {{ formAcquisition.role_number }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Uso de la propiedad: *</label>
+                                                        {{ formAcquisition.property_use }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Imagen de la propiedad:</label>
+                                                        {{ formAcquisition.image }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Fecha de adquisición: *</label>
+                                                        {{ formAcquisition.acquisition_date }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Tipo de escritura: *</label>
+                                                        {{ formAcquisition.writing_data }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Número AASI.net: *</label>
+                                                        {{ formAcquisition.number_AASI }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-lg-6">
+                                        <div class="card border-dark">
+                                            <div class="card-header"><h2>Datos de dirección</h2></div>
+                                            <div class="card-body">
+                                                <label>Nombre de calle:*</label>
+                                                {{ formLocation.street }}
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Número propiedad:*</label>
+                                                        {{ formLocation.number }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Comuna:*</label>
+                                                        {{ formLocation.commune }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Ciudad:*</label>
+                                                        {{ formLocation.city }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Región:*</label>
+                                                        {{ formLocation.region }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Parcela:</label>
+                                                        {{ formLocation.plot }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Número de parcela:</label>
+                                                        {{ formLocation.lot_number }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class='col-md-12' style="padding: 30px;">
+                                        <button id="enviarPropiedad" type="button"
+                                                class="btn btn-success btn-lg btn-block">Aceptar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card border-dark" id='Arquitecture' style="display: none">
+                                            <div class="card-header"><h2>Datos de arquitectura</h2></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Superficie de terreno:</label>
+                                                        {{ formArquitecture.ground_surface }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>M&#178 construidos PE-RF:</label>
+                                                        {{ formArquitecture.square_m_build }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>M&#178 construcción existente:</label>
+                                                        {{ formArquitecture.e_construction_m }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Nro. de recepción municipal:</label>
+                                                        {{ formArquitecture.municipal_n }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nro. de permiso de edificación</label>
+                                                        {{ formArquitecture.n_building_permit }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="accordion" id="accordionArquitecture">
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headEx">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseEx" aria-expanded="false"
+                                                                        aria-controls="collapseEx">
+                                                                    Documento de expropiación municipal:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseEx" class="collapse" aria-labelledby="headEx"
+                                                             data-parent="#accordionArquitecture">
+                                                            <div>{{ formEx }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headCIP">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseCIP" aria-expanded="true"
+                                                                        aria-controls="collapseCIP">
+                                                                    Documento CIP:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseCIP" class="collapse" aria-labelledby="headCIP"
+                                                             data-parent="#accordionArquitecture">
+                                                            <div>{{ formCip }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headCn">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseCn" aria-expanded="true"
+                                                                        aria-controls="collapseCn">
+                                                                    Documento Certificado número:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseCn" class="collapse" aria-labelledby="headCn"
+                                                             data-parent="#accordionArquitecture">
+                                                            <div>{{ formCn }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headBlue">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseBlue" aria-expanded="true"
+                                                                        aria-controls="collapseBlue">
+                                                                    Documento de planos:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseBlue" class="collapse"
+                                                             aria-labelledby="headBlue"
+                                                             data-parent="#accordionArquitecture">
+                                                            <div>{{ formBlue }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headBuild">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseBuild"
+                                                                        aria-expanded="true"
+                                                                        aria-controls="collapseBuild">
+                                                                    Documento permiso de edificación:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseBuild" class="collapse"
+                                                             aria-labelledby="headBuild"
+                                                             data-parent="#accordionArquitecture">
+                                                            <div>{{ formBuildP }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headRM">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseRM" aria-expanded="true"
+                                                                        aria-controls="collapseRM">
+                                                                    Documento de recepción municipal:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseRM" class="collapse" aria-labelledby="headRM"
+                                                             data-parent="#accordionArquitecture">
+                                                            <div>{{ formMR }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button id="enviarArquitecture" type="button"
+                                                        class="btn btn-success btn-lg btn-block">Aceptar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card border-dark" id="Notary" style="display: none">
+                                            <div class="card-header"><h2>Datos de notaría</h2></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <label>Notaría:</label>
+                                                        {{ formNotary.notary }}
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label>Año de escritura:</label>
+                                                        {{ formNotary.writing_year }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Precio de venta:</label>
+                                                        {{ formNotary.sale_price }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Titulo anterior:</label>
+                                                        {{ formNotary.previous_title }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Titulo actual:</label>
+                                                        {{ formNotary.current_title }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="accordion" id="accordionNotary">
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headWr">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseOneN" aria-expanded="true"
+                                                                        aria-controls="collapseOneN">
+                                                                    Documento de escritura:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseOneN" class="collapse" aria-labelledby="headWr"
+                                                             data-parent="#accordionNotary">
+                                                            <div>{{ formWR }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headDC">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseTwoN"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="collapseTwoN">
+                                                                    Documento certificado dominio:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseTwoN" class="collapse" aria-labelledby="headDC"
+                                                             data-parent="#accordionNotary">
+                                                            <div>{{ formDC }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headPH">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseThreeN"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="collapseThreeN">
+                                                                    Documento de prohibiciones:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseThreeN" class="collapse"
+                                                             aria-labelledby="headPH"
+                                                             data-parent="#accordionNotary">
+                                                            <div>{{ formPH }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headEs">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button" data-toggle="collapse"
+                                                                        data-target="#collapseFourN"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="collapseFourN">
+                                                                    Documento de expropiación del SERVIU:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseFourN" class="collapse"
+                                                             aria-labelledby="headEs"
+                                                             data-parent="#accordionNotary">
+                                                            <div>{{ formDB }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <button id="enviarNotaria" type="button"
+                                                            class="btn btn-success btn-lg btn-block">
+                                                        Aceptar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card border-dark" id="Internos" style="display: none">
+                                            <div class="card-header"><h3>Datos contables internos</h3></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Valor del terreno:</label>
+                                                        {{ formInternal.value_land }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Valor de la construcción:</label>
+                                                        {{ formInternal.value_construction }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nombre de comprador o donador:</label>
+                                                        {{ formInternal.acquiring_name }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nombre de vendedor o donatario:</label>
+                                                        {{ formInternal.supplier_name }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="accordion" id="accordionInternal">
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headTypeC">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#collapseOneI"
+                                                                        aria-expanded="true"
+                                                                        aria-controls="collapseOneI">
+                                                                    Documento Tipo de contrato:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseOneI" class="collapse"
+                                                             aria-labelledby="headTypeC"
+                                                             data-parent="#accordionInternal">
+                                                            <div>{{ formTypeC }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headOther">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#collapseTwoI"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="collapseTwoI">
+                                                                    Otro documento adicional:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseTwoI" class="collapse"
+                                                             aria-labelledby="headOther"
+                                                             data-parent="#accordionInternal">
+                                                            <div>{{ formOther }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <button id="enviarInternos" type="button"
+                                                            class="btn btn-success btn-lg btn-block">
+                                                        Aceptar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card border-dark" id="SII" style="display: none">
+                                            <div class="card-header"><h2>Datos de SII</h2></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Destino SII:</label>
+                                                        {{ formSII.destiny }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Exención de contribuciones:</label>
+                                                        {{ formSII.ex_contributions }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Nombre de propietario SII:</label>
+                                                        {{ formSII.owner_name_SII }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label>Avalúo fiscal:</label>
+                                                        {{ formSII.tax_appraisal }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Deuda total:</label>
+                                                        {{ formSII.total_debt }}
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="accordion" id="accordionSII">
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headAc">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#collapseOneS"
+                                                                        aria-expanded="true"
+                                                                        aria-controls="collapseOneS">
+                                                                    Documento de avalúo:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseOneS" class="collapse" aria-labelledby="headAc"
+                                                             data-parent="#accordionSII">
+                                                            <div>{{ formAc }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card border-dark">
+                                                        <div class="card-header" id="headDB">
+                                                            <h2 class="mb-0">
+                                                                <button class="btn btn-outline-secondary btn-lg btn-block"
+                                                                        type="button"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#collapseTwoS"
+                                                                        aria-expanded="true"
+                                                                        aria-controls="collapseTwoS">
+                                                                    Documento de no deuda:
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseTwoS" class="collapse"
+                                                             aria-labelledby="headAc"
+                                                             data-parent="#accordionSII">
+                                                            <div>{{ formEs }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <button id="enviarSII" type="button"
+                                                            class="btn btn-success btn-lg btn-block">
+                                                        Aceptar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="card" style="display:none" id="comentario">
+                                  <h5 class="card-header">Comentario Actualización</h5>
+                                  <div class="card-body">
+                                    <input type="text" class="form-control" name="comment" id="comment" placeholder="Porfavor Indique lo editado" value="" required>
+                                  </div>
+                                </div>
+                                <br>
+                                <a href="{% url 'list_acquisition' %}">
+                                    <button id="listo" type="button" class="btn btn-primary btn-lg btn-block" style="display: none">Listo</button>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </body>
+    <script type="text/javascript">
+
+        var id_p;
+        $(document).ready(function () {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            $("#enviarPropiedad").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('image', $('#image')[0].files[0]);
+                formulario.append('Tipo', "Propiedad");
+                formulario.append('name', $("#name").val());
+                formulario.append('role_number', $("#role_number").val());
+                formulario.append('property_use', $("#property_use").val());
+                formulario.append('number_AASI', $("#number_AASI").val());
+                formulario.append('acquisition_date', $("#acquisition_date").val());
+                formulario.append('writing_data', $("#writing_data").val());
+                // Location
+                formulario.append('street', $("#street").val());
+                formulario.append('number', $("#number").val());
+                formulario.append('commune', $("#commune").val());
+                formulario.append('city', $("#city").val());
+                formulario.append('region', $("#region").val());
+                formulario.append('lot_number', $("#lot_number").val());
+                formulario.append('plot', $("#plot").val());
+                formulario.append("csrfmiddlewaretoken", getCookie('csrftoken'));
+                $.ajax({
+                    url: '{% url "edit_acquisition" id  %}',
+                    type: "POST",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function (id) {
+                        id_p = id['id'];
+                        $('#Arquitecture').show();
+                        $('#Notary').show();
+                        $('#Internos').show();
+                        $('#SII').show();
+                        $('#enviarPropiedad').hide();
+                        $('#listo').show();
+                        $('#comentario').show();
+
+                        alert('Datos de propiedad guardados');
+                    }
+                });
+            });
+            $("#enviarArquitecture").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('Arquitecture', "arquitecture");
+                formulario.append('ground_surface', $("#ground_surface").val());
+                formulario.append('square_m_build', $("#square_m_build").val());
+                formulario.append('e_construction_m', $("#e_construction_m").val());
+                formulario.append('municipal_n', $("#municipal_n").val());
+                formulario.append('n_building_permit', $("#n_building_permit").val());
+
+                formulario.append('ArDocEx', $('#docEx')[0].files[0]);
+                formulario.append('CDocEx', $('#CdocEx').val());
+                formulario.append('ArDocCip', $('#docCip')[0].files[0]);
+                formulario.append('CDocCip', $('#CdocCip').val());
+                formulario.append('ArDocCn', $('#docCn')[0].files[0]);
+                formulario.append('CDocCn', $('#CdocCn').val());
+                formulario.append('ArDocBlue', $('#docBlue')[0].files[0]);
+                formulario.append('CDocBlue', $('#CdocBlue').val());
+                formulario.append('ArDocBuild', $('#docBuild')[0].files[0]);
+                formulario.append('CDocBuild', $('#CdocBuild').val());
+                formulario.append('ArDocMR', $('#docMR')[0].files[0]);
+                formulario.append('CDocMR', $('#CdocMR').val());
+                formulario.append('id_propiedad', id_p);
+
+                $.ajax({
+                    url: '{% url "edit_acquisition" id  %}',
+                    type: "POST",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Guardado');
+                        alert(id_p)
+                    }
+                })
+            });
+            $("#enviarNotaria").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('Notary', "notary");
+                formulario.append('notary', $("#notary").val());
+                formulario.append('writing_year', $("#writing_year").val());
+                formulario.append('sale_price', $("#sale_price").val());
+                formulario.append('previous_title', $("#previous_title").val());
+                formulario.append('current_title', $("#current_title").val());
+
+                formulario.append('ArDocWR',$('#docWR')[0].files[0]);
+                formulario.append('CDocWR',$('#CdocWR').val());
+                formulario.append('ArDocDC',$('#docDC')[0].files[0]);
+                formulario.append('CDocDC',$('#CdocDC').val());
+                formulario.append('ArDocPH',$('#docPH')[0].files[0]);
+                formulario.append('CDocPH',$('#CdocPH').val());
+                formulario.append('ArDocDB',$('#docDB')[0].files[0]);
+                formulario.append('CDocDB',$('#CdocDB').val());
+                formulario.append('id_propiedad', id_p);
+
+                $.ajax({
+                    url: '{% url "edit_acquisition" id  %}',
+                    type: "POST",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Datos de notaría guardados');
+                    }
+                })
+            });
+            $("#enviarInternos").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('Internal', "internal");
+                formulario.append('value_land', $("#value_land").val());
+                formulario.append('value_construction', $("#value_construction").val());
+                formulario.append('acquiring_name', $("#sale_price").val());
+                formulario.append('supplier_name', $("#previous_title").val());
+
+                formulario.append('ArDocTypeC',$('#docTypeC')[0].files[0]);
+                formulario.append('CDocTypeC',$('#CdocTypeC').val());
+                formulario.append('ArDocOther',$('#docOther')[0].files[0]);
+                formulario.append('CDocOther',$('#CdocOther').val());
+                formulario.append('id_propiedad', id_p);
+
+                $.ajax({
+                    url: '{% url "edit_acquisition" id  %}',
+                    type: "POST",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Datos internos guardados');
+                    }
+                })
+            });
+            $("#enviarSII").on("click", function () {
+                var formulario = new FormData();
+                formulario.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                formulario.append('SII', "Sii");
+                formulario.append('destiny', $("#destiny").val());
+                formulario.append('tax_appraisal', $("#tax_appraisal").val());
+                formulario.append('owner_name_SII', $("#owner_name_SII").val());
+                formulario.append('total_debt', $("#total_debt").val());
+                formulario.append('ex_contributions', $("#ex_contributions").val());
+
+                formulario.append('ArDocAc',$('#docAc')[0].files[0]);
+                formulario.append('CDocAc',$('#CdocAc').val());
+                formulario.append('ArDocEs',$('#docEs')[0].files[0]);
+                formulario.append('CDocEs',$('#CdocEs').val());
+                formulario.append('id_propiedad', id_p);
+
+                $.ajax({
+                    url: '{% url "edit_acquisition" id  %}',
+                    type: "POST",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formulario,
+                    success: function () {
+                        alert('Datos de SII guardados');
+                    }
+                })
+            })
+            $("#listo").on("click", function(){
+              $.ajax({
+                url: '{% url "edit_acquisition" id  %}',
+                type: "POST",
+                data: {
+                  'commentacq': $('#comment').val(),
+                  'csrfmiddlewaretoken': '{{ csrf_token}}'
+                }
+              })
+            })
+        })
+    </script>
+{% endblock %}
+</html>

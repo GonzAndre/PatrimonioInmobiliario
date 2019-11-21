@@ -1,0 +1,786 @@
+{% load static %}
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8"/>
+{% block navbar %}
+{% endblock %}
+{% include "base.html" %}
+{% block content %}
+    <html>
+    <head>
+        <title>{% block title %} Propiedades {% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'propiedades.css' %}">
+        <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+        <link href = "https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css"  rel = "stylesheet" >
+        <!-- CDN de mapbox -->
+        <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+    </head>
+    <body style="background-color:#FFFFFF  ">
+    <div class="container" style="height:50%">
+        <div class="row">
+            <div class="col-md-10">
+                <h1>Información Propiedad</h1>
+            </div>
+            <div class="col-md-2">
+                <a href="{% url 'edit_acquisition' acquisition.pk %}">
+                    <button type="button" class="btn btn-info btn-block" style="margin-top:10px">Editar</button>
+                </a>
+            </div>
+            <div class="col-lg-12">
+                <div class="card border-white">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="/media/{{ acquisition.image }}" class="card-img">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <p id="total"><strong>Nombre</strong>: {{ acquisition.name }}</p>
+                                {% if acquisition.number_AASI %}
+                                    <p id="total"><strong>Número AASI.net: </strong>{{ acquisition.number_AASI }}</p>
+                                {% else %}
+                                    <p id="total"><strong>Número AASI.net: </strong>No Registrado</p>
+                                {% endif %}
+                                {% if acquisition.role_number %}
+                                    <p id="total"><strong>Número de Rol: </strong>{{ acquisition.role_number }}</p>
+                                {% else %}
+                                    <p id="total"><strong>Número de Rol: </strong>No Registrado</p>
+                                {% endif %}
+                                <p id="total"><strong>Dirección: </strong>{{ acquisition.location.street }} {{ acquisition.location.number }},
+                                {% if acquisition.location.plot %}{{ acquisition.location.plot }}{{ acquisition.location.lot_number }}{% endif %}
+                                {{ acquisition.location.commune }},{{ acquisition.location.city }},{{ acquisition.location.region.name }}</p>
+                                <p id="total"><strong>Uso Propiedad: </strong>{{ acquisition.property_use.name }}</p>
+                            </div>
+                        </div>
+                        <!-- Mapa -->
+                        <div class="col-md-5">
+                            <div id="MyMap" style='width: 430px; height: 300px;border:solid black;border-radius: 5px;border-width: 1px'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="accordion" id="informacion">
+                    <div class="card border-dark">
+                        <div class="card-header" id="notaria">
+                            <h2 class="mb-0">
+                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button"
+                                        data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+                                        aria-controls="collapseOne">
+                                    Datos Notariales
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="notaria">
+                            <div class="card-body">
+                                {% if acquisition.notary.notary %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Notaria: </strong>{{ acquisition.notary.notary }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Notaria: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.writing %}
+                                    <li class="list-group-item"><strong>Escritura: </strong>
+                                        <a href="{% url 'view_archive' acquisition.notary.writing.type acquisition.notary.writing.pk %}"
+                                           style="color:blue">{{ acquisition.notary.writing.archive|cut:"Documentos/" }}</a>
+                                    </li>
+                                {% elif acquisition.notary.writing == '' %}
+                                    <li class="list-group-item" id="total"><strong>Escritura: </strong>No Registrado</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Escritura: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.writing_year %}
+                                    <li class="list-group-item" id="total"><strong>Año Escritura: </strong>{{ acquisition.notary.writing_year }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Año Escritura: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.sale_price %}
+                                    <li class="list-group-item" id="total"><strong>Precio Venta: </strong>{{ acquisition.notary.sale_price }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Precio Venta: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.current_title %}
+                                    <li class="list-group-item" id="total"><strong>Título Actual: </strong>{{ acquisition.notary.current_title }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Título Actual: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.previous_title %}
+                                    <li class="list-group-item" id="total"><strong>Título Anterior: </strong>{{ acquisition.notary.previous_title }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Título Anterior: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.domain_certificate %}
+                                    <li class="list-group-item"><strong>Certificado de dominio:</strong>
+                                        <a href="{% url 'view_archive' acquisition.notary.domain_certificate.type acquisition.notary.domain_certificate.pk %}"
+                                           style="color:blue">{{ acquisition.notary.domain_certificate.archive|cut:"Documentos/" }}</a>
+                                    </li>
+                                {% elif acquisition.notary.domain_certificate == "" %}
+                                    <li class="list-group-item" id="total"><strong>Certificado de dominio: </strong>No Registrado</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Certificado de dominio: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.prohibition %}
+                                    <li class="list-group-item"><strong>Gravamen y Prohibiciones: </strong>
+                                        <a href="{% url 'view_archive' acquisition.notary.prohibitions.type acquisition.notary.prohibitions.pk %}"
+                                           style="color:blue">{{ acquisition.notary.prohibitions.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Gravamen y Prohibiciones: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.notary.expropiation_serviu %}
+                                    <li class="list-group-item"><strong>Certificado de no expropiación: </strong>
+                                        <a href="{% url 'view_archive' acquisition.notary.expropiation_serviu.type acquisition.notary.expropiation_serviu.pk %}"
+                                           style="color:blue">{{ acquisition.notary.expropiation_serviu|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Certificado de no Expropiación: </strong>No Registrado</li>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-dark">
+                        <div class="card-header" id="sii">
+                            <h2 class="mb-0">
+                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button"
+                                        data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                                        aria-controls="collapseTwo">
+                                    Servicio impuesto interno
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="sii">
+                            <div class="card-body">
+                                {% if acquisition.SII.destiny %}
+                                    <li class="list-group-item" id="total"><strong>Destino: </strong>{{ acquisition.SII.destiny }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Destino: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.SII.tax_appraisal %}
+                                    <li class="list-group-item" id="total"><strong>Avalúo Fiscal: </strong>{{ acquisition.SII.tax_appraisal }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Avalúo Fiscal: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.SII.owner_name_SII %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Propietario SII: </strong>{{ acquisition.SII.owner_name_SII }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Propietario SII: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.SII.total_debt %}
+                                    <li class="list-group-item" id="total"><strong>Deuda Total: </strong>{{ acquisition.SII.total_debt }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Deuda Total: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.SII.ex_contributions %}
+                                    <li class="list-group-item" id="total"><strong>Exención de Contribuciones: </strong>{{ acquisition.SII.ex_contribuciones }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Exención de Contribuciones: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.SII.appraisal_certificate %}
+                                    <li class="list-group-item"><strong>Certificado de Avalúo: </strong>
+                                        <a class="list-group-item" href="{% url 'view_archive' acquisition.SII.appraisal_certificate.type acquisition.SII.appraisal_certificate.pk %}"
+                                           style="color:blue">{{ acquisition.SII.appraisal_certificate.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Certificado de Avalúo: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.SII.debt_certificate %}
+                                    <li class="list-group-item"><strong>Certificado de No Deuda: </strong>
+                                        <a href="{% url 'view_archive' acquisition.SII.debt_certificate.type acquisition.SII.debt_certificate.pk %}"
+                                           style="color:blue">{{ acquisition.SII.debt_certificate.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Certificado de NO Deuda: </strong>No Registrado</li>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="POST">
+                    <div class="card border-dark mb-12">
+                      <div class="card-header"><strong>Comentarios</strong></div>
+                      <div class="card-body text-dark mb-auto">
+                          <div class="row" style="margin-bottom: 14px">
+                              <div class="col-md-2 col-lg-2">
+                                  <label class="col-form-label" style="color:#005a65;margin-left: 14px"><strong>{{request.user.first_name}}</strong></label>
+                              </div>
+                              <div class="col-md-8 col-lg-8">
+                                  <input type="text" class="form-control" id="Description_post" placeholder="Añade un comentario...">
+                              </div>
+                              <div class="col-sm-12 col-md-2 col-lg-2"><button id="Post" type="button" class="btn btn-primary float-right" href="{% url 'add_post' %}">Comentar</button></div>
+                          </div>
+                          <table class="table">
+                            <tbody class="text-center">
+                                {% for cli in post_list %}
+                                <tr>
+                                    <td>
+                                        <div class="row">
+                                            <div class="media-body border rounded-top">
+                                                <ul class= 'float-left' style="color:#005a65;margin-left: 14px;margin-top: 10px">
+                                                    <strong>{{ cli.author.first_name }}</strong><spam style="color:grey; margin-left: 10px"> {{ cli.publish_date }}</spam>
+                                                </ul>
+                                                {% if cli.author.pk == request.user.pk %}
+                                                <!-- Modal de delete post -->
+                                                <button type="button" class="btn btn-light float-right align-content-center" data-toggle="modal" data-target="#del_modal_{{ cli.pk }}" style="margin-top: 6px"><ion-icon name="close"></ion-icon></button>
+                                                <div class="modal fade" id="del_modal_{{ cli.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <ul>¿Estas seguro que deseas borrar el comentario?</ul>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="delete_post btn btn-primary" data-pk="{{ cli.pk }}">Borrar</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {% endif %}
+                                                <!-- Modal de comentar post -->
+                                                <button type="button" class="btn btn-light float-right align-content-center" data-toggle="modal" data-target="#comment_modal_{{ cli.pk }}" style="margin-top: 6px"><ion-icon name="share-alt"></ion-icon></button>
+                                                <div class="modal fade" id="comment_modal_{{ cli.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">{{ cli.author.first_name }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <input type="text" class="comment_post form-control" id="text_comment{{ cli.pk }}"  placeholder="Añade un comentario...">
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="Comment_post btn btn-primary" data-pk="{{ cli.pk }}">Comentar</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {% if cli.author.pk == request.user.pk %}
+                                                <!-- Modal de editar post -->
+                                                <button type="button" class="btn btn-light float-right align-content-center" data-toggle="modal" data-target="#modal_{{ cli.pk }}" style="margin-top: 6px"><ion-icon name="create"></ion-icon></button>
+                                                <div class="modal fade" id="modal_{{ cli.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">{{ cli.author.first_name }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <input type="text" class="post_edit form-control" id="text_post{{ cli.pk }}" placeholder="Añade un comentario...">
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="Edit_post btn btn-primary" data-pk="{{ cli.pk }}">Guardar cambios</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- Descripción del post -->
+                                        <div class="row border rounded-bottom">
+                                            <ul class="float-left text-center" style="margin-left: 14px;margin-top: 10px">  {{ cli.description }}</ul>
+                                        </div>
+                                    {% for com in comment_post %}
+                                        {% if cli.pk == com.post.pk %}
+                                        <!-- Comentarios de los post -->
+                                        <div class="row" style="margin-left: 36px">
+                                            <div class="media-body border rounded-top">
+                                                <ul class= 'float-left' style="color:#005a65;margin-top: 10px">
+                                                    <strong>{{ com.author.first_name }}</strong><spam style="color:grey; margin-left: 10px"> {{ com.publish_date }}</spam>
+                                                </ul>
+                                                {% if com.author.pk == request.user.pk %}
+                                                <!-- Modal eliminar comentario -->
+                                                <button type="button" class="btn btn-light float-right align-content-center" data-toggle="modal" data-target="#del_comment_{{ com.pk }}" style="margin-top: 6px"><ion-icon name="close"></ion-icon></button>
+                                                <div class="modal fade" id="del_comment_{{ com.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <ul>¿Estas seguro que deseas borrar el comentario?</ul>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="delete_comment btn btn-primary" data-pk="{{ com.pk }}">Borrar</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <!-- Modal editar comentario -->
+                                                <button type="button" class="btn btn-light float-right align-content-center" data-toggle="modal" data-target="#edit_comment_{{ com.pk }}" style="margin-top: 6px"><ion-icon name="create"></ion-icon></button>
+                                                <div class="modal fade" id="edit_comment_{{ com.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">{{ com.author.first_name }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <input type="text" class="comment_edit form-control" id="text_comment{{ com.pk }}" placeholder="Añade un comentario...">
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="Edit_comment btn btn-primary" data-pk="{{ com.pk }}">Guardar cambios</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row border rounded-bottom" style="margin-left: 36px">
+                                            <ul class="float-left text-center" style="margin-top: 10px">  {{ com.description }}</ul>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                          </table>
+                      </div>
+                        <div class="card-footer text-muted"> </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-6">
+                <div class="accordion" id="info">
+                    <div class="card border-dark">
+                        <div class="card-header" id="antecedentes">
+                            <h2 class="mb-0">
+                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button"
+                                        data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+                                        aria-controls="collapseThree">
+                                    Antecedentes Arquitectónicos
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="antecedentes">
+                            <div class="card-body">
+                                {% if acquisition.arquitecture.ground_surface %}
+                                    <li class="list-group-item" id="total"><strong>Superficie de
+                                        Terreno: </strong>{{ acquisition.arquitecture.ground_surface }}</l>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Superficie de Terreno: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.square_m_build %}
+                                    <li class="list-group-item" id="total"><strong>Metros Cuadrados
+                                        Construidos: </strong>{{ acquisition.arquitecture.square_m_build }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Metros Cuadrados Construidos: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.e_construction_m %}
+                                    <li class="list-group-item" id="total"><strong>Metros Construcción
+                                        Existente: </strong>{{ acquisition.arquitecture.e_construction_m }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Metros Construcción
+                                        Existente: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.ex_contributions %}
+                                    <li class="list-group-item" id="total"><strong>Exención de
+                                        Contribuciones: </strong>{{ acquisition.arquitecture.ex_contribuciones }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Exención de
+                                        Contribuciones: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.municipal_n %}
+                                    <li class="list-group-item" id="total"><strong>Número de recepción
+                                        municipal: </strong>{{ acquisition.arquitecture.municipal_n }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Número de recepción
+                                        municipal: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.n_building_permit %}
+                                    <li class="list-group-item" id="total"><strong>Número de permiso de
+                                        edificación: </strong>{{ acquisition.arquitecture.n_building_permit }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Número de permiso de
+                                        edificación: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.expropriation_mun %}
+                                    <li class="list-group-item"><strong>Número de NO Expropiación: </strong>
+                                        <a href="{% url 'view_archive' acquisition.arquitecture.expropriation_mun.type acquisition.arquitecture.expropriation_mun.pk %}"
+                                           style="color:blue">{{ acquisition.arquitecture.expropriation_mun.archive|cut:"Documentos/" }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Número de NO
+                                        Expropiación: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.cip %}
+                                    <li class="list-group-item"><strong>CIP: </strong>
+                                        <a href="{% url 'view_archive' acquisition.arquitecture.cip.type acquisition.arquitecture.cip.pk %}"
+                                           style="color:blue">{{ acquisition.arquitecture.cip.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>CIP: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.certified_number %}
+                                    <li class="list-group-item"><strong>Número de Certificado: </strong>
+                                        <a href="{% url 'view_archive' acquisition.arquitecture.certified_number.type acquisition.arquitecture.certified_number.pk %}"
+                                           style="color:blue">{{ acquisition.arquitecture.certified_number.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Número de
+                                        Certificado: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.blueprints %}
+                                    <li class="list-group-item"><strong>Planos: </strong>
+                                        <a href="{% url 'view_archive' acquisition.arquitecture.blueprints.type acquisition.arquitecture.blueprints.pk %}"
+                                           style="color:blue">{{ acquisition.arquitecture.blueprints.archive|cut:"Documentos/" }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Planos: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.arquitecture.building_permit %}
+                                    <li class="list-group-item"><strong>Permiso de Edificación: </strong>
+                                        <a href="{% url 'view_archive' acquisition.arquitecture.building_permit.type acquisition.arquitecture.building_permit.pk %}"
+                                           style="color:blue">{{ acquisition.arquitecture.building_permit.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Permiso de
+                                        Edificación: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.municipal_reception %}
+                                    <li class="list-group-item"><strong>Recepción Municipal: </strong>
+                                        <a href="{% url 'view_archive' acquisition.arquitecture.municipal_reception.type acquisition.arquitecture.municipal_reception.pk %}"
+                                           style="color:blue">{{ acquisition.arquitecture.municipal_repection.archive|cut:"Documentos/" }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Recepción
+                                        Municipal: </strong>No Registrado</li>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-dark">
+                        <div class="card-header" id="contables_internos">
+                            <h2 class="mb-0">
+                                <button class="btn btn-outline-secondary btn-lg btn-block" type="button"
+                                        data-toggle="collapse" data-target="#collapseFour" aria-expanded="false"
+                                        aria-controls="collapseFour">
+                                    Antecedentes contables internos
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="contables_internos">
+                            <div class="card-body">
+                                {% if acquisition.internal.value_land %}
+                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado Terreno: </strong>{{ acquisition.internal.value_land }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado Terreno: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.internal.value_contruction %}
+                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado
+                                        Construcción: </strong>{{ acquisition.internal.value_contruction }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado
+                                        Construcción: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.internal.acquiring_name %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Comprador: </strong>{{ acquisition.internal.acquiring_name }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Comprador: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.internal.supplier_name %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Vendedor: </strong>{{ acquisition.internal.supplier_name }}</li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Nombre Vendedor: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.internal.contract_type %}
+                                    <li class="list-group-item"><strong>Tipo de contrato: </strong>
+                                        <a href="{% url 'view_archive' acquisition.internal.contract_type.type acquisition.internal.contract_type.pk %}"
+                                           style="color:blue">{{ acquisition.internal.contract_type.archive|cut:"Documentos/" }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Tipo de contrato: </strong>No Registrado</li>
+                                {% endif %}
+                                {% if acquisition.internal.others %}
+                                    <li class="list-group-item"><strong>Otros: </strong>
+                                        <a href="{% url 'view_archive' acquisition.internal.others.type acquisition.internal.others.pk %}"
+                                           style="color:blue">{{ acquisition.internal.others.archive|cut:"Documentos/" }}</a></li>
+                                {% else %}
+                                    <li class="list-group-item" id="total"><strong>Otros: </strong>No Registrado</li>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% if change %}
+                <div class="col-md-12">
+                    <table class="table table-sm" id="datos">
+                        <thead>
+                        <tr class="table-success">
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Fecha de cambio</th>
+                            <th Scope="col">Comentario</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for x in change %}
+                            <tr>
+                                <td>{{ x.user.username_staff }}</td>
+                                <td>{{ x.publish_date }}</td>
+                                <td>{{ x.comment}}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  {% endif %}
+            </div>
+        </div>
+    </div>
+    </body>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+    <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+    <!-- Custom and plugin javascript -->
+    <!-- Direccion de mapas -->
+    <script src="{% static 'leaflet/leaflet.js' %}"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+
+    <!-- Direccion de mapas -->
+    <script src="{% static 'js/inspinia.js' %}"></script>
+    <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+    <script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <script>
+        $(document).ready(function(){
+            mapboxgl.accessToken = 'pk.eyJ1IjoiZ29uemFuZHJlczIzIiwiYSI6ImNrMGgwMm1qbjBkZGgzbnBuNWR4c2dhcXcifQ.-CKew9xYdZql0kyxzZuHnQ';
+            var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+            var calle = '{{ acquisition.location.street }} {{ acquisition.location.number }} {{ acquisition.location.commune }} {{ acquisition.location.city }}.json?country=CL&';
+            var token = 'access_token=pk.eyJ1IjoiZ29uemFuZHJlczIzIiwiYSI6ImNrMGgwMm1qbjBkZGgzbnBuNWR4c2dhcXcifQ.-CKew9xYdZql0kyxzZuHnQ';
+            var consulta = url.concat(calle);
+            var consulta_final = consulta.concat(token);
+            fetch(consulta_final)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.features[0].center[1],data.features[0].center[0])
+                console.log(data.features[0])
+                var longitud = data.features[0].center[0]
+                var latitud = data.features[0].center[1]
+                let MyMap = new mapboxgl.Map({
+                    container: 'MyMap',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [longitud, latitud],
+                    zoom: 17,
+                });
+                MyMap.scrollZoom.disable();
+                var marker = new mapboxgl.Marker() // initialize a new marker
+                      .setLngLat([longitud,latitud]) // Marker [lng, lat] coordinates
+                      .addTo(MyMap); // Add the marker to the map
+                });
+        });
+
+        $(document).ready(function(){
+            $('#Description_post').keypress(function(e){
+              if(e.keyCode==13) {
+                  $('#Post').click();
+                  window.location.reload()
+              };
+            });
+        });
+        $(document).ready(function () {
+            $("#Post").on('click', function () {
+                $.ajax({
+                    url: '{% url "add_post" %}',
+                    type: 'POST',
+                    data: {
+                        'description': $("#Description_post").val(),
+                        'prop': 'acquisition',
+                        'prop_id': '{{ acquisition.pk }}',
+                        'csrfmiddlewaretoken': '{{ csrf_token}}'
+                    },
+                    success: function (data) {
+                        if (data.result){
+                            window.location.reload()
+                        }
+                        else {
+                            swal({
+                                title: 'Problemas',
+                                text: 'Por favor agrega algo que comentar',
+                                type: 'error'
+                            })
+                        }
+                    },
+                    error: function () {
+                        alert('error')
+                    }
+                });
+            })
+        });
+        $(document).ready(function () {
+            $(".Edit_post").on('click', function () {
+                var str1 = String("#text_post");
+                var str2 = String($(this).data('pk'));
+                var res = str1.concat(str2);
+                $.ajax({
+                    url: '{% url "edit_post" %}',
+                    type: 'POST',
+                    data: {
+                        'description': $(res).val(),
+                        'id': $(this).data('pk'),
+                        'prop': 'acquisition',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.result){
+                            window.location.reload()
+                        }
+                        else {
+                            swal({
+                                title: 'Problemas',
+                                text: 'Por favor agrega algo que comentar',
+                                type: 'error'
+                            })
+                        }
+                    },
+                    error: function () {
+                        alert('error')
+                    }
+                });
+            })
+        });
+        $(document).ready(function () {
+            $(".delete_post").on('click', function () {
+                $.ajax({
+                    url: '{% url "delete_post" %}',
+                    type: 'POST',
+                    data: {
+                        'id': $(this).data('pk'),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.result){
+                            window.location.reload()
+                        }
+                        else {
+                            swal({
+                                title: 'Problemas',
+                                text: 'No se pudo eliminar el comentario',
+                                type: 'error'
+                            })
+                        }
+                    },
+                    error: function () {
+                        alert('error')
+                    }
+                });
+            })
+        });
+        $(document).ready(function () {
+            $(".Comment_post").on('click', function () {
+                var str3 = String("#text_comment");
+                var str4 = String($(this).data('pk'));
+                var res = str3.concat(str4);
+                $.ajax({
+                    url: '{% url "add_comment" %}',
+                    type: 'POST',
+                    data: {
+                        'description': $(res).val(),
+                        'prop': 'acquisition',
+                        'prop_id': $(this).data('pk'),
+                        'csrfmiddlewaretoken': '{{ csrf_token}}'
+                    },
+                    success: function (data) {
+                        if (data.result){
+                            window.location.reload()
+                        }
+                        else {
+                            swal({
+                                title: 'Problemas',
+                                text: 'Por favor agrega algo que comentar',
+                                type: 'error'
+                            })
+                        }
+                    },
+                    error: function () {
+                        alert('error')
+                    }
+                });
+            })
+        });
+        $(document).ready(function () {
+            $(".Edit_comment").on('click', function () {
+                var str1 = String("#text_comment");
+                var str2 = String($(this).data('pk'));
+                var res = str1.concat(str2);
+                $.ajax({
+                    url: '{% url "edit_comment" %}',
+                    type: 'POST',
+                    data: {
+                        'description': $(res).val(),
+                        'id': $(this).data('pk'),
+                        'prop': 'acquisition',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.result){
+                            window.location.reload()
+                        }
+                        else {
+                            swal({
+                                title: 'Problemas',
+                                text: 'Por favor agrega algo que comentar',
+                                type: 'error'
+                            })
+                        }
+                    },
+                    error: function () {
+                        alert('error')
+                    }
+                });
+            })
+        });
+        $(document).ready(function () {
+            $(".delete_comment").on('click', function () {
+                $.ajax({
+                    url: '{% url "delete_comment" %}',
+                    type: 'POST',
+                    data: {
+                        'id': $(this).data('pk'),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.result){
+                            window.location.reload()
+                        }
+                        else {
+                            swal({
+                                title: 'Problemas',
+                                text: 'No se pudo eliminar el comentario',
+                                type: 'error'
+                            })
+                        }
+                    },
+                    error: function () {
+                        alert('error')
+                    }
+                });
+            })
+        });
+    </script>
+    </html>
+{% endblock %}

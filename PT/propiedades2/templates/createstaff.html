@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<style>
+/* Style all input fields */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+/* Style the submit button */
+input[type=button] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#message p {
+  padding: 10px 35px;
+  font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
+}
+</style>
+<html>
+<head>
+    <title>{% block title %} Crear Usuario {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+
+</head>
+{% include "base.html" %}
+{% block content %}
+<body>
+    <div class="container">
+        <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-offset-12">
+            <h1 class='text-center' style="margin-top:30px;">Agregar Usuario</h1>
+
+            <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ingrese su nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Apellido:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="" placeholder="Ingrese su apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" class="form-control" id="username" name="username" value="" placeholder="Ingrese su nombre de usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="password1">Contraseña:</label>
+                    <input type="password" id="pass" name="pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  title="Debe contener 1 Mayúscula, 1 Minúscula, 1 Número y un largo de 8 Caracteres" class="form-control" placeholder="Nueva contraseña" required>
+                </div>
+                <div id="message">
+                  <h3>Debe contener las siguentes caracteristicas:</h3>
+                  <p id="letter" class="invalid"><b>Minúscula</b></p>
+                  <p id="capital" class="invalid"><b>Mayúscula</b></p>
+                  <p id="number" class="invalid"><b>Número</b></p>
+                  <p id="length" class="invalid">Mínimo<b> 8 Caracteres</b></p>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Contraseña:</label>
+                    <input type="password" class="form-control" name="password2" id="InputPassword2" placeholder="Vuelve a introducir tu contraseña" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="" placeholder="Ingrese su correo electronico" required>
+                    <div class="alert alert-danger" id="val_correo" style="display:none">
+                      <strong>Correo Erroneo</strong>
+                    </div>
+                </div>
+                <div>
+                    <label for="type_user">Tipo de usuario:</label>
+                   <select class="form-control" id="Select" name="type_user">
+                        <option value="ADM" selected>Administrador</option>
+                        <option value="DIG">Digitador</option>
+                        <option value="VIS">Visualizador</option>
+                    </select>
+                </div>
+                <button type="button" id="create" class="btn btn-success">Agregar Usuario</button>
+            </form>
+            <br>
+        </div>
+
+    </div>
+</div>
+<script href="https://code.jquery.com/jquery-3.1.1.slim.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<!-- Custom and plugin javascript -->
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/sweetalert2/sweetalert2.all.js' %}"></script>
+<script>
+$(document).ready(function(){
+      $("#create").on('click',function(){
+          $.ajax({
+              url: '{% url "create_staff" %}',
+              type: 'POST',
+              data: {
+                  'first_name': $("#first_name").val(),
+                  'last_name': $("#last_name").val(),
+                  'username': $('#username').val(),
+                  'password1': $('#pass').val(),
+                  'password2': $('#InputPassword2').val(),
+                  'email': $("#email").val(),
+                  'type_user': $("#Select").val(),
+                  'csrfmiddlewaretoken': '{{ csrf_token}}'
+              },
+              success: function(data){
+                  if (data.result == 'True'){
+                      window.location.href = "{% url 'list_staff' %}"
+                  }
+                  else if(data.result == 'password'){
+                    swal({
+                        title: 'Oops...',
+                        text: 'Las contraseñas no son iguales',
+                        type: 'error',
+                    })
+                  }
+                  else if(data.result  == 'email'){
+                    swal({
+                      title: 'Oops...',
+                      text: 'El email ya se encuentra registrado',
+                      type: 'error',
+                    })
+                  }
+                  else if(data.result == 'username'){
+                    swal({
+                      title: 'Oops...',
+                      text: 'El nombre de usuario ya se encuentra registrado',
+                      type: 'error',
+                    })
+                  }
+              },
+              error: function(){
+                  alert("error")
+              }
+          });
+      })
+      var myInput = document.getElementById("pass");
+      var letter = document.getElementById("letter");
+      var capital = document.getElementById("capital");
+      var number = document.getElementById("number");
+      var length = document.getElementById("length");
+
+      // When the user clicks on the password field, show the message box
+      myInput.onfocus = function() {
+        document.getElementById("message").style.display = "block";
+      }
+
+      // When the user clicks outside of the password field, hide the message box
+      myInput.onblur = function() {
+        document.getElementById("message").style.display = "none";
+      }
+
+      // When the user starts to type something inside the password field
+      myInput.onkeyup = function() {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if(myInput.value.match(lowerCaseLetters)) {
+          letter.classList.remove("invalid");
+          letter.classList.add("valid");
+        } else {
+          letter.classList.remove("valid");
+          letter.classList.add("invalid");
+        }
+
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if(myInput.value.match(upperCaseLetters)) {
+          capital.classList.remove("invalid");
+          capital.classList.add("valid");
+        } else {
+          capital.classList.remove("valid");
+          capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if(myInput.value.match(numbers)) {
+          number.classList.remove("invalid");
+          number.classList.add("valid");
+        } else {
+          number.classList.remove("valid");
+          number.classList.add("invalid");
+        }
+
+        // Validate length
+        if(myInput.value.length >= 8) {
+          length.classList.remove("invalid");
+          length.classList.add("valid");
+        } else {
+          length.classList.remove("valid");
+          length.classList.add("invalid");
+        }
+      }
+  });
+</script>
+</body>
+{% endblock content %}

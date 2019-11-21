@@ -1,0 +1,46 @@
+<button class="btn btn-outline btn-md dropleft" type="submit" style="margin-left:2.5px; margin-right:2.5px;"> <a
+    class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="true">
+    <ion-icon style="color:white;" name="notifications"></ion-icon><span class="badge badge-pill badge-light"
+      style="margin-bottom:2px;">{{ Notifications.count }}</span>
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    {% for cli in Notifications %}
+    <a class="dropdown-item notification_" id="notification_{{ cli.pk }}" data-pk='{{ cli.pk }}'
+      style="background:#CDE4E7;"
+      href="{% if cli.link == 'view_acquisition' %}{% url 'view_acquisition' cli.id_property %}{% elif cli.link == 'view_rent' %}{% url 'view_rent' cli.id_property %}{% endif %}">
+      <strong>{{ cli.user_transmitter.first_name }} {{ cli.user_transmitter.last_name }}</strong>
+      {{ cli.text }}
+      <small style="color:gray">{{ cli.time_str }}</small>
+    </a>
+    <div class="dropdown-divider"></div>
+    {% empty %}
+    <a style="background:#CDE4E7;">
+      <strong>No tienes notificaciones</strong>
+    </a>
+    {% endfor %}
+  </div>
+</button>
+<script>
+  $(".notification_").on('click', function () {
+    alert($(this).data('pk'))
+    $.ajax({
+      url: '{% url "delete_notification" %}',
+      type: 'POST',
+      data: {
+        'id_notification': $(this).data('pk'),
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function (data) {
+        if (data.result == false) {
+          swal({
+            title: 'Problemas',
+            text: 'ha ocurrido un error en la notificación',
+            type: 'error'
+          })
+        }
+      }
+    });
+  });
+
+</script>
