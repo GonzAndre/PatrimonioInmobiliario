@@ -303,8 +303,8 @@ class Rent(models.Model):
                                          related_name='TipoContratoArriendo')
     acquiring_name = models.CharField(max_length=100)
     supplier_name = models.CharField(max_length=100)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     status = models.BooleanField(default=True)
     stats_rent = models.ForeignKey(Stats,blank=True, null=True, on_delete=models.CASCADE)
     def __str__(self):
@@ -327,8 +327,8 @@ class Post(models.Model):
     description = models.CharField(max_length=500)
     author = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
-    acquisition = models.OneToOneField(Acquisition, on_delete=models.CASCADE, related_name='PostAcquisition')
-    rent = models.OneToOneField(Rent, on_delete=models.CASCADE, related_name='PostRent')
+    acquisition = models.OneToOneField(Acquisition, on_delete=models.CASCADE, related_name='PostAcquisition',blank=True,null=True)
+    rent = models.OneToOneField(Rent, on_delete=models.CASCADE, related_name='PostRent',blank=True,null=True)
 
     def getDiference(self):
         now = datetime.now(timezone.utc)

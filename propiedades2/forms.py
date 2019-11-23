@@ -22,11 +22,10 @@ class DocExForm(ModelForm):
             'comment': 'Comentario',
         }
         widgets = {
-            'archive': forms.ClearableFileInput(attrs={'class': 'form-control', 'type': 'file', 'id': 'docEx'}),
+            'archive': forms.ClearableFileInput(attrs={'class': 'form-control-file', 'type': 'file', 'id': 'docEx'}),
             'comment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Ingrese un comentario', 'id': 'CdocEx'}),
         }
-
 
 class DocCipForm(ModelForm):
     class Meta:

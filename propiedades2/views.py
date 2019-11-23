@@ -119,9 +119,8 @@ def list_rent(request):
 @login_required(login_url='login')
 def Add_acquisition(request):
     data = {}
-    cantidad = []
-    data['staff'] = Staff.objects.get(username_staff=request.user)
-    if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
+    staff = Staff.objects.get(username_staff=request.user)
+    if staff.type_user == 'DIG' or staff.type_user == 'ADM':
         if request.method == "POST":
             # ArquitectureForm,InternalForm,NotaryForm,SII_recordForm
             data['formAcquisition'] = AcquisitionForm(request.POST, request.FILES)
@@ -158,9 +157,11 @@ def Add_acquisition(request):
                             aux = Location.objects.get(pk=data['formLocation'].pk)
                             data['formAcquisition'].location = aux
                             data['formAcquisition'].save()
+                            create_notification(request.user, "AA", data['formAcquisition'].pk, 'AC')
                             return JsonResponse({'id': data['formAcquisition'].pk})
             if request.POST.get('Arquitecture') is not None:
                 if request.POST['Arquitecture'] == 'arquitecture':
+                    print(request.POST)
                     if request.POST.get('id_propiedad') is not None:
                         prop = Acquisition.objects.get(pk=request.POST.get('id_propiedad'))
                         id = request.POST.get('id_propiedad')
@@ -319,6 +320,8 @@ def Add_acquisition(request):
                         data['formSII'].save()
                         prop.SII = data['formSII']
                         prop.save()
+                        #valores[0] = total
+                        #valores[1] = complete
                         valores = walk_object(prop.pk)
                         prop.stats_acquisition = create_stats(valores[0], valores[1])
                         prop.save()
@@ -333,12 +336,11 @@ def Add_acquisition(request):
                 'formOther': DocOtherForm, 'formNotary': NotaryForm, 'formWR': DocWRForm,
                 'formDC': DocDCForm,
                 'formPH': DocPHForm, 'formEs': DocEsForm, 'formSII': SII_recordForm,
-                'formAc': DocAcForm, 'formDB': DocDBForm,
+                'formAc': DocAcForm, 'formDB': DocDBForm, 'staff': staff,
             }
 
         return render(request, 'add_acquisition.html', data)
     else:
-        #data['object_list'] = list_acquisition(request)
         data['alerta'] = True
         a=list_acquisition(request)
         print(a)
@@ -379,19 +381,18 @@ def Add_rent(request):
                             #y es donde se modifica el stats correspondiente a la propiedad
                     rent.stats_rent = create_stats(total-1, contestado-1)
                     rent.save()
+                    create_notification(request.user, "AR", rent.pk, "RT")
                 return redirect('list_rent')
 
         else:
-            formDocument = DocTypeCForm()
-            formLocation = LocationForm()
-            formRent = RentForm()
+            data['formDocument'] = DocTypeCForm()
+            data['formLocation'] = LocationForm()
+            data['formRent'] = RentForm()
     else:
         data['alerta'] = True
         return HttpResponseRedirect(reverse('list_rent'))
 
-    return render(request, 'add_rent.html',
-                  {'formDocument': formDocument, 'formLocation': formLocation, 'formRent': formRent})
-
+    return render(request, 'add_rent.html', data)
 
 @login_required(login_url='login')
 def Edit_acquisition(request, acq_id):
@@ -402,6 +403,9 @@ def Edit_acquisition(request, acq_id):
     if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
         if request.method == "POST":
             # ArquitectureForm,InternalForm,NotaryForm,SII_recordForm
+            print('----------------------------------')
+            print(propiedad.arquitecture.expropriation_mun.pk)
+            print('----------------------------------')
             data['formAcquisition'] = AcquisitionForm(request.POST, request.FILES, instance=Acquisition.objects.get(pk=acq_id))
             data['formLocation'] = LocationForm(request.POST, request.FILES, instance = propiedad.location)
             # Arquitecture
@@ -435,9 +439,9 @@ def Edit_acquisition(request, acq_id):
                         data['formAcquisition'] = data['formAcquisition'].save(commit=False)
                         if data['formLocation'].is_valid():
                             data['formLocation'] = data['formLocation'].save()
-                            aux = Location.objects.get(pk=data['formLocation'].pk)
-                            data['formAcquisition'].location = aux
+                            data['formAcquisition'].location = data['formLocation']
                             data['formAcquisition'].save()
+                            create_notification(request.user, "EA", acq_id, 'AC')
                             return JsonResponse({'id': data['formAcquisition'].pk})
 
             elif request.POST.get('Arquitecture') is not None:
@@ -446,56 +450,66 @@ def Edit_acquisition(request, acq_id):
                         # extraer pk de la acquisition
                         prop = Acquisition.objects.get(pk=acq_id)
                     if data['formArquitecture'].is_valid():
-                        data['formArquitecture'] = data['formArquitecture'].save(commit=False)
+                        data['formArquitecture'] = data['formArquitecture'].save()
                         if data['formEx'].is_valid():
-                            Ex = DocumentEx()
-                            if ('ArDocEx' not in request.POST):
-                                Ex.archive = request.FILES['ArDocEx']
+                            Ex = DocumentEx.objects.get(pk=propiedad.arquitecture.expropriation_mun.pk)
+                            if request.FILES.get('ArDocEx') != None:
+                                Ex.archive = request.FILES.get('ArDocEx')
                             Ex.comment = request.POST['CDocEx']
                             Ex.type = 'EM'
                             Ex.save()
+                            print(Ex)
                             data['formArquitecture'].expropriation_mun = Ex
                         if data['formCip'].is_valid():
-                            Cip = DocumentCip()
-                            if ('ArDocCip' not in request.POST):
-                                Cip.archive = request.FILES['ArDocCip']
+                            print('paso CIP')
+                            Cip = DocumentCip.objects.get(pk=propiedad.arquitecture.cip.pk)
+                            if request.FILES.get('ArDocCip') != None:
+                                Cip.archive = request.FILES.get('ArDocCip')
                             Cip.comment = request.POST['CDocCip']
                             Cip.type = 'CP'
                             Cip.save()
                             data['formArquitecture'].cip = Cip
                         if data['formCn'].is_valid():
-                            cn = DocumentCn()
-                            if ('ArDocCn' not in request.POST):
-                                cn.archive = request.FILES['ArDocCn']
+                            print('paso CN')
+                            cn = DocumentCn.objects.get(pk=propiedad.arquitecture.certified_number.pk)
+                            if request.FILES.get('ArDocCn') != None:
+                                cn.archive = request.FILES.get('ArDocCn')
                             cn.comment = request.POST['CDocCn']
                             cn.type = 'NC'
                             cn.save()
                             data['formArquitecture'].certified_number = cn
                         if data['formBlue'].is_valid():
-                            blue = DocumentBlue()
-                            if ('ArDocBlue' not in request.POST):
-                                blue.archive = request.FILES['ArDocBlue']
+                            print('paso BLUE')
+                            blue = DocumentBlue.objects.get(pk=propiedad.arquitecture.blueprints.pk)
+                            if request.FILES.get('ArDocBlue') != None:
+                                blue.archive = request.FILES.get('ArDocBlue')
                             blue.comment = request.POST['CDocBlue']
                             blue.type = 'PL'
                             blue.save()
                             data['formArquitecture'].blueprints = blue
                         if data['formBuildP'].is_valid():
-                            build = DocumentBuildP()
-                            if ('ArDocBuild' not in request.POST):
-                                build.archive = request.FILES['ArDocBuild']
+                            print('paso BP')
+                            build = DocumentBuildP.objects.get(pk=propiedad.arquitecture.building_permit.pk)
+                            if request.FILES.get('ArDocBuild') != None:
+                                build.archive = request.FILES.get('ArDocBuild')
                             build.comment = request.POST['CDocBuild']
                             build.type = 'PE'
                             build.save()
                             data['formArquitecture'].building_permit = build
                         if data['formMR'].is_valid():
-                            MR = DocumentMR()
-                            if ('ArDocMR' not in request.POST):
-                                MR.archive = request.FILES['ArDocMR']
+                            print('paso MR')
+                            MR = DocumentMR.objects.get(pk = propiedad.arquitecture.municipal_reception.pk)
+                            if request.FILES.get('ArDocMR') != None:
+                                MR.archive = request.FILES.get('ArDocMR')
                             MR.type = 'RM'
                             MR.save()
                             data['formArquitecture'].municipal_reception = MR
                         data['formArquitecture'].save()
                         prop.arquitecture = data['formArquitecture']
+                        prop.save()
+                        valores = walk_object(acq_id)
+                        prop.stats_acquisition.total = valores[0]
+                        prop.stats_acquisition.complete = valores[1]
                         prop.save()
                     return JsonResponse({})
 
@@ -507,17 +521,17 @@ def Edit_acquisition(request, acq_id):
                     if data['formInternal'].is_valid():
                         data['formInternal'] = data['formInternal'].save(commit=False)
                         if data['formTypeC'].is_valid():
-                            TypeC = DocumentTypeC()
-                            if ('ArDocTypeC' not in request.POST):
-                                TypeC.archive = request.FILES['ArDocTypeC']
+                            TypeC = DocumentTypeC.objects.get(pk = propiedad.internal.contract_type.pk)
+                            if request.FILES.get('ArDocTypeC') != None:
+                                TypeC.archive = request.FILES.get('ArDocTypeC')
                             TypeC.comment = request.POST['CDocTypeC']
                             TypeC.type = 'TC'
                             TypeC.save()
                             data['formInternal'].contract_type = TypeC
                         if data['formOther'].is_valid():
-                            Other = DocumentOther()
-                            if ('ArDocOther' not in request.POST):
-                                Other.archive = request.FILES['ArDocOther']
+                            Other = DocumentOther.objects.get(pk = propiedad.internal.others.pk)
+                            if request.FILES.get('ArDocOther') != None:
+                                Other.archive = request.FILES.get('ArDocOther')
                             Other.comment = request.POST['CDocOther']
                             Other.type = 'OT'
                             Other.save()
@@ -525,6 +539,10 @@ def Edit_acquisition(request, acq_id):
                             # guardar en acquisition el intenal
                         data['formInternal'].save()
                         prop.internal = data['formInternal']
+                        prop.save()
+                        valores = walk_object(acq_id)
+                        prop.stats_acquisition.total = valores[0]
+                        prop.stats_acquisition.complete = valores[1]
                         prop.save()
                         return JsonResponse({})
 
@@ -537,39 +555,43 @@ def Edit_acquisition(request, acq_id):
                     if data['formNotary'].is_valid():
                         data['formNotary'] = data['formNotary'].save(commit=False)
                         if data['formWR'].is_valid():
-                            WR = DocumentWR()
-                            if ('ArDocWR' not in request.POST):
-                                WR.archive = request.FILES['ArDocWR']
+                            WR = DocumentWR.objects.get(pk = propiedad.notary.writing.pk)
+                            if request.FILES.get('ArDocWR') != None:
+                                WR.archive = request.FILES.get('ArDocWR')
                             WR.comment = request.POST['CDocWR']
                             WR.type = 'ES'
                             WR.save()
                             data['formNotary'].writing = WR
                         if data['formDC'].is_valid():
-                            DC = DocumentDC()
-                            if ('ArDocDC' not in request.POST):
-                                DC.archive = request.FILES['ArDocDC']
+                            DC = DocumentDC.objects.get(pk = propiedad.notary.domain_certificate.pk)
+                            if request.FILES.get('ArDocDC') != None:
+                                DC.archive = request.FILES.get('ArDocDC')
                             DC.comment = request.POST['CDocDC']
                             DC.type = 'DC'
                             DC.save()
                             data['formNotary'].domain_certificate = DC
                         if data['formPH'].is_valid():
-                            PH = DocumentPH()
-                            if ('ArDocPH' not in request.POST):
-                                PH.archive = request.FILES['ArDocPH']
+                            PH = DocumentPH.objects.get(pk = propiedad.notary.prohibitions.pk)
+                            if request.FILES.get('ArDocPH') != None:
+                                PH.archive = request.FILES.get('ArDocPH')
                             PH.comment = request.POST['CDocPH']
                             PH.type = 'PR'
                             PH.save()
                             data['formNotary'].prohibitions = PH
                         if data['formDB'].is_valid():
-                            Es = DocumentEs()
-                            if ('ArDocDB' not in request.POST):
-                                Es.archive = request.FILES['ArDocDB']
+                            Es = DocumentEs.objects.get(pk = propiedad.notary.expropriation_serviu.pk)
+                            if request.FILES.get('ArDocDB') != None:
+                                Es.archive = request.FILES.get('ArDocDB')
                             Es.comment = request.POST['CDocDB']
                             Es.type = 'SE'
                             Es.save()
                             data['formNotary'].expropriation_serviu = Es
                         data['formNotary'].save()
                         prop.notary = data['formNotary']
+                        prop.save()
+                        valores = walk_object(acq_id)
+                        prop.stats_acquisition.total = valores[0]
+                        prop.stats_acquisition.complete = valores[1]
                         prop.save()
                     return JsonResponse({})
 
@@ -581,17 +603,18 @@ def Edit_acquisition(request, acq_id):
                     if data['formSII'].is_valid():
                         data['formSII'] = data['formSII'].save(commit=False)
                         if data['formAc'].is_valid():
-                            Ac = DocumentAc()
-                            if ('ArDocAc' not in request.POST):
-                                Ac.archive = request.FILES['ArDocAc']
+                            print(type(propiedad.SII.appraisal_certificate.pk))
+                            Ac = DocumentAc.objects.get(pk = propiedad.SII.appraisal_certificate.pk)
+                            if request.FILES.get('ArDocAc') != None:
+                                Ac.archive = request.FILES.get('ArDocAc')
                             Ac.comment = request.POST['CDocAc']
                             Ac.type = 'CA'
                             Ac.save()
                             data['formSII'].appraisal_certificate = Ac
                         if data['formEs'].is_valid():
-                            DB = DocumentDB()
-                            if ('ArDocEs' not in request.POST):
-                                DB.archive = request.FILES['ArDocEs']
+                            DB = DocumentDB.objects.get(pk = propiedad.SII.debt_certificate.pk)
+                            if request.FILES.get('ArDocEs') != None:
+                                DB.archive = request.FILES.get('ArDocEs')
                             DB.comment = request.POST['CDocEs']
                             DB.type = 'CD'
                             DB.save()
@@ -599,14 +622,12 @@ def Edit_acquisition(request, acq_id):
                         data['formSII'].save()
                         prop.SII = data['formSII']
                         prop.save()
-                        print('dsajkdhsakdhsajkdhsakdah')
                         valores = walk_object(acq_id)
-                        prop.stats_acquisition = create_stats(valores[0], valores[1])
+                        prop.stats_acquisition.total = valores[0]
+                        prop.stats_acquisition.complete = valores[1]
                         prop.save()
                     return JsonResponse({})
-                print('xxxxxxxxxxxxxxxxxxxx')
-                print(request.POST.get("commentacq"))
-                print('xxxxxxxxxxxxxxxxxxxx')
+                
             if request.POST.get("commentacq") == None:
                 pass
             else:
@@ -670,7 +691,7 @@ def Edit_acquisition(request, acq_id):
                 'formOther': docother, 'formNotary': notary, 'formWR': docwr,
                 'formDC': docdc,
                 'formPH': docph, 'formEs': doces, 'formSII': sii,
-                'formAc': docac, 'formDB': docdb, 'id': propiedad.pk
+                'formAc': docac, 'formDB': docdb, 'id': acq_id
             }
         return render(request, 'edit_acquisition.html', data)
     else:
@@ -684,6 +705,12 @@ def Edit_rent(request, rent_id):
     propiedad = get_object_or_404(Rent, pk=rent_id)
     data['staff'] = Staff.objects.get(username_staff=request.user)
     if data['staff'].type_user == 'DIG' or data['staff'].type_user == 'ADM':
+        total = 0
+        contestado = 0
+        if propiedad.contract_type.archive != '':
+            contestado += 1
+        if propiedad.image != '':
+            contestado +=1
         if request.POST:
             FormRent = RentForm(request.POST, request.FILES, instance=Rent.objects.get(pk=rent_id))
             FormLocation = LocationForm(request.POST, request.FILES,instance=propiedad.location)
@@ -695,10 +722,9 @@ def Edit_rent(request, rent_id):
                         FormLocation.save(commit=False)
                         FormDocTypeC.save(commit=False)
                         FormRent.save()
+                        create_notification(request.user, "ER", rent_id, 'RT')
                         FormLocation.save()
                         FormDocTypeC.save()
-                        total = 0
-                        contestado = 0
                         if request.POST['plot'] == '':
                             print('vacio')
                             total -= 1
@@ -712,6 +738,7 @@ def Edit_rent(request, rent_id):
                                 total += 1
                             else:
                                 total += 1
+                        print(propiedad.stats_rent)
                         stats = Stats.objects.get(pk = propiedad.stats_rent.pk)
                         stats.total = total-2
                         stats.complete = contestado-2
@@ -729,55 +756,6 @@ def Edit_rent(request, rent_id):
         return render(request, template_name, data)
     else:
         return HttpResponseRedirect(reverse('list_acquisition'))
-
-# @login_required(login_url='login')
-# def Delete_acquisition(request, id):
-#     data = {}
-#     aux = Acquisition.objects.get(pk=id)
-#     #Location.objects.filter(pk=aux.location.pk).delete()
-#     if aux.arquitecture != None:
-#         print('tiene arquitectura')
-#         if aux.arquitecture.expropriation_mun != None:
-#             print('tiene documentos')
-#             DocumentEx.objects.filter(pk=aux.arquitecture.expropriation_mun.pk)
-#         if aux.arquitecture.cip != None:
-#             DocumentCip.objects.filter(pk=aux.arquitecture.cip.pk)
-#         if aux.arquitecture.certified_number != None:
-#             DocumentCn.objects.filter(pk=aux.arquitecture.certified_number.pk)
-#         if aux.arquitecture.blueprints != None:
-#             DocumentBlue.objects.filter(pk=aux.arquitecture.blueprints.pk)
-#         if aux.arquitecture.building_permit != None:
-#             DocumentBuildP.objects.filter(pk=aux.arquitecture.building_permit.pk)
-#         if aux.arquitecture.municipal_reception != None:
-#             DocumentMR.objects.filter(pk=aux.arquitecture.municipal_reception.pk)
-#         ArchitectureRecordAcq.objects.filter(pk=aux.arquitecture.pk)
-#     if aux.internal != None:
-#         if aux.internal.contract_type != None:
-#             DocumentTypeC.objects.filter(pk=aux.internal.contract_type.pk)
-#         if aux.internal.others != None:
-#             DocumentOther.objects.filter(pk=aux.internal.contract_type.pk)
-#         InternalAccountantsAcq.objects.filter(pk=aux.internal.pk)
-#     if aux.notary != None:
-#         if aux.internal.writing != None:
-#             DocumentWR.objects.filter(pk=aux.internal.writing.pk)
-#         if aux.internal.domain_certificate != None:
-#             DocumentDC.objects.filter(pk= aux.internal.domain_certificate.pk)
-#         if aux.internal.prohibitions != None:
-#             DocumentPH.objects.filter(pk=aux.internal.prohibitions.pk)
-#         if aux.internal.expropriation_serviu != None:
-#             DocumentEs.objects.filter(pk=aux.internal.expropriation_serviu.pk)
-#         NotaryAcquisition.objects.filter(pk=aux.notary.pk)
-#     if aux.SII != None:
-#         if aux.SII.appraisal_certificate != None:
-#             DocumentAc.objects.filter(pk= aux.SII.appraisal_certificate.pk)
-#         if aux.SII.debt_certificate != None:
-#             DocumentDB.objects.filter(pk = aux.SII.debt_certificate.pk)
-#         SiiRecord.objects.filter(pk = aux.SII.pk)
-#     Acquisition.objects.filter(pk=id)
-#
-#     # Acquisition.objects.filter(pk=id).delete()
-#     return HttpResponseRedirect(reverse('list_acquisition'))
-
 
 @login_required(login_url='login')
 def Delete_rent(request,id):
@@ -1258,16 +1236,20 @@ def change_status_acquisition(request, id):
     aux = Acquisition.objects.get(pk = id)
     if aux.status == True:
         Acquisition.objects.filter(pk = id).update(status = False)
+        create_notification(request.user, "SI", id, 'AC')
     elif aux.status == False:
         Acquisition.objects.filter(pk = id).update(status = True)
+        create_notification(request.user, "SA", id, 'AC')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def change_status_rent(request, id):
     aux = Rent.objects.get(pk = id)
     if aux.status == True:
         Rent.objects.filter(pk = id).update(status = False)
+        create_notification(request.user, "SI", id, 'RT')
     elif aux.status == False:
         Rent.objects.filter(pk = id).update(status = True)
+        create_notification(request.user, "SA", id, 'RT')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def add_property(request):
@@ -1297,12 +1279,9 @@ def edit_property(request, property_id):
     data['info'] = Property.objects.get(pk = property_id)
     x = Property.objects.get(pk = property_id)
     data['version_list'] = nn = Version.objects.get_for_object(x)
-    print(nn)
     if request.method == 'POST':
         nombre = request.POST.get('name')
         acronimo = request.POST.get('acronym')
-        comentario = request.POST.get('comment')
-        #Property.objects.filter(pk = property_id).update(name = nombre, acronym = acronimo)
         if x.name != nombre:
             x.name = nombre
             if x.acronym != acronimo:
@@ -1438,6 +1417,7 @@ def add_post(request):
                 acquisition = acquisition_post,
             )
             n_post.save()
+            create_notification(request.user, "PA", id, 'AC')
             data = {'result': True}
             return JsonResponse(data)
         elif request.POST.get('prop') == 'rent' and request.POST.get('description') != '':
@@ -1449,6 +1429,7 @@ def add_post(request):
                 rent=rent_post,
             )
             n_post.save()
+            create_notification(request.user, "PR", id, 'RT')
             data = {'result': True}
             return JsonResponse(data)
         else:
@@ -1500,6 +1481,7 @@ def add_comment(request):
                 post = post_id,
             )
             n_post.save()
+            create_notification(request.user, "RA", id, 'AC')
             data = {'result': True}
             return JsonResponse(data)
         elif request.POST.get('prop') == 'rent':
@@ -1511,6 +1493,7 @@ def add_comment(request):
                 post = rent_post,
             )
             n_post.save()
+            create_notification(request.user, "RR", id, 'RT')
             data = {'result': True}
             return JsonResponse(data)
         else:
@@ -1581,7 +1564,7 @@ def add_district(request):
             if request.POST:
                 x = District.objects.create(name=p, acronym=q)
                 x.save()
-                return JsonResponse({'result': True})
+                return JsonResponse({'result': 'True'})
         else:
             return JsonResponse({'result': 'Max'})
     else:
@@ -1591,6 +1574,7 @@ def add_district(request):
 
 def edit_district(request, district_id):
     data = {}
+    data['staff'] = Staff.objects.get(username_staff = request.user)
     template = 'edit_district.html'
     data['info'] = District.objects.get(pk = district_id)
     print(data)
@@ -1619,6 +1603,7 @@ def delete_district(request, district_id):
 def list_district(request):
     template = 'list_district.html'
     data = {}
+    data['staff'] = Staff.objects.get(username_staff = request.user)
     object_list = District.objects.all().order_by()
     paginator = Paginator(object_list, 20)
     page = request.GET.get('page')
@@ -2045,15 +2030,12 @@ def walk_object(id):
     total = 0
     valores = []
     for val in d_arq:
-        print(val, d_arq[val])
+        #print(val, d_arq[val])
         if d_arq[val] == None:
             total += 1
         else:
             total += 1
             contestado += 1
-    print('prueba')
-    print(exp_num.archive)
-    print('fin prueba')
     if exp_num.archive != '':   
         total += 1
         contestado += 1
@@ -2090,8 +2072,9 @@ def walk_object(id):
     else:
         total += 1
     #------------------------
+    print('--------------------------------')
     for val in d_internal:
-        print(val, d_internal[val])
+        #print(val, d_internal[val])
         if d_internal[val] == None:
             total += 1
         else:
@@ -2110,8 +2093,9 @@ def walk_object(id):
     else:
         total += 1
     #-------------------------
+    print('-------------------------------')
     for val in d_notary:
-        print(val, d_notary[val])
+        #print(val, d_notary[val])
         if d_notary[val] == None:
             total += 1
         else:
@@ -2143,19 +2127,19 @@ def walk_object(id):
         total += 1
     print('-------------------------')
     for val in d_SII:
-        print(val, d_SII[val])
+        #print(val, d_SII[val])
         if d_SII[val] == None:
             total += 1
         else:
             total += 1
             contestado += 1
-    if con_typ.archive != '':
+    if app_cer.archive != '':
         total += 1
         contestado += 1
     else:
         total += 1
     #-------------------------
-    if other.archive != '':
+    if deb_cer.archive != '':
         total += 1
         contestado += 1
     else:

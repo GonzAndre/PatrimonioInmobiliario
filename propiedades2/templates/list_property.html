@@ -20,21 +20,8 @@
             <div class="col-md-10">
                 <h1>Listado de tipo de Propiedades</h1>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-10">
-                <form class="form mb-auto" method="GET" action="{% url 'search' %}">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" style="display:none" name="selection" type="radio" value="3"
-                               id="defaultCheck3" checked>
-                        <label class="form-check-label" for="defaultCheck3"></label>
-                    </div>
-                    <input type="text" class="form-control ml-sm-2" name="q" value="{{ request.GET.q }}"
-                           placeholder="Hola! ¿Buscas algo?..">
-                </form>
-            </div>
-            <div class="col-md-2 col-sm-4">
-                <a class="float-right" href="{% url 'add_property' %}" style="margin-top: 15%;">
+            <div class="col-md-2">
+                <a class="float-right" href="{% url 'add_property' %}">
                     <button type="button" class="btn btn-success">Agregar</button>
                 </a>
             </div>

@@ -8562,3 +8562,7 @@ body.md-skin {
     margin: 0;
   }
 }
+
+#collapseEx a {
+  color: #000;
+}

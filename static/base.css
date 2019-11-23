@@ -21,3 +21,6 @@ button.navbar-toggler{
 .btn a:hover{
   color: black;
 }
+form .collapse a{
+  color: blue;
+}

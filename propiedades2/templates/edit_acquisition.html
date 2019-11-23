@@ -46,6 +46,10 @@
                                                         <label>Uso de la propiedad: *</label>
                                                         {{ formAcquisition.property_use }}
                                                     </div>
+                                                    <div class="col">
+                                                        <label>Distrito: *</label>
+                                                        {{ formAcquisition.district }}
+                                                    </div>
                                                 </div>
                                                 <p></p>
                                                 <div class="row">
@@ -169,7 +173,7 @@
                                                         </div>
                                                         <div id="collapseEx" class="collapse" aria-labelledby="headEx"
                                                              data-parent="#accordionArquitecture">
-                                                            <div>{{ formEx }}</div>
+                                                            <div>{{ formEx.archive}}</div>
                                                         </div>
                                                     </div>
                                                     <div class="card border-dark">
@@ -581,6 +585,7 @@
                 formulario.append('name', $("#name").val());
                 formulario.append('role_number', $("#role_number").val());
                 formulario.append('property_use', $("#property_use").val());
+                formulario.append('district', $("#district").val());
                 formulario.append('number_AASI', $("#number_AASI").val());
                 formulario.append('acquisition_date', $("#acquisition_date").val());
                 formulario.append('writing_data', $("#writing_data").val());
@@ -601,7 +606,7 @@
                     processData: false,
                     data: formulario,
                     success: function (id) {
-                        id_p = id['id'];
+                        id_p = {{id}};
                         $('#Arquitecture').show();
                         $('#Notary').show();
                         $('#Internos').show();
@@ -611,6 +616,7 @@
                         $('#comentario').show();
 
                         alert('Datos de propiedad guardados');
+                        alert(id_p)
                     }
                 });
             });

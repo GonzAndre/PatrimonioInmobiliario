@@ -1,4 +1,5 @@
 {% load static %}
+{% load mathfilters %}
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8" />
 {% block navbar %}
@@ -125,9 +126,9 @@
                                             </strong>No
                                             Registrado</li>
                                             {% endif %}
-                                            {% if rent.value_contruction %}
+                                            {% if rent.value_construction %}
                                         <li class="list-group-item" id="total"><strong>Valor Contabilizado
-                                                Construcción: </strong>{{ rent.value_contruction }}</li>
+                                                Construcción: </strong>{{ rent.value_construction }}</li>
                                             {% else %}
                                         <li class="list-group-item" id="total"><strong>Valor Contabilizado Construcción:
                                             </strong>No
@@ -142,15 +143,11 @@
                                                 Registrado</strong></li>
                                         {% endif %}
                                         {% if rent.end_date %}
-                                        <li class="list-group-item" id="total"><strong>Termino Arriendo o Comodato: </strong>{{ rent.end_date }}</li>
+                                        <li class="list-group-item" id="total"><strong>Termino Arriendo o Comodato: </strong>{{ rent.end_date}}</li>
                                         {% else %}
                                         <li class="list-group-item" id="total"><strong>Termino Arriendo o Comodato: </strong>No Registrado</li>
                                         {% endif %}
-                                        {% if rent.duration %}
-                                        <li class="list-group-item" id="total"><strong>Duración Arriendo o Comodato: </strong>{{ rent.duration }}</li>
-                                        {% else %}
-                                        <li class="list-group-item" id="total"><strong>Duración Arriendo o Comodato: </strong>No Registrado</li>
-                                        {% endif %}
+                                        <li class="list-group-item" id="total"><strong>Duración Arriendo o Comodato: </strong>{{rent.end_date|sub:rent.start_date|cut:", 0:00:00"}}</li>
                                     </div>
                                 </div>
                             </div>

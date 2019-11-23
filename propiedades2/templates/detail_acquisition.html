@@ -41,21 +41,21 @@
                         </div>
                         <div class="col-md-3">
                             <div class="card-body">
-                                <p id="total"><strong>Nombre</strong>: {{ acquisition.name }}</p>
+                                <p><strong>Nombre</strong>: {{ acquisition.name }}</p>
                                 {% if acquisition.number_AASI %}
-                                    <p id="total"><strong>Número AASI.net: </strong>{{ acquisition.number_AASI }}</p>
+                                    <p><strong>Número AASI.net: </strong>{{ acquisition.number_AASI }}</p>
                                 {% else %}
-                                    <p id="total"><strong>Número AASI.net: </strong>No Registrado</p>
+                                    <p><strong>Número AASI.net: </strong>No Registrado</p>
                                 {% endif %}
                                 {% if acquisition.role_number %}
-                                    <p id="total"><strong>Número de Rol: </strong>{{ acquisition.role_number }}</p>
+                                    <p><strong>Número de Rol: </strong>{{ acquisition.role_number }}</p>
                                 {% else %}
-                                    <p id="total"><strong>Número de Rol: </strong>No Registrado</p>
+                                    <p><strong>Número de Rol: </strong>No Registrado</p>
                                 {% endif %}
-                                <p id="total"><strong>Dirección: </strong>{{ acquisition.location.street }} {{ acquisition.location.number }},
+                                <p><strong>Dirección: </strong>{{ acquisition.location.street }} {{ acquisition.location.number }},
                                 {% if acquisition.location.plot %} {{ acquisition.location.plot }}{{ acquisition.location.lot_number }}{% endif %}
                                 {{ acquisition.location.commune }}, {{ acquisition.location.city }}, {{ acquisition.location.region.name }}</p>
-                                <p id="total"><strong>Uso Propiedad: </strong>{{ acquisition.property_use.name }}</p>
+                                <p><strong>Uso Propiedad: </strong>{{ acquisition.property_use.name }}</p>
                             </div>
                         </div>
                         <!-- Mapa -->
@@ -84,63 +84,63 @@
                         <div id="collapseOne" class="collapse" aria-labelledby="notaria">
                             <div class="card-body">
                                 {% if acquisition.notary.notary %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Notaria: </strong>{{ acquisition.notary.notary }}</li>
+                                    <li class="list-group-item"><strong>Nombre Notaria: </strong>{{ acquisition.notary.notary }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Notaria: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Nombre Notaria: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.notary.writing %}
-                                    <li class="list-group-item"><strong>Escritura: </strong>
+                                {% if acquisition.notary.writing.archive != '' %}
+                                    <li class="list-group-item"><strong>Escritura : </strong>
                                         <a href="{% url 'view_archive' acquisition.notary.writing.type acquisition.notary.writing.pk %}"
                                            style="color:blue">{{ acquisition.notary.writing.archive|cut:"Documentos/" }}</a>
                                     </li>
                                 {% elif acquisition.notary.writing == '' %}
-                                    <li class="list-group-item" id="total"><strong>Escritura: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Escritura : </strong>No Registrado</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Escritura: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Escritura : </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.notary.writing_year %}
-                                    <li class="list-group-item" id="total"><strong>Año Escritura: </strong>{{ acquisition.notary.writing_year }}</li>
+                                    <li class="list-group-item"><strong>Año Escritura: </strong>{{ acquisition.notary.writing_year }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Año Escritura: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Año Escritura: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.notary.sale_price %}
-                                    <li class="list-group-item" id="total"><strong>Precio Venta: </strong>{{ acquisition.notary.sale_price }}</li>
+                                    <li class="list-group-item"><strong>Precio Venta: </strong>{{ acquisition.notary.sale_price }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Precio Venta: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Precio Venta: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.notary.current_title %}
-                                    <li class="list-group-item" id="total"><strong>Título Actual: </strong>{{ acquisition.notary.current_title }}</li>
+                                    <li class="list-group-item"><strong>Título Actual: </strong>{{ acquisition.notary.current_title }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Título Actual: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Título Actual: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.notary.previous_title %}
-                                    <li class="list-group-item" id="total"><strong>Título Anterior: </strong>{{ acquisition.notary.previous_title }}</li>
+                                    <li class="list-group-item"><strong>Título Anterior: </strong>{{ acquisition.notary.previous_title }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Título Anterior: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Título Anterior: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.notary.domain_certificate %}
+                                {% if acquisition.notary.domain_certificate.archive != '' %}
                                     <li class="list-group-item"><strong>Certificado de dominio:</strong>
                                         <a href="{% url 'view_archive' acquisition.notary.domain_certificate.type acquisition.notary.domain_certificate.pk %}"
                                            style="color:blue">{{ acquisition.notary.domain_certificate.archive|cut:"Documentos/" }}</a>
                                     </li>
                                 {% elif acquisition.notary.domain_certificate == "" %}
-                                    <li class="list-group-item" id="total"><strong>Certificado de dominio: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Certificado de dominio: </strong>No Registrado</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Certificado de dominio: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Certificado de dominio: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.notary.prohibition %}
                                     <li class="list-group-item"><strong>Gravamen y Prohibiciones: </strong>
                                         <a href="{% url 'view_archive' acquisition.notary.prohibitions.type acquisition.notary.prohibitions.pk %}"
                                            style="color:blue">{{ acquisition.notary.prohibitions.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Gravamen y Prohibiciones: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Gravamen y Prohibiciones: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.notary.expropiation_serviu %}
                                     <li class="list-group-item"><strong>Certificado de no expropiación: </strong>
                                         <a href="{% url 'view_archive' acquisition.notary.expropiation_serviu.type acquisition.notary.expropiation_serviu.pk %}"
                                            style="color:blue">{{ acquisition.notary.expropiation_serviu|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Certificado de no Expropiación: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Certificado de no Expropiación: </strong>No Registrado</li>
                                 {% endif %}
                             </div>
                         </div>
@@ -158,43 +158,43 @@
                         <div id="collapseTwo" class="collapse" aria-labelledby="sii">
                             <div class="card-body">
                                 {% if acquisition.SII.destiny %}
-                                    <li class="list-group-item" id="total"><strong>Destino: </strong>{{ acquisition.SII.destiny }}</li>
+                                    <li class="list-group-item"><strong>Destino: </strong>{{ acquisition.SII.destiny }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Destino: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Destino: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.SII.tax_appraisal %}
-                                    <li class="list-group-item" id="total"><strong>Avalúo Fiscal: </strong>{{ acquisition.SII.tax_appraisal }}</li>
+                                    <li class="list-group-item"><strong>Avalúo Fiscal: </strong>{{ acquisition.SII.tax_appraisal }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Avalúo Fiscal: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Avalúo Fiscal: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.SII.owner_name_SII %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Propietario SII: </strong>{{ acquisition.SII.owner_name_SII }}</li>
+                                    <li class="list-group-item"><strong>Nombre Propietario SII: </strong>{{ acquisition.SII.owner_name_SII }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Propietario SII: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Nombre Propietario SII: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.SII.total_debt %}
-                                    <li class="list-group-item" id="total"><strong>Deuda Total: </strong>{{ acquisition.SII.total_debt }}</li>
+                                    <li class="list-group-item"><strong>Deuda Total: </strong>{{ acquisition.SII.total_debt }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Deuda Total: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Deuda Total: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.SII.ex_contributions %}
-                                    <li class="list-group-item" id="total"><strong>Exención de Contribuciones: </strong>{{ acquisition.SII.ex_contribuciones }}</li>
+                                {% if acquisition.SII.ex_contributions == True %}
+                                    <li class="list-group-item"><strong>Exención de Contribuciones: </strong>Si</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Exención de Contribuciones: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Exención de Contribuciones: </strong>No</li>
                                 {% endif %}
-                                {% if acquisition.SII.appraisal_certificate %}
+                                {% if acquisition.SII.appraisal_certificate.archive != '' %}
                                     <li class="list-group-item"><strong>Certificado de Avalúo: </strong>
                                         <a class="list-group-item" href="{% url 'view_archive' acquisition.SII.appraisal_certificate.type acquisition.SII.appraisal_certificate.pk %}"
                                            style="color:blue">{{ acquisition.SII.appraisal_certificate.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Certificado de Avalúo: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Certificado de Avalúo: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.SII.debt_certificate %}
+                                {% if acquisition.SII.debt_certificate.archive != '' %}
                                     <li class="list-group-item"><strong>Certificado de No Deuda: </strong>
                                         <a href="{% url 'view_archive' acquisition.SII.debt_certificate.type acquisition.SII.debt_certificate.pk %}"
                                            style="color:blue">{{ acquisition.SII.debt_certificate.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Certificado de NO Deuda: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Certificado de NO Deuda: </strong>No Registrado</li>
                                 {% endif %}
                             </div>
                         </div>
@@ -380,67 +380,67 @@
                         <div id="collapseThree" class="collapse" aria-labelledby="antecedentes">
                             <div class="card-body">
                                 {% if acquisition.arquitecture.ground_surface %}
-                                    <li class="list-group-item" id="total"><strong>Superficie de
+                                    <li class="list-group-item"><strong>Superficie de
                                         Terreno: </strong>{{ acquisition.arquitecture.ground_surface }}</l>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Superficie de Terreno: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Superficie de Terreno: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.arquitecture.square_m_build %}
-                                    <li class="list-group-item" id="total"><strong>Metros Cuadrados
+                                    <li class="list-group-item"><strong>Metros Cuadrados
                                         Construidos: </strong>{{ acquisition.arquitecture.square_m_build }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Metros Cuadrados Construidos: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Metros Cuadrados Construidos: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.arquitecture.e_construction_m %}
-                                    <li class="list-group-item" id="total"><strong>Metros Construcción
+                                    <li class="list-group-item"><strong>Metros Construcción
                                         Existente: </strong>{{ acquisition.arquitecture.e_construction_m }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Metros Construcción
+                                    <li class="list-group-item"><strong>Metros Construcción
                                         Existente: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.arquitecture.ex_contributions %}
-                                    <li class="list-group-item" id="total"><strong>Exención de
+                                    <li class="list-group-item"><strong>Exención de
                                         Contribuciones: </strong>{{ acquisition.arquitecture.ex_contribuciones }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Exención de
+                                    <li class="list-group-item"><strong>Exención de
                                         Contribuciones: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.arquitecture.municipal_n %}
-                                    <li class="list-group-item" id="total"><strong>Número de recepción
+                                    <li class="list-group-item"><strong>Número de recepción
                                         municipal: </strong>{{ acquisition.arquitecture.municipal_n }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Número de recepción
+                                    <li class="list-group-item"><strong>Número de recepción
                                         municipal: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.arquitecture.n_building_permit %}
-                                    <li class="list-group-item" id="total"><strong>Número de permiso de
+                                    <li class="list-group-item"><strong>Número de permiso de
                                         edificación: </strong>{{ acquisition.arquitecture.n_building_permit }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Número de permiso de
+                                    <li class="list-group-item"><strong>Número de permiso de
                                         edificación: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.arquitecture.expropriation_mun %}
+                                {% if acquisition.arquitecture.expropriation_mun.archive != '' %}
                                     <li class="list-group-item"><strong>Número de NO Expropiación: </strong>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.expropriation_mun.type acquisition.arquitecture.expropriation_mun.pk %}"
                                            style="color:blue">{{ acquisition.arquitecture.expropriation_mun.archive|cut:"Documentos/" }}</a>
                                     </li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Número de NO
+                                    <li class="list-group-item"><strong>Número de NO
                                         Expropiación: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.arquitecture.cip %}
+                                {% if acquisition.arquitecture.cip.archive != '' %}
                                     <li class="list-group-item"><strong>CIP: </strong>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.cip.type acquisition.arquitecture.cip.pk %}"
                                            style="color:blue">{{ acquisition.arquitecture.cip.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>CIP: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>CIP: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.arquitecture.certified_number %}
+                                {% if acquisition.arquitecture.certified_number.archive != '' %}
                                     <li class="list-group-item"><strong>Número de Certificado: </strong>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.certified_number.type acquisition.arquitecture.certified_number.pk %}"
                                            style="color:blue">{{ acquisition.arquitecture.certified_number.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Número de
+                                    <li class="list-group-item"><strong>Número de
                                         Certificado: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.blueprints %}
@@ -449,14 +449,14 @@
                                            style="color:blue">{{ acquisition.arquitecture.blueprints.archive|cut:"Documentos/" }}</a>
                                     </li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Planos: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Planos: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.arquitecture.building_permit %}
+                                {% if acquisition.arquitecture.building_permit.archive != '' %}
                                     <li class="list-group-item"><strong>Permiso de Edificación: </strong>
                                         <a href="{% url 'view_archive' acquisition.arquitecture.building_permit.type acquisition.arquitecture.building_permit.pk %}"
                                            style="color:blue">{{ acquisition.arquitecture.building_permit.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Permiso de
+                                    <li class="list-group-item"><strong>Permiso de
                                         Edificación: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.municipal_reception %}
@@ -465,7 +465,7 @@
                                            style="color:blue">{{ acquisition.arquitecture.municipal_repection.archive|cut:"Documentos/" }}</a>
                                     </li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Recepción
+                                    <li class="list-group-item"><strong>Recepción
                                         Municipal: </strong>No Registrado</li>
                                 {% endif %}
                             </div>
@@ -484,41 +484,41 @@
                         <div id="collapseFour" class="collapse" aria-labelledby="contables_internos">
                             <div class="card-body">
                                 {% if acquisition.internal.value_land %}
-                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado Terreno: </strong>{{ acquisition.internal.value_land }}</li>
+                                    <li class="list-group-item"><strong>Valor Contabilizado Terreno: </strong>{{ acquisition.internal.value_land }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado Terreno: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Valor Contabilizado Terreno: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.internal.value_contruction %}
-                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado
+                                    <li class="list-group-item"><strong>Valor Contabilizado
                                         Construcción: </strong>{{ acquisition.internal.value_contruction }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Valor Contabilizado
+                                    <li class="list-group-item"><strong>Valor Contabilizado
                                         Construcción: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.internal.acquiring_name %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Comprador: </strong>{{ acquisition.internal.acquiring_name }}</li>
+                                    <li class="list-group-item"><strong>Nombre Comprador: </strong>{{ acquisition.internal.acquiring_name }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Comprador: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Nombre Comprador: </strong>No Registrado</li>
                                 {% endif %}
                                 {% if acquisition.internal.supplier_name %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Vendedor: </strong>{{ acquisition.internal.supplier_name }}</li>
+                                    <li class="list-group-item"><strong>Nombre Vendedor: </strong>{{ acquisition.internal.supplier_name }}</li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Nombre Vendedor: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Nombre Vendedor: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.internal.contract_type %}
+                                {% if acquisition.internal.contract_type.archive != '' %}
                                     <li class="list-group-item"><strong>Tipo de contrato: </strong>
                                         <a href="{% url 'view_archive' acquisition.internal.contract_type.type acquisition.internal.contract_type.pk %}"
                                            style="color:blue">{{ acquisition.internal.contract_type.archive|cut:"Documentos/" }}</a>
                                     </li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Tipo de contrato: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Tipo de contrato: </strong>No Registrado</li>
                                 {% endif %}
-                                {% if acquisition.internal.others %}
+                                {% if acquisition.internal.others.archive != '' %}
                                     <li class="list-group-item"><strong>Otros: </strong>
                                         <a href="{% url 'view_archive' acquisition.internal.others.type acquisition.internal.others.pk %}"
                                            style="color:blue">{{ acquisition.internal.others.archive|cut:"Documentos/" }}</a></li>
                                 {% else %}
-                                    <li class="list-group-item" id="total"><strong>Otros: </strong>No Registrado</li>
+                                    <li class="list-group-item"><strong>Otros: </strong>No Registrado</li>
                                 {% endif %}
                             </div>
                         </div>
