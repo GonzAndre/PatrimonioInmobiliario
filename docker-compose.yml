@@ -11,6 +11,7 @@ services:
       interval: 5s
     ports:
       - 3306:3306
+    restart: unless-stopped
 
   web:
     build: .
@@ -28,6 +29,7 @@ services:
       USER: root
       PASSWORD: bomberos
       HOST: db
+    restart: unless-stopped
 
   migrate:
     image: aplicacion1
@@ -42,3 +44,4 @@ services:
       USER: root
       PASSWORD: bomberos
       HOST: db
+    restart: unless-stopped
